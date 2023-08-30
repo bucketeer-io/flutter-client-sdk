@@ -1,0 +1,11 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/build/**"
+    - "**/generated_*.dart"
+    - "**/l10n*.dart"
+
+linter:
+  rules:
+    public_member_api_docs: false

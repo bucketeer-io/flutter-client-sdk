@@ -1,0 +1,180 @@
+name: Build & Integration tests
+
+on:
+  push:
+    branches:
+      - main
+      - initial-implementation
+  workflow_dispatch:
+
+concurrency:
+  group: release-build-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: 3.13.1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: /opt/hostedtoolcache/flutter # For Ubuntu machine
+          key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa # v2.10.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+
+      - name: Install Flutter dependencies
+        run: flutter pub get
+
+      - name: Check lint
+        run: |
+          flutter pub publish --dry-run
+          flutter analyze
+          cd example && flutter analyze
+
+      - name: Run unit tests
+        run: flutter test test
+
+  ios-integration-test:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    strategy:
+      matrix:
+        device:
+          - "iPhone 14 Simulator (16.2)" # the name of the simulator could be different depending on the macos version you are using
+      fail-fast: false
+    steps:
+      - name: "List all simulators"
+        run: "xcrun xctrace list devices"
+      - name: "Start Simulator"
+        # the command "xcrun simctl boot" expects a device identifier
+        # the assignment of the UDID variable consists of retrieving the ID of the simulator
+        # by extracting it from the command "xcrun xctrace list devices"
+        run: |
+          UDID=$(xcrun xctrace list devices | grep -m 1 "^${{ matrix.device }}" | awk '{gsub(/[()]/,""); print $NF}')
+          echo $UDID
+          xcrun simctl boot "${UDID:?No Simulator with this name found}"
+      - uses: actions/checkout@v3
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: /Users/runner/hostedtoolcache/flutter # For mac OS
+          key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa # v2.10.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+
+      - name: Install Flutter dependencies
+        run: flutter pub get
+
+      - name: Run iOS integration tests
+        run: |
+          cd example && flutter test --dart-define=API_KEY=${{ secrets.BKT_API_KEY }} --dart-define=API_ENDPOINT=${{ secrets.BKT_API_ENDPOINT }} integration_test
+
+  android-integration-test:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    strategy:
+      matrix:
+        api-level:
+          - 29
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: /Users/runner/hostedtoolcache/flutter # For mac OS
+          key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
+
+      - name: AVD cache
+        uses: actions/cache@v3
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: macOS-avd-x64-${{ matrix.api-level }}
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa # v2.10.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+
+      - name: Install Flutter dependencies
+        run: flutter pub get
+
+      - name: Run Android integration tests
+        uses: reactivecircus/android-emulator-runner@d94c3fbe4fe6a29e4a5ba47c12fb47677c73656b # v2.28.0
+        with:
+          api-level: ${{ matrix.api-level }}
+          avd-name: macOS-avd-x64-${{ matrix.api-level }}
+          arch: x86_64
+          target: google_apis
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          # channel: stable
+          # profile: Nexus 6
+          script: cd example && flutter test --dart-define=API_KEY=${{ secrets.BKT_API_KEY }} --dart-define=API_ENDPOINT=${{ secrets.BKT_API_ENDPOINT }} integration_test
+
+  build-example-app-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: /opt/hostedtoolcache/flutter # For Ubuntu machine
+          key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa # v2.10.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+
+      - name: Install Flutter dependencies
+        run: flutter pub get
+
+      - name: Build the example app
+        run: |
+          make build-android
+
+  build-example-app-ios:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: /Users/runner/hostedtoolcache/flutter # For mac OS
+          key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa # v2.10.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+
+      - name: Build the example app
+        run: |
+          make build-ios

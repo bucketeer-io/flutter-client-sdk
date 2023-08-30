@@ -1,0 +1,88 @@
+name: Pull Request
+
+on:
+  pull_request:
+    paths-ignore:
+      - "*.md"
+  workflow_dispatch:
+
+concurrency:
+  group: pr-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: 3.13.1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: /opt/hostedtoolcache/flutter # For Ubuntu machine
+          key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa # v2.10.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+
+      - name: Install Flutter dependencies
+        run: flutter pub get
+
+      - name: Check lint
+        run: |
+          flutter pub publish --dry-run
+          flutter analyze
+          cd example && flutter analyze
+
+      - name: Run unit tests
+        run: flutter test test
+
+  build-example-app-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: /opt/hostedtoolcache/flutter # For Ubuntu machine
+          key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa # v2.10.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+
+      - name: Build the example app
+        run: |
+          make build-android
+
+  build-example-app-ios:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: /Users/runner/hostedtoolcache/flutter # For mac OS
+          key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa # v2.10.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+
+      - name: Build the example app
+        run: |
+          make build-ios

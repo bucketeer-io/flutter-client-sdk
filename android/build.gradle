@@ -1,0 +1,52 @@
+group 'io.bucketeer.sdk.plugin'
+version '2.0.0' // x-release-please-version
+
+buildscript {
+  ext.kotlin_version = '1.8.22'
+  repositories {
+    google()
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath 'com.android.tools.build:gradle:7.4.2'
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  }
+}
+
+rootProject.allprojects {
+  repositories {
+    google()
+    mavenCentral()
+  }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+  compileSdkVersion 33
+
+  defaultConfig {
+    minSdkVersion 22
+    targetSdkVersion 33
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  kotlinOptions {
+    jvmTarget = '1.8'
+  }
+
+  lintOptions {
+    disable 'InvalidPackage'
+  }
+}
+
+dependencies {
+  implementation 'androidx.annotation:annotation:1.6.0'
+  implementation 'io.bucketeer:android-client-sdk:2.1.2'
+}

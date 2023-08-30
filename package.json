@@ -1,0 +1,13 @@
+{
+  "name": "bucketeer",
+  "private": true,
+  "author": "CyberAgent, Inc.",
+  "husky": {
+    "hooks": {
+      "pre-push": "make format && make analyze"
+    }
+  },
+  "devDependencies": {
+    "husky": "4.3.0"
+  }
+}
