@@ -53,8 +53,11 @@ jobs:
           - "iPhone 14 Simulator (16.2)" # the name of the simulator could be different depending on the macos version you are using
       fail-fast: false
     steps:
+      - uses: actions/checkout@v3
+
       - name: "List all simulators"
         run: "xcrun xctrace list devices"
+
       - name: "Start Simulator"
         # the command "xcrun simctl boot" expects a device identifier
         # the assignment of the UDID variable consists of retrieving the ID of the simulator
@@ -63,7 +66,7 @@ jobs:
           UDID=$(xcrun xctrace list devices | grep -m 1 "^${{ matrix.device }}" | awk '{gsub(/[()]/,""); print $NF}')
           echo $UDID
           xcrun simctl boot "${UDID:?No Simulator with this name found}"
-      - uses: actions/checkout@v3
+
       - name: Cache Flutter dependencies
         uses: actions/cache@v2
         with:
@@ -89,7 +92,7 @@ jobs:
     strategy:
       matrix:
         api-level:
-          - 29
+          - 33
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
