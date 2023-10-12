@@ -10,7 +10,7 @@ analyze:
 	cd example && flutter analyze
 
 format:
-	flutter format lib/ example/lib
+	dart format lib/ example/lib
 
 build-android:
 	cd example && flutter build apk --no-tree-shake-icons

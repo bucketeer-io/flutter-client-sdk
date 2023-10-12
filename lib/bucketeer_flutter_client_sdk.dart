@@ -212,7 +212,7 @@ class BKTClient {
 
   Future<void> destroy() async {
     await _invokeMethod(CallMethods.destroy.name).then(
-          (value) async {
+      (value) async {
         // Remove all listener for the current client
         clearEvaluationUpdateListeners();
         return value;

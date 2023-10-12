@@ -31,7 +31,7 @@ class BKTEvaluation {
       featureVersion == other.featureVersion &&
       userId == other.userId &&
       variationId == other.variationId &&
-          variationName == other.variationName &&
+      variationName == other.variationName &&
       variationValue == other.variationValue &&
       reason == other.reason;
 

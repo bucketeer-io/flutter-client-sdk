@@ -38,7 +38,8 @@ class BKTResult<T> {
   int get hashCode => runtimeType.hashCode ^ _result.hashCode;
 
   @override
-  bool operator ==(Object other) => other is BKTResult && other._result == _result;
+  bool operator ==(Object other) =>
+      other is BKTResult && other._result == _result;
 }
 
 @immutable
