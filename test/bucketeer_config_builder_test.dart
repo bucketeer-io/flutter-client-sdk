@@ -17,7 +17,8 @@ void main() {
         .pollingInterval(10000)
         .backgroundPollingInterval(10000)
         .appVersion("1.0.0");
-    expect(() => builderMissingAPIEndpoint.build(), throwsA(isA<ArgumentError>()));
+    expect(
+        () => builderMissingAPIEndpoint.build(), throwsA(isA<ArgumentError>()));
 
     final builderMissingFeatureTag = BKTConfigBuilder()
         .apiKey("apikeyapikeyapikeyapikeyapikeyapikeyapikey")
@@ -28,7 +29,8 @@ void main() {
         .pollingInterval(10000)
         .backgroundPollingInterval(10000)
         .appVersion("1.0.0");
-    expect(() => builderMissingFeatureTag.build(), throwsA(isA<ArgumentError>()));
+    expect(
+        () => builderMissingFeatureTag.build(), throwsA(isA<ArgumentError>()));
 
     final builderMissingAppVersion = BKTConfigBuilder()
         .apiKey("apikeyapikeyapikeyapikeyapikeyapikeyapikey")
@@ -39,7 +41,8 @@ void main() {
         .eventsFlushInterval(10000)
         .pollingInterval(10000)
         .backgroundPollingInterval(10000);
-    expect(() => builderMissingAppVersion.build(), throwsA(isA<ArgumentError>()));
+    expect(
+        () => builderMissingAppVersion.build(), throwsA(isA<ArgumentError>()));
 
     final config = BKTConfigBuilder()
         .apiKey("apikeyapikeyapikeyapikeyapikeyapikeyapikey")

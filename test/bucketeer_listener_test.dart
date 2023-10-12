@@ -5,14 +5,16 @@ import 'package:bucketeer_flutter_client_sdk/src/evaluation_update_listener_disp
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-class MockEvaluationUpdateListener extends Mock implements BKTEvaluationUpdateListener {}
+class MockEvaluationUpdateListener extends Mock
+    implements BKTEvaluationUpdateListener {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   final eventController = StreamController<bool>.broadcast();
 
   test('EvaluationUpdateListener Tests', () async {
-    final dispatcher = EvaluationUpdateListenerDispatcher(eventController.stream);
+    final dispatcher =
+        EvaluationUpdateListenerDispatcher(eventController.stream);
     final mockListener = MockEvaluationUpdateListener();
     final neverCalledMockListener = MockEvaluationUpdateListener();
     final listenToken = dispatcher.addEvaluationUpdateListener(mockListener);
