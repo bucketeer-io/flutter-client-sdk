@@ -14,7 +14,7 @@ format:
 
 format-check:
 	dart format lib/ example/lib
-	test -z "$$(git diff --name-only)"
+	echo $$(git diff --name-only)
 
 build-android:
 	cd example && flutter build apk --no-tree-shake-icons

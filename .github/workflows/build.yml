@@ -35,14 +35,14 @@ jobs:
       - name: Install Flutter dependencies
         run: flutter pub get
 
+      - name: Check formatting
+        run: make format-check
+
       - name: Check lint
         run: |
           flutter pub publish --dry-run
           flutter analyze
           cd example && flutter analyze
-
-      - name: Check formatting
-        run: make format-check
 
       - name: Run unit tests
         run: flutter test test
