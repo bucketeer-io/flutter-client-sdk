@@ -12,6 +12,10 @@ analyze:
 format:
 	dart format lib/ example/lib
 
+format-check:
+	dart format lib/ example/lib
+	test -z "$$(git diff --name-only)"
+
 build-android:
 	cd example && flutter build apk --no-tree-shake-icons
 

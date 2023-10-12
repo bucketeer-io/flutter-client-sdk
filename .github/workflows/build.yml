@@ -41,6 +41,9 @@ jobs:
           flutter analyze
           cd example && flutter analyze
 
+      - name: Check formatting
+        run: make format-check
+
       - name: Run unit tests
         run: flutter test test
 
