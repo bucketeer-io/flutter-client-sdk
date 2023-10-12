@@ -33,5 +33,12 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Setup credentials
+        run: |
+          mkdir -p ~/.config/dart
+          cat <<EOF > ~/.config/dart/pub-credentials.json
+          ${{ secrets.PUB_DEV_CREDENTIALS_JSON }}
+          EOF
+
       - name: Publish
         run: flutter pub publish --force
