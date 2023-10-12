@@ -4,7 +4,6 @@ on:
   pull_request:
     paths-ignore:
       - "*.md"
-  workflow_dispatch:
 
 concurrency:
   group: pr-${{ github.ref }}
@@ -44,7 +43,7 @@ jobs:
         run: make format-check
 
       - name: Run unit tests
-        run: flutter test test
+        run: make unit-test
 
   build-example-app-android:
     runs-on: ubuntu-latest

@@ -4,14 +4,14 @@ on:
   push:
     tags:
       - v*
-    branches:
-      - initial-implementation
 
 env:
   FLUTTER_VERSION: 3.13.1
 
 jobs:
   publish:
+    permissions:
+      id-token: write # This is required for authentication using OIDC
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -48,9 +48,16 @@ jobs:
         with:
           ref: ${{ github.ref }}
           # DO NOT CHANGE the check-name. This name is based on the workflow job name and the matrix device defined in the build.yaml
-          check-name: "ios-integration-test (iPhone 14 Simulator (16.2))"
+          check-name: "ios-integration-test (iPhone 14 Simulator (16.4))"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
 
+      - name: Setup credentials
+        run: |
+          mkdir -p ~/.config/dart
+          cat <<EOF > ~/.config/dart/pub-credentials.json
+          ${{ secrets.CREDENTIAL_JSON }}
+          EOF
+
       - name: Publish
-        run: flutter pub publish --dry-run
+        run: flutter pub publish -f

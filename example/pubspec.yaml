@@ -1,12 +1,12 @@
 name: bucketeer_example
 description: A sample project for using the Bucketeer.
 
-publish_to: 'none'
+publish_to: "none"
 
 version: 1.1.0+1
 
 environment:
-  sdk: '>=2.15.0 <3.0.0'
+  sdk: ">=2.15.0 <3.0.0"
   flutter: ">=2.5.0"
 
 dependencies:

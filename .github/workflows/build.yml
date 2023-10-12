@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - initial-implementation
   workflow_dispatch:
 
 concurrency:
@@ -45,7 +44,7 @@ jobs:
           cd example && flutter analyze
 
       - name: Run unit tests
-        run: flutter test test
+        run: make unit-test
 
   ios-integration-test:
     runs-on: macos-13
