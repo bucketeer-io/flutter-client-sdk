@@ -45,7 +45,7 @@ jobs:
         run: flutter test test
 
   ios-integration-test:
-    runs-on: macos-latest
+    runs-on: macos-13
     timeout-minutes: 45
     strategy:
       matrix:
@@ -53,8 +53,6 @@ jobs:
           - "iPhone 14 Simulator (16.2)" # the name of the simulator could be different depending on the macos version you are using
       fail-fast: false
     steps:
-      - uses: actions/checkout@v3
-
       - name: "List all simulators"
         run: "xcrun xctrace list devices"
 
@@ -66,6 +64,8 @@ jobs:
           UDID=$(xcrun xctrace list devices | grep -m 1 "^${{ matrix.device }}" | awk '{gsub(/[()]/,""); print $NF}')
           echo $UDID
           xcrun simctl boot "${UDID:?No Simulator with this name found}"
+
+      - uses: actions/checkout@v3
 
       - name: Cache Flutter dependencies
         uses: actions/cache@v2
@@ -87,7 +87,7 @@ jobs:
           cd example && flutter test --dart-define=API_KEY=${{ secrets.BKT_API_KEY }} --dart-define=API_ENDPOINT=${{ secrets.BKT_API_ENDPOINT }} integration_test
 
   android-integration-test:
-    runs-on: macos-latest
+    runs-on: macos-13
     timeout-minutes: 45
     strategy:
       matrix:
