@@ -7,7 +7,7 @@ documentation: https://docs.bucketeer.io/sdk/client-side/flutter
 issue_tracker: https://github.com/bucketeer-io/flutter-client-sdk/issues
 
 environment:
-  sdk: ">=2.15.0 <3.0.0"
+  sdk: ">=2.15.0 <4.0.0"
   flutter: ">=2.5.0"
 
 dependencies:
