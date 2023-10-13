@@ -37,6 +37,7 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
             fail(result: result, message: "appVersion is required")
             return
         }
+        let featureTag = arguments?["featureTag"] as? String ?? ""
 
         do {
             var builder = BKTConfig.Builder()

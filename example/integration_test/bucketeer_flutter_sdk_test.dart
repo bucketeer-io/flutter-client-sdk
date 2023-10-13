@@ -305,6 +305,41 @@ void main() async {
       expect(fetchEvaluationsResult.isSuccess, true,
           reason: "fetchEvaluations() should success");
     });
+
+    testWidgets('testEmptyTag', (WidgetTester _) async {
+      await BKTClient.instance.destroy().onError((error, stackTrace) => fail(
+          "BKTClient.instance.destroy should success and should not throw exception"));
+      final config = BKTConfigBuilder()
+          .apiKey(Constants.apiKey)
+          .apiEndpoint(Constants.apiEndpoint)
+          .debugging(debugging)
+          .eventsMaxQueueSize(Constants.exampleEventMaxQueueSize)
+          .eventsFlushInterval(Constants.exampleEventsFlushInterval)
+          .pollingInterval(Constants.examplePollingInterval)
+          .backgroundPollingInterval(Constants.exampleBackgroundPollingInterval)
+          .appVersion(appVersion)
+          .build();
+      final user = BKTUserBuilder().id("test_id").customAttributes({}).build();
+
+      var instanceResult = await BKTClient.initialize(
+        config: config,
+        user: user,
+      );
+      expect(instanceResult.isSuccess, true,
+          reason: "initialize() should success");
+
+      var result = await BKTClient.instance.evaluationDetails(featureIdBoolean);
+      var expected = const BKTEvaluation(
+          id: "$featureIdBoolean:3:$userId",
+          featureId: featureIdBoolean,
+          featureVersion: 3,
+          userId: userId,
+          variationId: "cbd42331-094e-4306-aacd-d7bf3f07cf65",
+          variationName: "variation true",
+          variationValue: "true",
+          reason: "DEFAULT");
+      expect(result, expected);
+    });
   }
 
   group('Bucketeer', () {

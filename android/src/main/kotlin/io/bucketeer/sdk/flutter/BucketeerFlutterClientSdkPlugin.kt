@@ -60,7 +60,7 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
     val userId = call.argument("userId") as? String
     val apiKey = call.argument("apiKey") as? String
     val apiEndpoint = call.argument("apiEndpoint") as? String
-    val featureTag = call.argument("featureTag") as? String
+    val featureTag = call.argument("featureTag") as? String ?: ""
     val eventsFlushInterval =
       call.argument("eventsFlushInterval") as? Long
     val eventsMaxQueueSize =
