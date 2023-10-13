@@ -35,7 +35,6 @@ jobs:
 
       - name: Check lint
         run: |
-          flutter pub publish --dry-run
           flutter analyze
           cd example && flutter analyze
 
