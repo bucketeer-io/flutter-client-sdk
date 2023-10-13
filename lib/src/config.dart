@@ -94,10 +94,6 @@ class BKTConfigBuilder {
       throw ArgumentError("apiEndpoint is required");
     }
 
-    if (_featureTag.isEmpty) {
-      throw ArgumentError("featureTag is required");
-    }
-
     if (_appVersion.isEmpty) {
       throw ArgumentError("appVersion is required");
     }

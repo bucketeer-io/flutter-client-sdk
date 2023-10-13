@@ -78,9 +78,6 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
     if (apiEndpoint.isNullOrEmpty()) {
       return fail(result, "apiEndpoint is required")
     }
-    if (featureTag.isNullOrEmpty()) {
-      return fail(result, "featureTag is required")
-    }
     if (userId.isNullOrEmpty()) {
       return fail(result, "userId is required")
     }
