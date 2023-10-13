@@ -28,7 +28,8 @@ jobs:
               {"type":"refactor","section":"Code Refactoring","hidden":false},
               {"type":"revert","section":"Reverts","hidden":false}
             ]
-          release-type: simple
+          release-type: dart
+          include-v-in-tag: false
           release-as: 0.0.1
           extra-files: |
             pubspec.yaml
