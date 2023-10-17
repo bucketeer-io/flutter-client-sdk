@@ -4,12 +4,21 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('BKTUserBuilder Tests', () async {
+  test('BKTUserBuilder build', () async {
     final builderWithError = BKTUserBuilder().id("");
-    expect(() => builderWithError.build(), throwsA(isA<ArgumentError>()));
+    expect(
+      () => builderWithError.build(),
+      throwsA(
+        isA<ArgumentError>().having(
+          (e) => e.message,
+          'userId is required',
+          equals('userId is required'),
+        ),
+      ),
+    );
     final builder =
-        BKTUserBuilder().id("1233").customAttributes(const {"name": "test"});
-    expect(builder.build().id, "1233");
+        BKTUserBuilder().id("user-id").customAttributes(const {"name": "test"});
+    expect(builder.build().id, "user-id");
     expect(builder.build().attributes, const {"name": "test"});
   });
 }

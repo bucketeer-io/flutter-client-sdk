@@ -41,11 +41,10 @@ class BKTUserBuilder {
   }
 
   /// Create an [BKTUser] from the current configuration of the builder.
-  /// Make sure you set `_id`
-  /// Throws a [ArgumentError] if `id` empty.
+  /// Throws a [ArgumentError] if the `id` empty.
   BKTUser build() {
     if (_id.isEmpty) {
-      throw ArgumentError("id is required");
+      throw ArgumentError("userId is required");
     }
     return BKTUser._(id: _id, attributes: _attributes);
   }

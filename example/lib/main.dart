@@ -153,7 +153,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _getEvaluation(String featureId) async {
     final result = await BKTClient.instance.evaluationDetails(featureId);
-    debugPrint('Successful get evaluation details');
     if (result != null) {
       showSnackbar(
           title: 'getEvaluation(${result.toString()})',
@@ -163,7 +162,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _sendGoal(String goalId) async {
     await BKTClient.instance.track(goalId, value: 3.1412);
-    debugPrint('Successful the send goal.');
     showSnackbar(title: 'sendGoal', message: 'Successful the send goal.');
   }
 
@@ -192,14 +190,12 @@ class _MyHomePageState extends State<MyHomePage> {
     await BKTClient.instance.updateUserAttributes(
       {'app_version': "1.2.4"},
     );
-    debugPrint('Successful the switchUser');
     showSnackbar(title: 'setUser', message: 'Successful the switchUser.');
   }
 
   Future<void> _getCurrentUser() async {
     final user = await BKTClient.instance.currentUser();
     if (user != null) {
-      debugPrint('Successful the getUser');
       showSnackbar(
           title: 'getUser(${user.id})', message: user.attributes.toString());
     }

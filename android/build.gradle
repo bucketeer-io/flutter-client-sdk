@@ -48,5 +48,5 @@ android {
 
 dependencies {
   implementation 'androidx.annotation:annotation:1.6.0'
-  implementation 'io.bucketeer:android-client-sdk:2.1.2'
+  implementation 'io.bucketeer:android-client-sdk:2.1.3'
 }

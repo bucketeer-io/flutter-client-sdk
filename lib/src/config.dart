@@ -26,7 +26,6 @@ class BKTConfig {
 }
 
 class BKTConfigBuilder {
-  // Dart required set default value
   String _apiKey = "";
   String _apiEndpoint = "";
   String _featureTag = "";
@@ -82,9 +81,11 @@ class BKTConfigBuilder {
     return this;
   }
 
-  /// Create an [BKTConfig] from the current configuration of the builder.
-  /// Make sure you set `apiKey`, `apiEndpoint`, `featureTag`, `appVersion`
-  /// Throws a [ArgumentError] if ``apiKey`, `apiEndpoint`, `featureTag`, `appVersion` empty.
+  /// Create an [BKTConfig] from the current builder configuration.
+  /// Throws a [ArgumentError] if the `apiKey`, `apiEndpoint`, `appVersion` are empty.
+  /// The native SDK will configure the following values by default when it is not set:
+  /// `eventsFlushInterval`, `eventsMaxBatchQueueCount`, `pollingInterval`, `backgroundPollingInterval`
+  /// Check the documentation for more information
   BKTConfig build() {
     if (_apiKey.isEmpty) {
       throw ArgumentError("apiKey is required");
@@ -97,11 +98,6 @@ class BKTConfigBuilder {
     if (_appVersion.isEmpty) {
       throw ArgumentError("appVersion is required");
     }
-
-    /// Keep the intervals settings as the user input values.
-    /// `eventsFlushInterval`, `eventsMaxBatchQueueCount`, `pollingInterval`, `backgroundPollingInterval`
-    /// The native SDK will changes it if needed.
-    /// Check the documentation for more information
     return BKTConfig._(
         apiKey: _apiKey,
         apiEndpoint: _apiEndpoint,

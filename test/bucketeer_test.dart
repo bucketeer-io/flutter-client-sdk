@@ -194,17 +194,17 @@ void main() {
       ),
     );
 
-    /// Void method should not throw exception
+    // Void method should not throw exception
     BKTClient.instance.updateUserAttributes(
       {'app_version': '1.0.0'},
     ).onError((error, stackTrace) => fail(
         "BKTClient.instance.updateUserAttributes should not throw an exception"));
 
-    /// Void method should not throw exception
+    // Void method should not throw exception
     BKTClient.instance.track('goal-id').onError((error, stackTrace) =>
         fail("BKTClient.instance.track should not throw an exception"));
 
-    /// Void method should not throw exception
+    // Void method should not throw exception
     await BKTClient.instance.destroy().onError((error, stackTrace) =>
         fail("BKTClient.instance.destroy should not throw an exception"));
   });
@@ -237,7 +237,7 @@ void main() {
 
     enableMockGetEvaluationDetailsNotFound = true;
 
-    /// Should return the null when catching an error
+    // Should return the null when catching an error
     var evaluationDetailsRs =
         await BKTClient.instance.evaluationDetails("not_found_featureId");
     expect(evaluationDetailsRs == null, equals(true),
@@ -252,7 +252,7 @@ void main() {
     final flushFailRs = await BKTClient.instance.flush();
     expect(flushFailRs.isFailure, equals(true));
 
-    /// Should get `null`
+    // Should get `null`
     expectLater(
       BKTClient.instance.currentUser(),
       completion(
@@ -263,23 +263,23 @@ void main() {
       reason: "BKTClient.instance.currentUser should return null",
     );
 
-    /// Void method should not throw exception
+    // Void method should not throw exception
     BKTClient.instance.updateUserAttributes(
       {'app_version': '1.0.0'},
     ).onError((error, stackTrace) => fail(
         "BKTClient.instance.updateUserAttributes should not throw an exception"));
 
-    /// Void method should not throw exception
+    // Void method should not throw exception
     await BKTClient.instance.track('goal-id').onError((error, stackTrace) =>
         fail("BKTClient.instance.track should not throw an exception"));
 
-    /// Void method should not throw exception
+    // Void method should not throw exception
     var evaluationDetailsFailRs =
         await BKTClient.instance.evaluationDetails("not_found_featureId");
     expect(evaluationDetailsFailRs == null, equals(true),
         reason: "BKTClient.instance.evaluationDetails should return null");
 
-    /// Should return the default value 200.0 when catching an error
+    // Should return the default value 200.0 when catching an error
     expectLater(
       BKTClient.instance.stringVariation('feature-id', defaultValue: 'bkt'),
       completion(
@@ -326,11 +326,11 @@ void main() {
         reason:
             "BKTClient.instance.fetchEvaluations should return BKTResult.failure");
 
-    /// Void method should not throw exception
+    // Void method should not throw exception
     await BKTClient.instance.destroy().onError((error, stackTrace) =>
         fail("BKTClient.instance.destroy() should not throw an exception"));
 
-    /// Try re-initialize , but should fail
+    // Try re-initialize , but should fail
     final shouldFailInitializeRs = await BKTClient.initialize(
       config: config,
       user: user,

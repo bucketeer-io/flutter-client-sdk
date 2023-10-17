@@ -20,11 +20,13 @@ void main() {
     final listenToken = dispatcher.addEvaluationUpdateListener(mockListener);
     expect(listenToken.isNotEmpty, true);
     expect(dispatcher.listenerCount(), 1);
-    // sent event 3 times
+
+    // Send three events
     eventController.add(true);
     eventController.add(true);
     eventController.add(true);
-    // wait 50ms because Stream is async
+
+    // Wait 50ms because the stream is async
     await Future.delayed(const Duration(milliseconds: 50));
     verify(() => mockListener.onUpdate()).called(3);
 
@@ -35,20 +37,24 @@ void main() {
     dispatcher.addEvaluationUpdateListener(neverCalledMockListener);
     expect(dispatcher.listenerCount(), 2);
 
+    // Remove all update listeners
     dispatcher.clearEvaluationUpdateListeners();
     expect(dispatcher.listenerCount(), 0);
 
-    // the new event sent. But no one listen to it
+    // Send four new events
     eventController.add(true);
     eventController.add(true);
     eventController.add(true);
     eventController.add(true);
-    // wait 50ms because Stream is async
+
+    // Wait 50ms because the stream is async
     await Future.delayed(const Duration(milliseconds: 50));
-    // neverCalledMockListener is removed before any update sent
-    // so that, it will never get an update anymore
+
+    // The neverCalledMockListener is removed before any update is sent
+    // so that, it won't get any update
     verifyNever(() => neverCalledMockListener.onUpdate());
-    // the same with mockListener
+
+    // The same with mockListener
     verifyNever(() => mockListener.onUpdate());
   });
 }

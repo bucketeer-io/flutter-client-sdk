@@ -24,3 +24,6 @@ build-ios:
 
 unit-test:
 	flutter test --coverage --coverage-path=./coverage/lcov.info
+
+e2e:
+	cd example && flutter test --dart-define=API_KEY=${BKT_API_KEY} --dart-define=API_ENDPOINT=${BKT_API_ENDPOINT} integration_test

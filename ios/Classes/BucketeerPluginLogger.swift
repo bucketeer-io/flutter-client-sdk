@@ -13,4 +13,8 @@ class BucketeerPluginLogger : BKTLogger {
     func error(_ error: Error) {
         debugPrint("BucketeerPluginLogger__ERROR__ \(error)")
     }
+
+    func error(message: String, _ error: Error) {
+        debugPrint("BucketeerPluginLogger__ERROR__ \(message) \(error)")
+    }
 }

@@ -37,7 +37,9 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
             fail(result: result, message: "appVersion is required")
             return
         }
+
         let featureTag = arguments?["featureTag"] as? String ?? ""
+        let logger = BucketeerPluginLogger()
 
         do {
             var builder = BKTConfig.Builder()
@@ -63,23 +65,28 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
             }
 
             if let debugging = arguments?["debugging"] as? Bool, debugging {
-                builder = builder.with(logger: BucketeerPluginLogger())
+                builder = builder.with(logger: logger)
             }
 
-            let bkConfig = try builder.build()
+            let bktConfig = try builder.build()
             let userAttributes = arguments?["userAttributes"] as? [String: String] ?? [:]
             let user = try BKTUser.Builder().with(id: userId).with( attributes: userAttributes).build()
-
-            if let timeoutMillis = arguments?["timeoutMillis"] as? Int64 {
-                try BKTClient.initialize(config: bkConfig, user: user, timeoutMillis: timeoutMillis)
-            } else {
-                try BKTClient.initialize(config: bkConfig, user: user)
+            let completion : ((BKTError?) -> Void) = { [self] err in
+                if let er = err {
+                    logger.warn(message: "Fetch evaluations failed during the initialize process. It will try to fetch again in the next polling.")
+                }
+                success(result: result)
             }
-            // Set default EvaluationUpdateListener. It will forward event to the Flutter side for handle
+            if let timeoutMillis = arguments?["timeoutMillis"] as? Int64 {
+                try BKTClient.initialize(config: bktConfig, user: user, timeoutMillis: timeoutMillis, completion: completion)
+            } else {
+                try BKTClient.initialize(config: bktConfig, user: user, completion: completion)
+            }
+
+            // Set the default EvaluationUpdateListener. It will forward the event to the Flutter side.
             try BKTClient.shared.addEvaluationUpdateListener(listener: evaluationListener)
-            success(result: result)
         } catch {
-            debugPrint("BKTClient.initialize failed with error: \(error)")
+            logger.error(message: "BKTClient.initialize failed with error: \(error)", error)
             fail(result: result, message: error.localizedDescription)
         }
     }
