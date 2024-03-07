@@ -11,9 +11,7 @@ enum CallMethods {
   fetchEvaluations,
   flush,
   evaluationDetails,
-  addEvaluationUpdateListener,
-  removeEvaluationUpdateListener,
-  clearEvaluationUpdateListeners,
+  addProxyEvaluationUpdateListener,
   destroy,
   unknown,
 }

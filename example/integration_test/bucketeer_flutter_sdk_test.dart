@@ -326,7 +326,7 @@ void main() async {
         (WidgetTester _) async {
       final listener = MockEvaluationUpdateListener();
       final listenToken =
-          BKTClient.instance.addEvaluationUpdateListener(listener);
+          await BKTClient.instance.addEvaluationUpdateListener(listener);
       // Ensure that the `listener.onUpdate()` is called.
       // Wait for all the evaluations are fetched by the SDK automatically after the `initialize`.
       // Use Completer to convert the listener callback to a future
@@ -381,6 +381,7 @@ void main() async {
         await BKTClient.instance.evaluationDetails(featureIdBoolean);
     assert(flutter != null);
 
+    // This flag uses many tags such as android, ios, javascript, etc.
     final flagWithDifferentTag =
         await BKTClient.instance.evaluationDetails("feature-using-all-tags");
     assert(flagWithDifferentTag != null);

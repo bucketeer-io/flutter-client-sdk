@@ -1,8 +1,10 @@
+import 'package:bucketeer_flutter_client_sdk/src/proxy_evaluation_update_listener.dart';
 import 'package:flutter/services.dart';
 import 'package:bucketeer_flutter_client_sdk/bucketeer_flutter_client_sdk.dart';
 import 'package:bucketeer_flutter_client_sdk/src/call_methods.dart';
 import 'package:bucketeer_flutter_client_sdk/src/constants.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'bucketeer_listener_test.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -71,9 +73,11 @@ void main() {
               'enable': true,
             }
           };
-        case CallMethods.addEvaluationUpdateListener:
-        case CallMethods.removeEvaluationUpdateListener:
-        case CallMethods.clearEvaluationUpdateListeners:
+        case CallMethods.addProxyEvaluationUpdateListener:
+          return {
+            'status': true,
+            'response': '00673eaf-364f-49a7-84cb-b4d723a6ac5d'
+          };
         case CallMethods.unknown:
           return null;
       }
@@ -105,6 +109,17 @@ void main() {
       ),
       completion(
         equals(const BKTResult.success()),
+      ),
+    );
+
+    expectLater(
+      BKTClient.instance
+          .addEvaluationUpdateListener(MockEvaluationUpdateListener())
+          .then((value) {
+        return ProxyEvaluationUpdateListenToken.getToken();
+      }),
+      completion(
+        equals('00673eaf-364f-49a7-84cb-b4d723a6ac5d'),
       ),
     );
 

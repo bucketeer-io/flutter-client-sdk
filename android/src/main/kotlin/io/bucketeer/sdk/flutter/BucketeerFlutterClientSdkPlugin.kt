@@ -38,6 +38,8 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
   private var methodChannel: MethodChannel? = null
   private var evaluationUpdateEventChannel: EventChannel? = null
   private var evaluationUpdateListener = BucketeerPluginEvaluationUpdateListener()
+  private var evaluationUpdateListenToken: String? = null
+  private val logger = BucketeerPluginLogger()
   override fun onAttachedToEngine(binding: FlutterPluginBinding) {
     onAttachedToEngine(binding.applicationContext, binding.binaryMessenger)
   }
@@ -63,7 +65,7 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
     val userId = call.argument("userId") as? String
     val apiKey = call.argument("apiKey") as? String
     val apiEndpoint = call.argument("apiEndpoint") as? String
-    val featureTag = call.argument("featureTag") as? String ?: ""
+    val featureTag = (call.argument("featureTag") as? String) ?: ""
     val eventsFlushInterval =
       call.argument("eventsFlushInterval") as? Long
     val eventsMaxQueueSize =
@@ -75,7 +77,6 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
     val timeoutMillis = call.argument("timeoutMillis") as? Long
     val appVersion = call.argument("appVersion") as? String
     val userAttributes = call.argument("userAttributes") as? Map<String, String> ?: mapOf()
-
     if (apiKey.isNullOrEmpty()) {
       return fail(methodChannelResult, "apiKey is required")
     }
@@ -89,7 +90,6 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
       return fail(methodChannelResult, "appVersion is required")
     }
 
-    val logger = BucketeerPluginLogger()
     try {
       val config: BKTConfig = BKTConfig.builder()
         .apiKey(apiKey)
@@ -132,27 +132,36 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
       } else {
         BKTClient.initialize(applicationContext!!, config, user)
       }
-      // Set the default EvaluationUpdateListener. It will forward the events to the Flutter side
-      BKTClient.getInstance().addEvaluationUpdateListener(
-        evaluationUpdateListener
-      )
+
       MainScope().launch {
         val initializeResult = withContext(Dispatchers.IO) {
           future.get()
         }
-        if (initializeResult != null) {
-          logger.log(Log.WARN, {
-            "Fetch evaluations failed during the initialize process. It will try to fetch again in the next polling."
-          }, initializeResult)
+        when (initializeResult?.cause) {
+          is BKTException.TimeoutException -> {
+            logger.log(Log.WARN, {
+              "Fetch evaluations failed during the initialize process. It will try to fetch again in the next polling."
+            }, initializeResult)
+            success(methodChannelResult)
+          }
+          null -> {
+            success(methodChannelResult)
+          }
+          else -> fail(methodChannelResult, initializeResult.cause?.message)
         }
-        success(methodChannelResult)
       }
     } catch (ex: Exception) {
       logger.log(Log.ERROR, {
-        "BKTClient.initialize failed with error ${ex}}"
+        "Failed to initialize the BKTClient. Error: ${ex}}"
       }, ex)
       fail(methodChannelResult, ex.message)
     }
+  }
+
+  private fun registerProxyEvaluationUpdateListener(logger: BucketeerPluginLogger): String {
+    return BKTClient.getInstance().addEvaluationUpdateListener(
+      evaluationUpdateListener
+    )
   }
 
   private fun currentUser(result: MethodChannel.Result) {
@@ -346,17 +355,25 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
           flush(result)
         }
 
-        CallMethods.AddEvaluationUpdateListener,
-        CallMethods.RemoveEvaluationUpdateListener,
-        CallMethods.ClearEvaluationUpdateListeners -> {
-          // We will forward all the `evaluation update` events to Flutter side using
-          // the event_channel : https://api.flutter.dev/flutter/services/EventChannel-class.html
-          // so there is no native code here.
-          // We will create the default listener for Flutter using the BucketeerPluginEvaluationUpdateListener.kt
-          result.notImplemented()
+        // The SDK creates a default listener. See > BucketeerPluginEvaluationUpdateListener.kt
+        // Note: The SDK will forward all the `evaluation update` events to Flutter using `event_channel`
+        // https://api.flutter.dev/flutter/services/EventChannel-class.html
+        CallMethods.AddProxyEvaluationUpdateListener -> {
+          // Register the proxy listener if needed
+          var listenToken = evaluationUpdateListenToken
+          if (listenToken == null) {
+            listenToken = registerProxyEvaluationUpdateListener(logger)
+            evaluationUpdateListenToken = listenToken
+          }
+          success(result, listenToken)
         }
 
         CallMethods.Destroy -> {
+          val listenToken = evaluationUpdateListenToken
+          if (listenToken != null) {
+            BKTClient.getInstance().removeEvaluationUpdateListener(listenToken)
+            evaluationUpdateListenToken = null
+          }
           BKTClient.destroy()
           success(result)
         }
@@ -406,9 +423,7 @@ internal enum class CallMethods {
   FetchEvaluations,
   Flush,
   EvaluationDetails,
-  AddEvaluationUpdateListener,
-  RemoveEvaluationUpdateListener,
-  ClearEvaluationUpdateListeners,
+  AddProxyEvaluationUpdateListener,
   Destroy,
   Unknown
 }

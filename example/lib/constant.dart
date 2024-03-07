@@ -5,8 +5,9 @@ abstract class Constants {
       defaultValue: "*****************************");
   static const apiEndpoint = String.fromEnvironment("API_ENDPOINT",
       defaultValue: "https://api.example.com");
-  static const exampleFeatureTag = "ios";
-  static const exampleUserId = "bucketeer-ios-user-id-1";
+  static const exampleFeatureTag = "flutter";
+  static const exampleFeatureId = "feature-flutter-e2e-int";
+  static const exampleUserId = "bucketeer-flutter-user-id-1";
   static const exampleEventsFlushInterval = 60000;
   static const exampleEventMaxQueueSize = 4;
   static const examplePollingInterval = 60000;

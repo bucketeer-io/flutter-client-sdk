@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import 'exception.dart';
+
 @immutable
 class BKTResult<T> {
   const BKTResult._(this._result);
@@ -51,7 +53,7 @@ class Success<T> {
 
 @immutable
 class Failure {
-  const Failure(this.message);
-
+  const Failure(this.message, {this.exception});
+  final BKTException? exception;
   final String message;
 }

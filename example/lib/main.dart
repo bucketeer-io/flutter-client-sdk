@@ -79,7 +79,8 @@ class _AppState extends State<MyApp>
           .customAttributes({'app_version': "1.2.3"}).build();
       final result = await BKTClient.initialize(config: config, user: user);
       if (result.isSuccess) {
-        _listenToken = BKTClient.instance.addEvaluationUpdateListener(this);
+        _listenToken =
+            await BKTClient.instance.addEvaluationUpdateListener(this);
       } else if (result.isFailure) {
         final errorMessage = result.asFailure.message;
         debugPrint(errorMessage);
@@ -112,7 +113,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final flagController =
-      TextEditingController(text: Constants.exampleFeatureTag);
+      TextEditingController(text: Constants.exampleFeatureId);
   final goalController = TextEditingController(text: 'bucketeer-goal-id');
   final userIdController = TextEditingController(text: Constants.exampleUserId);
 
@@ -166,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _switchUser(String userId) async {
-    // note: please initialize the Bucketeer again when switching the user
+    // Note: We must initialize the SDK when switching the user
     final config = BKTConfigBuilder()
         .apiKey(Constants.apiKey)
         .apiEndpoint(Constants.apiEndpoint)
@@ -182,15 +183,27 @@ class _MyHomePageState extends State<MyHomePage> {
         .id(userId)
         .customAttributes({'app_version': "1.2.3"}).build();
 
+    // Sending all the pending events before destroying the instance
+    await BKTClient.instance.flush();
+
     await BKTClient.instance.destroy();
-    await BKTClient.initialize(
+    final result = await BKTClient.initialize(
       config: config,
       user: user,
     );
-    await BKTClient.instance.updateUserAttributes(
-      {'app_version': "1.2.4"},
-    );
-    showSnackbar(title: 'setUser', message: 'Successful the switchUser.');
+    if (result.isSuccess || result.asFailure.exception is BKTTimeoutException) {
+      /// BKTClient.initialize success
+      const client = BKTClient.instance;
+      await client.updateUserAttributes(
+        {'app_version': "1.2.4"},
+      );
+      showSnackbar(title: 'setUser', message: 'Successful the switchUser.');
+    } else {
+      /// Print the error
+      showSnackbar(
+          title: 'initialize',
+          message: 'Failed with error ${result.asFailure.message}');
+    }
   }
 
   Future<void> _getCurrentUser() async {
