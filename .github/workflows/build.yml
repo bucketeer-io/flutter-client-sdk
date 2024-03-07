@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  FLUTTER_VERSION: 3.13.7
+  FLUTTER_VERSION: "3.19.2"
 
 jobs:
   build:
@@ -52,7 +52,8 @@ jobs:
     strategy:
       matrix:
         device:
-          - "iPhone 14 Simulator (16.4)" # the name of the simulator could be different depending on the macos version you are using
+          # the name of the simulator could be different depending on the macos version you are using
+          - "iPhone 14 Simulator (17.2)"
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
@@ -94,7 +95,7 @@ jobs:
     strategy:
       matrix:
         api-level:
-          - 33
+          - 34
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
