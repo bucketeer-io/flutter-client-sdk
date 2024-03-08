@@ -3,7 +3,10 @@ name: Publish to pub.dev
 on:
   push:
     tags:
-      - "[0-9]+.[0-9]+.[0-9]+*"
+      - "v*"
+    branches: # TODO: The remove the branches after testing
+      - main
+      - initial-implementation
 
 env:
   FLUTTER_VERSION: "3.19.2"
@@ -23,7 +26,7 @@ jobs:
           key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
 
       - name: Setup Flutter SDK
-        uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa # v2.10.0
+        uses: subosito/flutter-action@62f096cacda5168a3bd7b95793373be14fa4fbaf # v2.13.0
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: "stable"
@@ -33,24 +36,26 @@ jobs:
 
       # This is a workaround to ensure that we don't publish to Cocoapods before the Build and Integration tests workflow is finished.
       - name: Wait for Android Integration tests
+        timeout-minutes: 45
         if: ${{ ! github.event.inputs || github.event.inputs.skip_release_note == 'false' }}
-        uses: lewagon/wait-on-check-action@e106e5c43e8ca1edea6383a39a01c5ca495fd812 # v1.3.1
+        uses: lewagon/wait-on-check-action@595dabb3acf442d47e29c9ec9ba44db0c6bdd18f # v1.3.3
         with:
           ref: ${{ github.ref }}
           # DO NOT CHANGE the check-name. This name is based on the workflow job name and the matrix device defined in the build.yaml
           check-name: "android-integration-test (34)"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 10
+          wait-interval: 30
 
       - name: Wait for iOS Integration tests
+        timeout-minutes: 45
         if: ${{ ! github.event.inputs || github.event.inputs.skip_release_note == 'false' }}
-        uses: lewagon/wait-on-check-action@e106e5c43e8ca1edea6383a39a01c5ca495fd812 # v1.3.1
+        uses: lewagon/wait-on-check-action@595dabb3acf442d47e29c9ec9ba44db0c6bdd18f # v1.3.3
         with:
           ref: ${{ github.ref }}
           # DO NOT CHANGE the check-name. This name is based on the workflow job name and the matrix device defined in the build.yaml
           check-name: "ios-integration-test (iPhone 14 Simulator (17.2))"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 10
+          wait-interval: 30
 
       - name: Setup credentials
         run: |
@@ -60,4 +65,4 @@ jobs:
           EOF
 
       - name: Publish
-        run: flutter pub publish
+        run: flutter pub publish --dry-run # TODO: The remove the dry-run after testing

@@ -58,7 +58,8 @@ void main() async {
       await BKTClient.initialize(
         config: config,
         user: user,
-      ).onError((error, stackTrace) => fail("initialize() should success"));
+      ).onError((error, stackTrace) =>
+          fail("initialize() should succeed. Error: $error"));
     });
 
     setUp(() async {});
@@ -66,14 +67,18 @@ void main() async {
     tearDown(() async {});
 
     tearDownAll(() async {
+      // TODO: Find out why it fails when flushing in the Android emulator
+      // await BKTClient.instance.flush().onError((error, stackTrace) => fail(
+      //     "BKTClient.instance.flush should succeed and should not throw an exception. Error: $error"));
       await BKTClient.instance.destroy().onError((error, stackTrace) => fail(
-          "BKTClient.instance.destroy should success and should not throw exception"));
-      debugPrint("Bucketeer tests passed");
+          "BKTClient.instance.destroy should succeed and should not throw an exception. Error: $error"));
+      debugPrint("Bucketeer tests finished");
     });
 
     testWidgets('testStringVariation', (WidgetTester _) async {
       expectLater(
-        BKTClient.instance.stringVariation(featureIdString, defaultValue: "hh"),
+        BKTClient.instance
+            .stringVariation(featureIdString, defaultValue: "test"),
         completion(
           equals(featureIdStringValue),
         ),
@@ -184,7 +189,7 @@ void main() async {
     testWidgets('testTrack', (WidgetTester _) async {
       await BKTClient.instance.track(goalId, value: goalValue).onError(
           (error, stackTrace) =>
-              fail("BKTClient.instance.track should success"));
+              fail("BKTClient.instance.track should succeed. Error: $error"));
 
       var flushResult = await BKTClient.instance.flush();
       expect(flushResult, const BKTResult.success());
@@ -196,7 +201,7 @@ void main() async {
       await BKTClient.instance.updateUserAttributes(
         {'app_version': appVersion},
       ).onError((error, stackTrace) => fail(
-          "BKTClient.instance.updateUserAttributes should success and should not throw exception"));
+          "BKTClient.instance.updateUserAttributes should succeed and should not throw an exception. Error: $error"));
       user = await BKTClient.instance.currentUser();
       expect(
           user,
@@ -212,33 +217,63 @@ void main() async {
         fail("fetchEvaluations should time out under 30000ms");
       });
       expect(fetchEvaluationsResult.isSuccess, true,
-          reason: "fetchEvaluations() should success");
+          reason: "fetchEvaluations() should succeed");
     });
 
+    // This test also checks the `EvaluationUpdateListener` if it is called
     testWidgets('testEvaluationUpdateFlow', (WidgetTester _) async {
       await expectLater(
-        BKTClient.instance.stringVariation(featureIdString, defaultValue: "hh"),
+        BKTClient.instance
+            .stringVariation(featureIdString, defaultValue: "test"),
         completion(
           equals(featureIdStringValue),
         ),
       );
 
+      final listener = MockEvaluationUpdateListener();
+      final listenToken =
+          await BKTClient.instance.addEvaluationUpdateListener(listener);
+
+      // Ensure that the `listener.onUpdate()` is called.
+      // Use Completer to convert the listener callback to a future.
+      var completer = Completer();
+      when(() => listener.onUpdate()).thenAnswer((invocation) {
+        completer.complete();
+      });
+
+      // Ensure that the attributes are update before calling `fetchEvaluations`
       await BKTClient.instance.updateUserAttributes(
         {'app_version': oldAppVersion},
-      ).onError(
-        (error, stackTrace) => fail(
-            "BKTClient.instance.updateUserAttributes should success and should not throw exception"),
-      );
+      ).onError((error, stackTrace) => fail(
+          "BKTClient.instance.updateUserAttributes should succeed and should not throw an exception. Error: $error"));
+
+      // Do NOT use `await` here. Otherwise, the complete won't be called
+      BKTClient.instance.fetchEvaluations(timeoutMillis: 30000);
+
+      // Wait for `fetchEvaluations` to finish.
+      await completer.future.timeout(const Duration(seconds: 60),
+          onTimeout: () {
+        fail("The OnUpdate callback should be called under 60 seconds");
+      });
+
+      // Remove the listener ASAP to avoid random exception logs in the background
+      // when the completer is called because the client is still running
+      BKTClient.instance.removeEvaluationUpdateListener(listenToken);
+
+      var onUpdateCallCount = verify(() => listener.onUpdate()).callCount;
+      // The listener should called at least once.
+      // Because the fetch process during the initializing might finish
+      // before adding the listener, we check if it was called at least once.
+      expect(onUpdateCallCount >= 1, true,
+          reason:
+              "The OnUpdate callback should be called at least once. Called $onUpdateCallCount times");
+
+      debugPrint(
+          "testEvaluationUpdateFlow `OnUpdate` called $onUpdateCallCount times");
 
       await expectLater(
-        BKTClient.instance.fetchEvaluations(timeoutMillis: 30000),
-        completion(
-          equals(const BKTResult.success()),
-        ),
-      );
-
-      await expectLater(
-        BKTClient.instance.stringVariation(featureIdString, defaultValue: "hh"),
+        BKTClient.instance
+            .stringVariation(featureIdString, defaultValue: "test"),
         completion(
           equals(featureIdStringValueUpdate),
         ),
@@ -246,8 +281,12 @@ void main() async {
     });
 
     testWidgets('testSwitchUser', (WidgetTester _) async {
+      await BKTClient.instance.flush().onError((error, stackTrace) => fail(
+          "BKTClient.instance.flush should succeed and should not throw an exception. Error: $error"));
+
       await BKTClient.instance.destroy().onError((error, stackTrace) => fail(
-          "BKTClient.instance.destroy should success and should not throw exception"));
+          "BKTClient.instance.destroy should succeed and should not throw an exception. Error: $error"));
+
       final config = BKTConfigBuilder()
           .apiKey(Constants.apiKey)
           .apiEndpoint(Constants.apiEndpoint)
@@ -266,19 +305,17 @@ void main() async {
         user: user,
       );
       expect(instanceResult.isSuccess, true,
-          reason: "initialize() should success");
+          reason: "initialize() should succeed");
 
       await BKTClient.instance.updateUserAttributes(
         {'app_version': appVersion},
-      ).onError(
-        (error, stackTrace) => fail(
-            "BKTClient.instance.updateUserAttributes should success and should not throw exception"),
-      );
+      ).onError((error, stackTrace) => fail(
+          "BKTClient.instance.updateUserAttributes should succeed and should not throw an exception. Error: $error"));
 
       var currentUser = await BKTClient.instance.currentUser();
       expect(currentUser != null, true,
           reason:
-              "BKTClient.instance.currentUser() should return non-null user data");
+              "BKTClient.instance.currentUser() should return a non-null user data");
       expect(currentUser!.id, "test_id", reason: "user_id should be `test_id`");
       expect(currentUser.attributes, {'app_version': appVersion},
           reason: "user_data should match");
@@ -286,107 +323,22 @@ void main() async {
       var fetchEvaluationsResult =
           await BKTClient.instance.fetchEvaluations(timeoutMillis: 30000);
       expect(fetchEvaluationsResult.isSuccess, true,
-          reason: "fetchEvaluations() should success");
-    });
-  });
-
-  group('Bucketeer Listener Tests', () {
-    setUpAll(() async {
-      final config = BKTConfigBuilder()
-          .apiKey(Constants.apiKey)
-          .apiEndpoint(Constants.apiEndpoint)
-          .featureTag(featureTag)
-          .debugging(debugging)
-          .eventsMaxQueueSize(Constants.exampleEventMaxQueueSize)
-          .eventsFlushInterval(Constants.exampleEventsFlushInterval)
-          .pollingInterval(Constants.examplePollingInterval)
-          .backgroundPollingInterval(Constants.exampleBackgroundPollingInterval)
-          .appVersion(appVersion)
-          .build();
-      final user = BKTUserBuilder().id(userId).customAttributes({}).build();
-
-      BKTClient.initialize(
-        config: config,
-        user: user,
-      ).onError((error, stackTrace) => fail("initialize() should success"));
+          reason: "fetchEvaluations() should succeed");
     });
 
-    setUp(() async {});
+    testWidgets('testGetAllFeaturesWithoutFeatureTag', (WidgetTester _) async {
+      // When the feature tag is empty, the SDK will fetch all features
+      final flutter =
+          await BKTClient.instance.evaluationDetails(featureIdBoolean);
+      assert(flutter != null);
 
-    tearDown(() async {});
+      // This flag uses many tags such as android, ios, javascript, etc.
+      final flagWithDifferentTag =
+          await BKTClient.instance.evaluationDetails("feature-using-all-tags");
+      assert(flagWithDifferentTag != null);
 
-    tearDownAll(() async {
       await BKTClient.instance.destroy().onError((error, stackTrace) => fail(
-          "BKTClient.instance.destroy should success and should not throw exception"));
-      debugPrint("Bucketeer Listener Tests passed");
+          "BKTClient.instance.destroy should succeed and should not throw an exception. Error: $error"));
     });
-
-    testWidgets(
-        'Initialize the SDK and wait for all the evaluations are fetched',
-        (WidgetTester _) async {
-      final listener = MockEvaluationUpdateListener();
-      final listenToken =
-          await BKTClient.instance.addEvaluationUpdateListener(listener);
-      // Ensure that the `listener.onUpdate()` is called.
-      // Wait for all the evaluations are fetched by the SDK automatically after the `initialize`.
-      // Use Completer to convert the listener callback to a future
-      var completer = Completer();
-      when(() => listener.onUpdate()).thenAnswer((invocation) {
-        // Called, complete the future
-        completer.complete();
-      });
-      await completer.future.timeout(const Duration(seconds: 60),
-          onTimeout: () {
-        // Fast fail
-        fail("The OnUpdate callback should be called under 60 seconds");
-      });
-      var onUpdateCallCount = verify(() => listener.onUpdate()).callCount;
-      // The listener should called 1 times.
-      expect(onUpdateCallCount, 1,
-          reason:
-              "The OnUpdate callback should be called when the evaluations are updated");
-      // Check remove the listener. If the `removeEvaluationUpdateListener` fail, the test will fail.
-      // The `completer` instance may get more call more times.
-      // Because it already complete, it will throw an exception cause the test fail.
-      BKTClient.instance.removeEvaluationUpdateListener(listenToken);
-    });
-  });
-
-  test('Get all features without feature tag', () async {
-    final config = BKTConfigBuilder()
-        .apiKey(Constants.apiKey)
-        .apiEndpoint(Constants.apiEndpoint)
-        .debugging(debugging)
-        .eventsMaxQueueSize(Constants.exampleEventMaxQueueSize)
-        .eventsFlushInterval(Constants.exampleEventsFlushInterval)
-        .pollingInterval(Constants.examplePollingInterval)
-        .backgroundPollingInterval(Constants.exampleBackgroundPollingInterval)
-        .appVersion(appVersion)
-        .build();
-    assert(config.featureTag == "");
-    final user = BKTUserBuilder().id(userId).customAttributes({}).build();
-
-    await BKTClient.initialize(
-      config: config,
-      user: user,
-    ).then(
-      (instanceResult) {
-        expect(instanceResult.isSuccess, true,
-            reason: "initialize() should success");
-      },
-    );
-
-    // When the feature tag is empty, the SDK will fetch all features
-    final flutter =
-        await BKTClient.instance.evaluationDetails(featureIdBoolean);
-    assert(flutter != null);
-
-    // This flag uses many tags such as android, ios, javascript, etc.
-    final flagWithDifferentTag =
-        await BKTClient.instance.evaluationDetails("feature-using-all-tags");
-    assert(flagWithDifferentTag != null);
-
-    await BKTClient.instance.destroy().onError((error, stackTrace) => fail(
-        "BKTClient.instance.destroy should success and should not throw exception"));
   });
 }
