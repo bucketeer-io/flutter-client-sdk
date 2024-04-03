@@ -154,6 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _getEvaluation(String featureId) async {
     final result = await BKTClient.instance.evaluationDetails(featureId);
+    debugPrint('Successful get evaluation details');
     if (result != null) {
       showSnackbar(
           title: 'getEvaluation(${result.toString()})',
@@ -167,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _switchUser(String userId) async {
-    // Note: We must initialize the SDK when switching the user
+    // Note: Please initialize the Bucketeer again when switching the user
     final config = BKTConfigBuilder()
         .apiKey(Constants.apiKey)
         .apiEndpoint(Constants.apiEndpoint)
@@ -183,14 +184,13 @@ class _MyHomePageState extends State<MyHomePage> {
         .id(userId)
         .customAttributes({'app_version': "1.2.3"}).build();
 
-    // Sending all the pending events before destroying the instance
-    await BKTClient.instance.flush();
-
     await BKTClient.instance.destroy();
+
     final result = await BKTClient.initialize(
       config: config,
       user: user,
     );
+
     if (result.isSuccess || result.asFailure.exception is BKTTimeoutException) {
       /// BKTClient.initialize success
       const client = BKTClient.instance;
@@ -207,11 +207,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _getCurrentUser() async {
-    final user = await BKTClient.instance.currentUser();
-    if (user != null) {
+    final userRs = await BKTClient.instance.currentUser();
+    userRs.ifSuccess((user) {
       showSnackbar(
           title: 'getUser(${user.id})', message: user.attributes.toString());
-    }
+    });
+    userRs.ifFailure((message, exception) {
+      showSnackbar(title: 'currentUser', message: 'Failed with error $message');
+    });
   }
 
   @override

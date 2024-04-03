@@ -53,7 +53,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
           # DO NOT CHANGE the check-name. This name is based on the workflow job name and the matrix device defined in the build.yaml
-          check-name: "ios-integration-test (iPhone 14 Simulator (17.2))"
+          check-name: "ios-integration-test (iPhone 15 Simulator (17.2))"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 30
 

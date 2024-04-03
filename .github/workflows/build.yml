@@ -55,7 +55,7 @@ jobs:
       matrix:
         device:
           # the name of the simulator could be different depending on the macos version you are using
-          - "iPhone 14 Simulator (17.2)"
+          - "iPhone 15 Simulator (17.2)"
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -145,7 +145,7 @@ jobs:
           script: make e2e
 
   build-example-app-android:
-    runs-on: ubuntu-latest
+    runs-on: macos-13
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
@@ -153,7 +153,8 @@ jobs:
       - name: Cache Flutter dependencies
         uses: actions/cache@v4
         with:
-          path: /opt/hostedtoolcache/flutter # For Ubuntu machine
+          # path: /opt/hostedtoolcache/flutter # For Ubuntu machine
+          path: /Users/runner/hostedtoolcache/flutter # For mac OS
           key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
 
       - name: Setup Flutter SDK
