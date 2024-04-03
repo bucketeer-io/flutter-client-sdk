@@ -17,8 +17,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 import java.util.concurrent.Future
 
@@ -78,16 +76,16 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
     val appVersion = call.argument("appVersion") as? String
     val userAttributes = call.argument("userAttributes") as? Map<String, String> ?: mapOf()
     if (apiKey.isNullOrEmpty()) {
-      return fail(methodChannelResult, "apiKey is required")
+      return failWithIllegalArgumentException(methodChannelResult, "apiKey is required")
     }
     if (apiEndpoint.isNullOrEmpty()) {
-      return fail(methodChannelResult, "apiEndpoint is required")
+      return failWithIllegalArgumentException(methodChannelResult, "apiEndpoint is required")
     }
     if (userId.isNullOrEmpty()) {
-      return fail(methodChannelResult, "userId is required")
+      return failWithIllegalArgumentException(methodChannelResult, "userId is required")
     }
     if (appVersion.isNullOrEmpty()) {
-      return fail(methodChannelResult, "appVersion is required")
+      return failWithIllegalArgumentException(methodChannelResult, "appVersion is required")
     }
 
     try {
@@ -137,24 +135,24 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
         val initializeResult = withContext(Dispatchers.IO) {
           future.get()
         }
-        when (initializeResult?.cause) {
+        when (initializeResult) {
           is BKTException.TimeoutException -> {
             logger.log(Log.WARN, {
               "Fetch evaluations failed during the initialize process. It will try to fetch again in the next polling."
             }, initializeResult)
-            success(methodChannelResult)
+            fail(methodChannelResult, initializeResult.message, exception = initializeResult)
           }
           null -> {
             success(methodChannelResult)
           }
-          else -> fail(methodChannelResult, initializeResult.cause?.message)
+          else -> fail(methodChannelResult, initializeResult.message, exception = initializeResult)
         }
       }
     } catch (ex: Exception) {
       logger.log(Log.ERROR, {
         "Failed to initialize the BKTClient. Error: ${ex}}"
       }, ex)
-      fail(methodChannelResult, ex.message)
+      fail(methodChannelResult, ex.message, exception = ex)
     }
   }
 
@@ -165,7 +163,6 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
   }
 
   private fun currentUser(result: MethodChannel.Result) {
-    assertInitialize()
     val user = BKTClient.getInstance().currentUser()
     val map: MutableMap<String, Any> = HashMap()
     map["id"] = user.id
@@ -174,13 +171,13 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
   }
 
   private fun evaluationDetails(call: MethodCall, result: MethodChannel.Result) {
-    assertInitialize()
     val args = call.arguments<Map<String, Any>>()!!
     val featureId = args["featureId"] as? String
-      ?: return fail(result, "featureId is required")
+      ?: return failWithIllegalArgumentException(result, "featureId is required")
     val evaluation = BKTClient.getInstance().evaluationDetails(featureId)
     if (evaluation == null) {
-      fail(result, "Feature flag not found.")
+      val ex = BKTException.FeatureNotFoundException(message = "Feature flag not found");
+      fail(result, ex.message, exception = ex)
     } else {
       val map: MutableMap<String, Any> = HashMap()
       map["id"] = evaluation.id
@@ -196,54 +193,49 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
   }
 
   private fun stringVariation(call: MethodCall, result: MethodChannel.Result) {
-    assertInitialize()
     val args = call.arguments<Map<String, Any>>()!!
     val featureId = args["featureId"] as? String
-      ?: return fail(result, "featureId is required")
+      ?: return failWithIllegalArgumentException(result, "featureId is required")
     val defaultValue = args["defaultValue"] as? String
-      ?: return fail(result, "defaultValue is required")
+      ?: return failWithIllegalArgumentException(result, "defaultValue is required")
     val response = BKTClient.getInstance().stringVariation(featureId, defaultValue)
     success(result, response)
   }
 
   private fun intVariation(call: MethodCall, result: MethodChannel.Result) {
-    assertInitialize()
     val args = call.arguments<Map<String, Any>>()!!
     val featureId = args["featureId"] as? String
-      ?: return fail(result, "featureId is required")
+      ?: return failWithIllegalArgumentException(result, "featureId is required")
     val defaultValue = args["defaultValue"] as? Int
-      ?: return fail(result, "defaultValue is required")
+      ?: return failWithIllegalArgumentException(result, "defaultValue is required")
     val response = BKTClient.getInstance().intVariation(featureId, defaultValue)
     success(result, response)
   }
 
   private fun doubleVariation(call: MethodCall, result: MethodChannel.Result) {
-    assertInitialize()
     val args = call.arguments<Map<String, Any>>()!!
     val featureId = args["featureId"] as? String
-      ?: return fail(result, "featureId is required")
+      ?: return failWithIllegalArgumentException(result, "featureId is required")
     val defaultValue = args["defaultValue"] as? Double
-      ?: return fail(result, "defaultValue is required")
+      ?: return failWithIllegalArgumentException(result, "defaultValue is required")
     val response = BKTClient.getInstance().doubleVariation(featureId, defaultValue)
     success(result, response)
   }
 
   private fun boolVariation(call: MethodCall, result: MethodChannel.Result) {
-    assertInitialize()
     val args = call.arguments<Map<String, Any>>()!!
     val featureId = args["featureId"] as? String
-      ?: return fail(result, "featureId is required")
+      ?: return failWithIllegalArgumentException(result, "featureId is required")
     val defaultValue = args["defaultValue"] as? Boolean
-      ?: return fail(result, "defaultValue is required")
+      ?: return failWithIllegalArgumentException(result, "defaultValue is required")
     val response = BKTClient.getInstance().booleanVariation(featureId, defaultValue)
     success(result, response)
   }
 
   private fun track(call: MethodCall, result: MethodChannel.Result) {
-    assertInitialize()
     val args = call.arguments<Map<String, Any>>()!!
     val goalId = args["goalId"] as? String
-      ?: return fail(result, "goalId is required")
+      ?: return failWithIllegalArgumentException(result, "goalId is required")
     val value = args["value"] as? Double
     if (value != null) {
       BKTClient.getInstance().track(goalId, value)
@@ -257,15 +249,15 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
     try {
       val args = call.arguments<Map<String, Any>>()!!
       val featureId = args["featureId"] as? String
-        ?: return fail(result, "featureId is required")
+        ?: return failWithIllegalArgumentException(result, "featureId is required")
       val defaultValue =
-        args["defaultValue"] as? Map<*, *> ?: return fail(result, "defaultValue is required")
+        args["defaultValue"] as? Map<*, *> ?: return failWithIllegalArgumentException(result, "defaultValue is required")
       val response =
         BKTClient.getInstance().jsonVariation(featureId, JSONObject(defaultValue))
       val rawJson = response.toMap()
       success(result, rawJson)
     } catch (ex: Exception) {
-      fail(result, message = ex.message ?: "Failed to get JSON variation.")
+      fail(result, message = ex.message ?: "Failed to get JSON variation.", exception = ex)
     }
   }
 
@@ -280,10 +272,14 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
     val timeoutMillis = args["timeoutMillis"] as? Long
     MainScope().launch {
       val err = withContext(Dispatchers.IO) {
-        return@withContext BKTClient.getInstance().fetchEvaluations(timeoutMillis).get()
+        try {
+          return@withContext BKTClient.getInstance().fetchEvaluations(timeoutMillis).get()
+        } catch (ex: Exception) {
+          return@withContext ex
+        }
       }
       if (err != null) {
-        fail(result, err.message)
+        fail(result, err.message, exception = err)
       } else {
         success(result)
       }
@@ -293,10 +289,14 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
   private fun flush(result: MethodChannel.Result) {
     MainScope().launch {
       val err = withContext(Dispatchers.IO) {
-        return@withContext BKTClient.getInstance().flush().get()
+        try {
+          return@withContext BKTClient.getInstance().flush().get()
+        } catch (ex: Exception) {
+          return@withContext ex
+        }
       }
       if (err != null) {
-        fail(result, err.message)
+        fail(result, err.message, exception = err)
       } else {
         success(result)
       }
@@ -305,8 +305,15 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
 
   override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
     try {
-      when (CallMethods.values().firstOrNull { call.method.lowercase() == it.name.lowercase() }
-        ?: CallMethods.Unknown) {
+      val callMethod = CallMethods.values().firstOrNull { call.method.lowercase() == it.name.lowercase() }
+        ?: CallMethods.Unknown
+
+      if (CallMethods.shouldAssertInitialize(callMethod)) {
+        // make sure the client has been initialize
+        assertInitialize()
+      }
+
+      when (callMethod) {
         CallMethods.Initialize -> {
           initialize(call, result)
         }
@@ -383,16 +390,20 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
         }
 
       }
-    } catch (e: BKTException) {
-      fail(result, e.message)
-    } catch (e: RuntimeException) {
-      fail(result, e.message)
+    } catch (e: Exception) {
+      fail(result, e.message, exception = e)
     }
   }
 
-  @Throws(IllegalStateException::class)
+  @Throws(BKTException.IllegalStateException::class)
   private fun assertInitialize() {
-    BKTClient.getInstance()
+    try {
+      BKTClient.getInstance()
+    } catch (ex: BKTException.IllegalStateException) {
+      throw  ex
+    } catch (ex: Exception) {
+      throw  BKTException.IllegalStateException(message =  ex.message ?: "")
+    }
   }
 
   private fun success(result: MethodChannel.Result?, response: Any? = null) {
@@ -402,58 +413,16 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
     result?.success(map)
   }
 
-  private fun fail(result: MethodChannel.Result?, message: String?) {
+  private fun failWithIllegalArgumentException(result: MethodChannel.Result?, message: String) {
+    val ex = BKTException.IllegalArgumentException(message = message)
+    fail(result = result, message = ex.message, exception = ex)
+  }
+
+  private fun fail(result: MethodChannel.Result?, message: String?, exception: Exception?) {
     val map: MutableMap<String, Any?> = HashMap()
     map["status"] = false
     map["errorMessage"] = message
+    map["errorCode"] = exception?.toErrorCode() ?: 0
     result?.success(map)
   }
-}
-
-internal enum class CallMethods {
-  Initialize,
-  StringVariation,
-  IntVariation,
-  DoubleVariation,
-  BoolVariation,
-  JsonVariation,
-  Track,
-  CurrentUser,
-  UpdateUserAttributes,
-  FetchEvaluations,
-  Flush,
-  EvaluationDetails,
-  AddProxyEvaluationUpdateListener,
-  Destroy,
-  Unknown
-}
-
-@Throws(JSONException::class)
-fun JSONObject.toMap(): Map<String, Any> {
-  val map = mutableMapOf<String, Any>()
-  val keysItr: Iterator<String> = this.keys()
-  while (keysItr.hasNext()) {
-    val key = keysItr.next()
-    var value: Any = this.get(key)
-    when (value) {
-      is JSONArray -> value = value.toList()
-      is JSONObject -> value = value.toMap()
-    }
-    map[key] = value
-  }
-  return map
-}
-
-@Throws(JSONException::class)
-fun JSONArray.toList(): List<Any> {
-  val list = mutableListOf<Any>()
-  for (i in 0 until this.length()) {
-    var value: Any = this[i]
-    when (value) {
-      is JSONArray -> value = value.toList()
-      is JSONObject -> value = value.toMap()
-    }
-    list.add(value)
-  }
-  return list
 }
