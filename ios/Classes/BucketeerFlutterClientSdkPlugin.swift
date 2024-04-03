@@ -15,26 +15,26 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
         let channel = FlutterMethodChannel(name: METHOD_CHANNEL_NAME, binaryMessenger: registrar.messenger())
         let instance = BucketeerFlutterClientSdkPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
-        let eventChannel = FlutterEventChannel(
-            name: EVALUATION_UPDATE_EVENT_CHANNEL_NAME, binaryMessenger: registrar.messenger())
+        let eventChannel = FlutterEventChannel(name: EVALUATION_UPDATE_EVENT_CHANNEL_NAME,
+                                               binaryMessenger: registrar.messenger())
         eventChannel.setStreamHandler(instance.proxyEvaluationListener)
     }
 
     private func initialize(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
         guard let apiKey = arguments?["apiKey"] as? String else {
-            fail(result: result, message: "apiKey is required")
+            failWithIllegalArgumentException(result: result, message: "apiKey is required")
             return
         }
         guard let apiEndpoint = arguments?["apiEndpoint"] as? String else {
-            fail(result: result, message: "apiEndpoint is required")
+            failWithIllegalArgumentException(result: result, message: "apiEndpoint is required")
             return
         }
         guard let userId = arguments?["userId"] as? String else {
-            fail(result: result, message: "userId is required")
+            failWithIllegalArgumentException(result: result, message: "userId is required")
             return
         }
         guard let appVersion = arguments?["appVersion"] as? String else {
-            fail(result: result, message: "appVersion is required")
+            failWithIllegalArgumentException(result: result, message: "appVersion is required")
             return
         }
 
@@ -80,8 +80,8 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
                         logger.warn(message: "Fetch evaluations failed during the initialize process. It will try to fetch again in the next polling.")
                     } else {
                         logger.error(message: "BKTClient.initialize failed with error: \(er)", er)
-                        fail(result: result, message: er.localizedDescription)
                     }
+                    fail(result: result, message: er.localizedDescription, error: er)
                 } else {
                     success(result: result)
                 }
@@ -96,81 +96,81 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
 
         } catch {
             logger.error(message: "BKTClient.initialize failed with error: \(error)", error)
-            fail(result: result, message: error.localizedDescription)
+            fail(result: result, message: error.localizedDescription, error: error)
         }
     }
 
     private func stringVariation(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
         guard let featureId = arguments?["featureId"] as? String else {
-            fail(result: result, message: "featureId is required")
+            failWithIllegalArgumentException(result: result, message: "featureId is required")
             return
         }
         guard let defaultValue = arguments?["defaultValue"] as? String else {
-            fail(result: result, message: "defaultValue is required")
+            failWithIllegalArgumentException(result: result, message: "defaultValue is required")
             return
         }
         do {
             let response = try BKTClient.shared.stringVariation(featureId: featureId, defaultValue: defaultValue)
             success(result: result, response: response)
         } catch {
-            fail(result: result, message: error.localizedDescription)
+            fail(result: result, message: error.localizedDescription, error: error)
         }
     }
 
     private func intVariation(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
         guard let featureId = arguments?["featureId"] as? String else {
-            fail(result: result, message: "featureId is required")
+            failWithIllegalArgumentException(result: result, message: "featureId is required")
             return
         }
         guard let defaultValue = arguments?["defaultValue"] as? Int else {
-            fail(result: result, message: "defaultValue is required")
+            failWithIllegalArgumentException(result: result, message: "defaultValue is required")
             return
         }
         do {
             let response = try BKTClient.shared.intVariation(featureId: featureId, defaultValue: defaultValue)
             success(result: result, response: response)
         } catch {
-            fail(result: result, message: error.localizedDescription)
+            fail(result: result, message: error.localizedDescription, error: error)
         }
     }
 
     private func doubleVariation(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
         guard let featureId = arguments?["featureId"] as? String else {
-            fail(result: result, message: "featureId is required")
+            failWithIllegalArgumentException(result: result, message: "featureId is required")
             return
         }
         guard let defaultValue = arguments?["defaultValue"] as? Double else {
-            fail(result: result, message: "defaultValue is required")
+            failWithIllegalArgumentException(result: result, message: "defaultValue is required")
             return
         }
         do {
             let response = try BKTClient.shared.doubleVariation(featureId: featureId, defaultValue: defaultValue)
             success(result: result, response: response)
         } catch {
-            fail(result: result, message: error.localizedDescription)
+            fail(result: result, message: error.localizedDescription, error: error)
         }
     }
 
     private func boolVariation(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
         guard let featureId = arguments?["featureId"] as? String else {
-            fail(result: result, message: "featureId is required")
+            failWithIllegalArgumentException(result: result, message: "featureId is required")
             return
         }
         guard let defaultValue = arguments?["defaultValue"] as? Bool else {
-            fail(result: result, message: "defaultValue is required")
+            failWithIllegalArgumentException(result: result, message: "defaultValue is required")
             return
         }
         do {
             let response = try BKTClient.shared.boolVariation(featureId: featureId, defaultValue: defaultValue)
             success(result: result, response: response)
         } catch {
-            fail(result: result, message: error.localizedDescription)
+            fail(result: result, message: error.localizedDescription, error: error)
         }
     }
 
     private func track(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
         guard let goalId = arguments?["goalId"] as? String else {
-            fail(result: result, message: "goalId is required")
+            failWithIllegalArgumentException(result: result, message: "goalId is required")
             return
         }
         do {
@@ -181,38 +181,40 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
             }
             success(result: result)
         } catch {
-            fail(result: result, message: error.localizedDescription)
+            fail(result: result, message: error.localizedDescription, error: error)
         }
     }
 
     private func jsonVariation(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
         guard let featureId = arguments?["featureId"] as? String else {
-            fail(result: result, message: "featureId is required")
+            failWithIllegalArgumentException(result: result, message: "featureId is required")
             return
         }
         guard let defaultValue = arguments?["defaultValue"] as? [String: AnyHashable] else {
-            fail(result: result, message: "defaultValue is required")
+            failWithIllegalArgumentException(result: result, message: "defaultValue is required")
             return
         }
         do {
             let response = try BKTClient.shared.jsonVariation(featureId: featureId, defaultValue: defaultValue)
             success(result: result, response: response)
         } catch {
-            fail(result: result, message: error.localizedDescription)
+            fail(result: result, message: error.localizedDescription, error: error)
         }
     }
 
     private func currentUser(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        var client: BKTClient?
+        var client: BKTClient
         do {
             client = try BKTClient.shared
         } catch {
-            fail(result: result, message: error.localizedDescription)
+            fail(result: result, message: error.localizedDescription, error: error)
             return
         }
 
-        guard let user = client?.currentUser() else {
-            fail(result: result, message: "Failed to fetch the user.")
+        guard let user = client.currentUser() else {
+            let message = "Failed to fetch the user"
+            let err = BKTError.illegalState(message: message)
+            fail(result: result, message: message, error: err)
             return
         }
         success(result: result, response: ["id": user.id, "data": user.attr])
@@ -220,14 +222,14 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
 
     private func updateUserAttributes(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
         guard let userAttributes = arguments as? [String: String] else {
-            fail(result: result, message: "userAttributes is required")
+            failWithIllegalArgumentException(result: result, message: "userAttributes is required")
             return
         }
         do {
             try BKTClient.shared.updateUserAttributes(attributes: userAttributes)
             success(result: result)
         } catch {
-            fail(result: result, message: error.localizedDescription)
+            fail(result: result, message: error.localizedDescription, error: error)
         }
     }
 
@@ -236,13 +238,13 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
         do {
             try BKTClient.shared.fetchEvaluations(timeoutMillis: timeoutMillis) { [weak self] err in
                 if let err {
-                    self?.fail(result: result, message: err.localizedDescription)
+                    self?.fail(result: result, message: err.localizedDescription, error: err)
                 } else {
                     self?.success(result: result)
                 }
             }
         } catch {
-            fail(result: result, message: error.localizedDescription)
+            fail(result: result, message: error.localizedDescription, error: error)
         }
     }
 
@@ -251,31 +253,33 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
             try BKTClient.shared.flush {[weak self] error in
                 if let bktError = error {
                     let errorMessage = bktError.localizedDescription
-                    self?.fail(result: result, message: errorMessage)
+                    self?.fail(result: result, message: errorMessage, error: bktError)
                 } else {
                     self?.success(result: result)
                 }
             }
         } catch {
-            fail(result: result, message: error.localizedDescription)
+            fail(result: result, message: error.localizedDescription, error: error)
         }
     }
 
     private func evaluationDetails(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
         guard let featureId = arguments?["featureId"] as? String else {
-            fail(result: result, message: "featureId is required")
+            failWithIllegalArgumentException(result: result, message: "featureId is required")
             return
         }
         var client: BKTClient?
         do {
             client = try BKTClient.shared
         } catch {
-            fail(result: result, message: error.localizedDescription)
+            fail(result: result, message: error.localizedDescription, error: error)
             return
         }
 
         guard let response = client?.evaluationDetails(featureId: featureId) else {
-            fail(result: result, message: "Feature flag not found.")
+            let message = "Feature flag not found"
+            let err = BKTError.notFound(message: message)
+            fail(result: result, message: message, error: err)
             return
         }
         success(
@@ -302,7 +306,7 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
                 success(result: result, response: newListenToken)
             }
         } catch {
-            fail(result: result, message: error.localizedDescription)
+            fail(result: result, message: error.localizedDescription, error: error)
         }
     }
 
@@ -361,7 +365,7 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
                 try BKTClient.destroy()
                 success(result: result)
             } catch {
-                fail(result: result, message: error.localizedDescription)
+                fail(result: result, message: error.localizedDescription, error: error)
             }
 
         default:
@@ -377,11 +381,18 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
         result(dic)
     }
 
-    func fail(result: @escaping FlutterResult, message: String = "") {
+    func fail(result: @escaping FlutterResult, message: String = "", error: Error? = nil) {
+        let errorCode = error?.toErrorCode() ?? 0
         let dic = [
             "status": false,
-            "errorMessage": message
+            "errorMessage": message,
+            "errorCode": errorCode,
         ] as [String: Any]
         result(dic)
+    }
+
+    func failWithIllegalArgumentException(result: @escaping FlutterResult, message: String = "") {
+        let err = BKTError.illegalArgument(message: message)
+        fail(result: result, message: err.errorDescription ?? "", error: err)
     }
 }
