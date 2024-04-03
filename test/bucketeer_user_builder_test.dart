@@ -2,8 +2,6 @@ import 'package:bucketeer_flutter_client_sdk/bucketeer_flutter_client_sdk.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   test('BKTUserBuilder build', () async {
     final builderWithError = BKTUserBuilder().id("");
     expect(

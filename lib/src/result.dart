@@ -8,7 +8,10 @@ class BKTResult<T> {
 
   const BKTResult.success({T? data}) : this._(data);
 
-  BKTResult.failure(String message) : this._(Failure(message));
+  BKTResult.failure(
+    String message, {
+    BKTException? exception,
+  }) : this._(Failure(message, exception: exception));
 
   final Object? _result;
 
@@ -26,10 +29,12 @@ class BKTResult<T> {
     }
   }
 
-  void ifFailure(void Function(String message) action) {
+  void ifFailure(void Function(String message, Exception? exception) action) {
     if (isFailure) {
-      final message = (_result as Failure).message;
-      action(message);
+      final failure = _result as Failure;
+      final message = failure.message;
+      final exception = failure.exception;
+      action(message, exception);
     }
   }
 
@@ -56,4 +61,7 @@ class Failure {
   const Failure(this.message, {this.exception});
   final BKTException? exception;
   final String message;
+
+  @override
+  String toString() => '[message ($message) - ${exception.toString()}]';
 }

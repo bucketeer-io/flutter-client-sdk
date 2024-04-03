@@ -2,6 +2,19 @@ abstract class BKTException implements Exception {
   final String message;
 
   BKTException({required this.message});
+
+  @override
+  int get hashCode => runtimeType.hashCode ^ message.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      other.hashCode == hashCode &&
+      other is BKTException &&
+      other.message == message;
+}
+
+class RedirectRequestException extends BKTException {
+  RedirectRequestException({required String message}) : super(message: message);
 }
 
 class BKTBadRequestException extends BKTException {
@@ -29,6 +42,10 @@ class BKTClientClosedRequestException extends BKTException {
 class BKTInvalidHttpMethodException extends BKTException {
   BKTInvalidHttpMethodException({required String message})
       : super(message: message);
+}
+
+class PayloadTooLargeException extends BKTException {
+  PayloadTooLargeException({required String message}) : super(message: message);
 }
 
 class BKTInternalServerErrorException extends BKTException {
@@ -59,5 +76,6 @@ class BKTIllegalStateException extends BKTException {
 }
 
 class BKTUnknownException extends BKTException {
-  BKTUnknownException({required String message}) : super(message: message);
+  BKTUnknownException({required String message, Exception? exception})
+      : super(message: message);
 }
