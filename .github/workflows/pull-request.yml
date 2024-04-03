@@ -45,7 +45,7 @@ jobs:
         run: make unit-test
 
   build-example-app-android:
-    runs-on: macos-13-large
+    runs-on: macos-13-xlarge
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
@@ -67,7 +67,7 @@ jobs:
         run: make build-android
 
   build-example-app-ios:
-    runs-on: macos-13-large
+    runs-on: macos-13-xlarge
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
