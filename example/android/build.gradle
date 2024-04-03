@@ -22,7 +22,7 @@ allprojects {
     // "Inconsistent JVM-target compatibility detected for tasks 'compileDebugJavaWithJavac' (1.8) and 'compileDebugKotlin' (17)."
     // jvm on other module is 1.8 but the jvm is using by the AGP is 17 (default)
     tasks.withType(KotlinCompile).configureEach {
-      kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "1.8"
     }
 }
 
