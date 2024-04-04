@@ -40,7 +40,7 @@ void main() async {
   const String goalId = "goal-flutter-e2e-1";
   const double goalValue = 1.0;
 
-  group('Bucketeer', () {
+  group('Bucketeer: general test', () {
     setUpAll(() async {
       final config = BKTConfigBuilder()
           .apiKey(Constants.apiKey)
@@ -338,7 +338,7 @@ void main() async {
     });
   });
 
-  group('Bucketeer test optional configurations', () {
+  group('Bucketeer: test optional configurations', () {
     setUp(() {});
 
     test('BKTClient should allow feature_tag to be optional', () async {
