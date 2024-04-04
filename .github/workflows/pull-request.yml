@@ -13,7 +13,8 @@ env:
   FLUTTER_VERSION: "3.19.2"
 
 jobs:
-  build:
+  check-format-lint:
+    name: Check code format and lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,56 +34,13 @@ jobs:
       - name: Install Flutter dependencies
         run: flutter pub get
 
+      - name: Check formatting
+        run: make format-check
+
       - name: Check lint
         run: |
           flutter analyze
           cd example && flutter analyze
-
-      - name: Check formatting
-        run: make format-check
-
-      - name: Run unit tests
-        run: make unit-test
-
-  build-example-app-android:
-    runs-on: macos-13-xlarge
-    timeout-minutes: 45
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v4
-        with:
-          # path: /opt/hostedtoolcache/flutter # For Ubuntu machine
-          path: /Users/runner/hostedtoolcache/flutter # For mac OS
-          key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
-
-      - name: Setup Flutter SDK
-        uses: subosito/flutter-action@62f096cacda5168a3bd7b95793373be14fa4fbaf # v2.13.0
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-
-      - name: Build the example app
-        run: make build-android
-
-  build-example-app-ios:
-    runs-on: macos-13-xlarge
-    timeout-minutes: 45
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v4
-        with:
-          path: /Users/runner/hostedtoolcache/flutter # For mac OS
-          key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
-
-      - name: Setup Flutter SDK
-        uses: subosito/flutter-action@62f096cacda5168a3bd7b95793373be14fa4fbaf # v2.13.0
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-
-      - name: Build the example app
-        run: make build-ios
+  build:
+    name: Build and run unit tests
+    uses: ./.github/workflows/build.yml

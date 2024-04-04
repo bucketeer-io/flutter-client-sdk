@@ -1,5 +1,5 @@
 # This workflow will update the CHANGELOG page in the `bucketeer-io/bucketeer-docs` repository when a tag is created
-name: update-changelog-docs-page
+name: Update CHANGELOG docs page
 
 on:
   workflow_dispatch:
