@@ -22,12 +22,6 @@ Please follow our contribution guide [here](https://docs.bucketeer.io/contributi
 
 ## Development
 
-### Setup
-
-```sh
-make setup
-```
-
 ### Install the dependencies
 
 ```sh

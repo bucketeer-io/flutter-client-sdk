@@ -1,6 +1,3 @@
-setup:
-	npm install
-
 deps:
 	flutter pub get
 	cd example && flutter pub get
