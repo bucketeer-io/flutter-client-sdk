@@ -61,12 +61,12 @@ jobs:
 
   android-integration-test:
     # macos-13-xlarge is an M1 mac (which has no Android SDK)
-    runs-on: macos-13-large
+    runs-on: macos-13
     timeout-minutes: 45
     strategy:
       matrix:
         api-level:
-          - 33
+          - 34
         target:
           - google_apis
         arch:
