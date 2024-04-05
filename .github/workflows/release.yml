@@ -30,7 +30,7 @@ jobs:
             ]
           release-type: dart
           include-v-in-tag: false
-          release-as: 0.0.3
+          release-as: "2.0.0"
           extra-files: |
             pubspec.yaml
             android/build.gradle
