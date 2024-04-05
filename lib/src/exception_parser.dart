@@ -28,54 +28,54 @@ extension ParseBKTException on Map<String, dynamic> {
 }
 
 enum BKTExceptionType {
+  /// 0
   unknown,
 
-  /// 0
+  /// 1
   redirectRequest,
 
-  /// 1
+  /// 2
   badRequest,
 
-  /// 2
+  /// 3
   unauthorized,
 
-  /// 3
+  /// 4
   forbidden,
 
-  /// 4
+  /// 5
   featureNotFound,
 
-  /// 5
+  /// 6
   clientClosedRequest,
 
-  /// 6
+  /// 7
   invalidHttpMethod,
 
-  /// 7
+  /// 8
   payloadTooLarge,
 
-  /// 8
+  /// 9
   internalServerError,
 
-  /// 9
+  /// 10
   serviceUnavailable,
 
-  /// 10
+  /// 11
   timeout,
 
-  /// 11
+  /// 12
   network,
 
-  /// 12
+  /// 13
   illegalArgumentException,
 
-  /// 13
+  /// 14
   illegalStateException,
 
-  /// 14
+  /// 15
   nativeUnknownException;
 
-  /// 15
   static BKTExceptionType fromInt(int value) {
     if (value <= 0 || value >= BKTExceptionType.values.length) {
       return BKTExceptionType.unknown;
