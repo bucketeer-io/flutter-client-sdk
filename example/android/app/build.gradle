@@ -41,10 +41,6 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8
     }
 
-    // kotlin {
-    //     jvmToolchain(8)
-    // }
-
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }

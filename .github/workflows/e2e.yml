@@ -61,7 +61,7 @@ jobs:
 
   android-integration-test:
     # macos-13-xlarge is an M1 mac (which has no Android SDK)
-    runs-on: macos-13-large
+    runs-on: macos-13
     timeout-minutes: 45
     strategy:
       matrix:
@@ -72,7 +72,7 @@ jobs:
         arch:
           - x86_64
         cores:
-          - 8
+          - 4
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
