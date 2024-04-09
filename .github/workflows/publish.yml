@@ -1,0 +1,42 @@
+name: Publish to pub.dev
+
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  FLUTTER_VERSION: "3.19.2"
+
+jobs:
+  publish:
+    permissions:
+      id-token: write # This is required for authentication using OIDC
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v4
+        with:
+          path: /opt/hostedtoolcache/flutter # For Ubuntu machine
+          key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@62f096cacda5168a3bd7b95793373be14fa4fbaf # v2.13.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Setup credentials
+        run: |
+          mkdir -p ~/.config/dart
+          cat <<EOF > ~/.config/dart/pub-credentials.json
+          ${{ secrets.PUB_DEV_CREDENTIALS_JSON }}
+          EOF
+
+      - name: Publish
+        run: flutter pub publish --force
