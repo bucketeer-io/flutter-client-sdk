@@ -62,6 +62,8 @@ jobs:
         run: flutter pub get
 
       - name: Build the example app
+        env:
+          GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-Xmx1536m -XX:MaxMetaspaceSize=2g"
         run: |
           make build-android
 
