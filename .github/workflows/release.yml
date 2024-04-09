@@ -29,8 +29,6 @@ jobs:
               {"type":"revert","section":"Reverts","hidden":false}
             ]
           release-type: simple
-          include-v-in-tag: false
-          release-as: "2.0.0"
           pull-request-title-pattern: "chore: release v${version}"
           extra-files: |
             pubspec.yaml
