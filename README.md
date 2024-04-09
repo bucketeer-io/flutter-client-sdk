@@ -18,7 +18,7 @@ See our [documentation](https://docs.bucketeer.io/sdk/client-side/flutter) to in
 
 We would ❤️ for you to contribute to Bucketeer and help improve it! Anyone can use and enjoy it!
 
-Please follow our contribution guide [here](https://docs.bucketeer.io/contribution-guide/).
+Please follow our contribution guide [here](https://docs.bucketeer.io/contribution-guide/contributing/).
 
 ## Development
 
