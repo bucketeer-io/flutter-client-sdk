@@ -502,7 +502,7 @@ extension InitializeSuccess on BKTResult<void> {
   }
 }
 
-class E2EBKTClient {
+extension E2EBKTClient on BKTClient {
   /// This func will retry the BKTClient.initialize 3 times (default) if we got a network error.
   static Future<BKTResult<void>> initializeWithRetryMechanism({
     required BKTConfig config,
