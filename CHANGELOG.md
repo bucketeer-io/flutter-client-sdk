@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/bucketeer-io/flutter-client-sdk/compare/2.0.0...v2.0.1) (2024-05-12)
+
+
+### Bug Fixes
+
+* e2e test fail randomly with a network error ([#15](https://github.com/bucketeer-io/flutter-client-sdk/issues/15)) ([3f1adea](https://github.com/bucketeer-io/flutter-client-sdk/commit/3f1adea69863fa65b5aff0703fd321bd46d950fe))
+
 ## 2.0.0 (2024-04-09)
 
 This version brings the **BREAKING CHANGES**.
