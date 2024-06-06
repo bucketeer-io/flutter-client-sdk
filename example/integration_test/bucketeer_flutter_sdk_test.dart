@@ -55,7 +55,7 @@ void main() async {
           .build();
       final user = BKTUserBuilder().id(userId).customAttributes({}).build();
 
-      await BKTClient.initialize(
+      await E2EBKTClient.initializeWithRetryMechanism(
         config: config,
         user: user,
       ).then(
@@ -305,7 +305,7 @@ void main() async {
           .build();
       final user = BKTUserBuilder().id("test_id").customAttributes({}).build();
 
-      var instanceResult = await BKTClient.initialize(
+      var instanceResult = await E2EBKTClient.initializeWithRetryMechanism(
         config: config,
         user: user,
       );
@@ -355,7 +355,7 @@ void main() async {
       assert(config.featureTag == "");
       final user = BKTUserBuilder().id(userId).customAttributes({}).build();
 
-      await BKTClient.initialize(
+      await E2EBKTClient.initializeWithRetryMechanism(
         config: config,
         user: user,
       ).then((instanceResult) {
@@ -441,7 +441,7 @@ void main() async {
       assert(config.featureTag == "");
       final user = BKTUserBuilder().id(userId).customAttributes({}).build();
 
-      await BKTClient.initialize(
+      await E2EBKTClient.initializeWithRetryMechanism(
         config: config,
         user: user,
       ).then((instanceResult) {
@@ -499,5 +499,32 @@ void main() async {
 extension InitializeSuccess on BKTResult<void> {
   bool isInitializeSuccess() {
     return isSuccess || asFailure.exception is BKTTimeoutException;
+  }
+}
+
+extension E2EBKTClient on BKTClient {
+  /// This func will retry the BKTClient.initialize 3 times (default) if we got a network error.
+  static Future<BKTResult<void>> initializeWithRetryMechanism({
+    required BKTConfig config,
+    required BKTUser user,
+    int? timeoutMillis,
+    int maxRetryTimes = 3,
+  }) async {
+    var retryCount = 0;
+    BKTResult<void>? result;
+    do {
+      result = await BKTClient.initialize(
+        config: config,
+        user: user,
+        timeoutMillis: timeoutMillis,
+      );
+      bool shouldRetry = result.isFailure && result.asFailure is BKTNetworkException;
+      if (shouldRetry) {
+        retryCount++;
+        continue;
+      }
+      break;
+    } while (retryCount < maxRetryTimes);
+    return result;
   }
 }
