@@ -151,6 +151,41 @@ class BKTClient {
     });
   }
 
+  Future<BKTEvaluationDetails<String>> stringVariationDetails(
+      String featureId, {
+        required String defaultValue,
+      }) async {
+    throw Exception("Not impl");
+  }
+
+  Future<BKTEvaluationDetails<String>> intVariationDetails(
+      String featureId, {
+        required int defaultValue,
+      }) async {
+    throw Exception("Not impl");
+  }
+
+  Future<BKTEvaluationDetails<double>> doubleVariationDetails(
+      String featureId, {
+        required double defaultValue,
+      }) async {
+    throw Exception("Not impl");
+  }
+
+  Future<BKTEvaluationDetails<double>> boolVariationDetails(
+      String featureId, {
+        required bool defaultValue,
+      }) async {
+    throw Exception("Not impl");
+  }
+
+  Future<BKTEvaluationDetails<Map<String, dynamic>>> jsonVariationDetails(
+      String featureId, {
+        required Map<String, dynamic> defaultValue,
+      }) async {
+    throw Exception("Not impl");
+  }
+
   Future<BKTResult<void>> track(
     String goalId, {
     double? value,
