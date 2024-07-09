@@ -6,6 +6,7 @@ buildscript {
   repositories {
     google()
     mavenCentral()
+    maven { url 'https://jitpack.io' }
   }
 
   dependencies {
@@ -53,7 +54,8 @@ android {
 
 dependencies {
   implementation 'androidx.annotation:annotation:1.7.1'
-  implementation 'io.bucketeer:android-client-sdk:2.1.5'
+  //implementation 'io.bucketeer:android-client-sdk:2.1.5'
+  implementation 'com.github.duyhungtnn:android-client-sdk:feat~get-variation-details-by-variation-type-812f51391e-1'
   testImplementation 'junit:junit:4.13.2'
   testImplementation 'org.json:json:20240205'
 }
