@@ -14,4 +14,10 @@ enum CallMethods {
   addProxyEvaluationUpdateListener,
   destroy,
   unknown,
+
+  jsonVariationDetails,
+  intVariationDetails,
+  boolVariationDetails,
+  doubleVariationDetails,
+  stringVariationDetails,
 }
