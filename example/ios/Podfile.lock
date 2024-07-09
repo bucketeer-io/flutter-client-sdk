@@ -37,7 +37,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Bucketeer: 46c9b73442da08438c8cc28934de5e474e05181c
-  bucketeer_flutter_client_sdk: b973159904ce681c59f9eba26e71b56ccfad408b
+  bucketeer_flutter_client_sdk: 6eb8f79a07c9b377fe89773c26bbe745298f3e4c
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   integration_test: 13825b8a9334a850581300559b8839134b124670
   shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
