@@ -271,6 +271,7 @@ class BKTClient {
     });
   }
 
+  @Deprecated("use BKTEvaluationDetails<String> instead")
   Future<BKTEvaluation?> evaluationDetails(String featureId) async {
     return valueGuard<BKTEvaluation?>(
       await _invokeMethod(CallMethods.evaluationDetails.name, argument: {

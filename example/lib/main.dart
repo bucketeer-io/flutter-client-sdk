@@ -153,6 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _getEvaluation(String featureId) async {
+    // ignore: deprecated_member_use
     final result = await BKTClient.instance.evaluationDetails(featureId);
     debugPrint('Successful get evaluation details');
     if (result != null) {

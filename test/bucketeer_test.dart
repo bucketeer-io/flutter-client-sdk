@@ -73,6 +73,16 @@ void main() {
           };
         case CallMethods.unknown:
           return null;
+        case CallMethods.jsonVariationDetails:
+          return null;
+        case CallMethods.intVariationDetails:
+          return null;
+        case CallMethods.boolVariationDetails:
+          return null;
+        case CallMethods.doubleVariationDetails:
+          return null;
+        case CallMethods.stringVariationDetails:
+          return null;
       }
     });
   });
@@ -186,10 +196,11 @@ void main() {
     );
 
     expectLater(
+      // ignore: deprecated_member_use_from_same_package
       BKTClient.instance.evaluationDetails('featureId'),
       completion(
         equals(
-          const BKTEvaluation(
+          const BKTEvaluationDetails<String>(
             id: 'id123',
             featureId: 'featureId123',
             featureVersion: 123,

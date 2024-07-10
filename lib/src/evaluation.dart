@@ -56,16 +56,4 @@ class BKTEvaluationDetails<T extends Object> {
   }
 }
 
-@Deprecated("use BKTEvaluationDetails<String> instead")
-@immutable
-class BKTEvaluation extends BKTEvaluationDetails<String> {
-  const BKTEvaluation(
-      {required super.id,
-      required super.featureId,
-      required super.featureVersion,
-      required super.userId,
-      required super.variationId,
-      required super.variationName,
-      required super.variationValue,
-      required super.reason});
-}
+typedef BKTEvaluation = BKTEvaluationDetails<String>;

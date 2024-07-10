@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 
 import 'package:bucketeer_example/constant.dart';
@@ -91,7 +93,7 @@ void main() async {
 
     testWidgets('testStringVariationDetail', (WidgetTester _) async {
       var result = await BKTClient.instance.evaluationDetails(featureIdString);
-      var expected = const BKTEvaluation(
+      var expected = const BKTEvaluationDetails<String>(
           id: "$featureIdString:4:$userId",
           featureId: featureIdString,
           featureVersion: 4,
@@ -115,7 +117,7 @@ void main() async {
 
     testWidgets('testDoubleVariationDetail', (WidgetTester _) async {
       var result = await BKTClient.instance.evaluationDetails(featureIdDouble);
-      var expected = const BKTEvaluation(
+      var expected = const BKTEvaluationDetails<String>(
           id: "$featureIdDouble:3:$userId",
           featureId: featureIdDouble,
           featureVersion: 3,
@@ -137,7 +139,7 @@ void main() async {
     });
     testWidgets('testBoolVariationDetail', (WidgetTester _) async {
       var result = await BKTClient.instance.evaluationDetails(featureIdBoolean);
-      var expected = const BKTEvaluation(
+      var expected = const BKTEvaluationDetails<String>(
           id: "$featureIdBoolean:3:$userId",
           featureId: featureIdBoolean,
           featureVersion: 3,
@@ -159,7 +161,7 @@ void main() async {
     });
     testWidgets('testIntVariationDetail', (WidgetTester _) async {
       var result = await BKTClient.instance.evaluationDetails(featureIdInt);
-      var expected = const BKTEvaluation(
+      var expected = const BKTEvaluationDetails<String>(
           id: "$featureIdInt:3:$userId",
           featureId: featureIdInt,
           featureVersion: 3,
@@ -178,7 +180,7 @@ void main() async {
     });
     testWidgets('testJSONVariationDetail', (WidgetTester _) async {
       var result = await BKTClient.instance.evaluationDetails(featureIdJson);
-      var expected = const BKTEvaluation(
+      var expected = const BKTEvaluationDetails<String>(
           id: "$featureIdJson:3:$userId",
           featureId: featureIdJson,
           featureVersion: 3,
