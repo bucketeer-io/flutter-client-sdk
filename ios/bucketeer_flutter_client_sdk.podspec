@@ -9,12 +9,10 @@ Pod::Spec.new do |s|
   s.homepage         = 'https://bucketeer.io/'
   s.license          = { :type => "Apache License, Version 2.0", :file => '../LICENSE' }
   s.author           = { 'Bucketeer team' => 'bucketeer@cyberagent.co.jp' }
-  #s.source           = { :http => "https://github.com/bucketeer-io/flutter-client-sdk", }
-  s.source            = { :git => 'https://github.com/bucketeer-io/ios-client-sdk.git', :commit => 'd990311490bfbd235cb548df8b4aaf4bb48f88b9' }
-
+  s.source           = { :http => "https://github.com/bucketeer-io/flutter-client-sdk", }
   s.source_files      = 'Classes/**/*.{h,m,swift}'
   s.dependency 'Flutter'
-  s.dependency 'Bucketeer', '2.1.4'
+  s.dependency 'Bucketeer'#, '2.1.4'
   s.platform = :ios, '11.0'
 
   s.ios.deployment_target = "11.0"

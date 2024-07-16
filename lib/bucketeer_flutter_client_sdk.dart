@@ -172,7 +172,7 @@ class BKTClient {
     throw Exception("Not impl");
   }
 
-  Future<BKTEvaluationDetails<double>> boolVariationDetails(
+  Future<BKTEvaluationDetails<bool>> boolVariationDetails(
       String featureId, {
         required bool defaultValue,
       }) async {

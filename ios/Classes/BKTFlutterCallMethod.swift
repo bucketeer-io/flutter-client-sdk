@@ -1,6 +1,6 @@
 import Foundation
 
-public enum BKTFlutterCallMethod: String, Codable, Hashable {
+enum BKTFlutterCallMethod: String, Codable, Hashable {
     case initialize
     case stringVariation
     case intVariation
@@ -16,4 +16,16 @@ public enum BKTFlutterCallMethod: String, Codable, Hashable {
     case addProxyEvaluationUpdateListener
     case destroy
     case unknown
+    
+    case stringVariationDetails
+    case intVariationDetails
+    case doubleVariationDetails
+    case boolVariationDetails
+    case jsonVariationDetails
 }
+
+class BKTFlutterCallParams {
+    static let featureId = "featureId"
+    static let defaultValue = "defaultValue"
+}
+

@@ -101,12 +101,12 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
     }
 
     private func stringVariation(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        guard let featureId = arguments?["featureId"] as? String else {
-            failWithIllegalArgumentException(result: result, message: "featureId is required")
+        guard let featureId = arguments?[BKTFlutterCallParams.featureId] as? String else {
+            failParamFeatureIdRequired(result: result)
             return
         }
-        guard let defaultValue = arguments?["defaultValue"] as? String else {
-            failWithIllegalArgumentException(result: result, message: "defaultValue is required")
+        guard let defaultValue = arguments?[BKTFlutterCallParams.defaultValue] as? String else {
+            failWithIllegalArgumentException(result: result)
             return
         }
         do {
@@ -118,12 +118,12 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
     }
 
     private func intVariation(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        guard let featureId = arguments?["featureId"] as? String else {
-            failWithIllegalArgumentException(result: result, message: "featureId is required")
+        guard let featureId = arguments?[BKTFlutterCallParams.featureId] as? String else {
+            failParamFeatureIdRequired(result: result)
             return
         }
-        guard let defaultValue = arguments?["defaultValue"] as? Int else {
-            failWithIllegalArgumentException(result: result, message: "defaultValue is required")
+        guard let defaultValue = arguments?[BKTFlutterCallParams.defaultValue] as? Int else {
+            failWithIllegalArgumentException(result: result)
             return
         }
         do {
@@ -135,12 +135,12 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
     }
 
     private func doubleVariation(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        guard let featureId = arguments?["featureId"] as? String else {
-            failWithIllegalArgumentException(result: result, message: "featureId is required")
+        guard let featureId = arguments?[BKTFlutterCallParams.featureId] as? String else {
+            failParamFeatureIdRequired(result: result)
             return
         }
-        guard let defaultValue = arguments?["defaultValue"] as? Double else {
-            failWithIllegalArgumentException(result: result, message: "defaultValue is required")
+        guard let defaultValue = arguments?[BKTFlutterCallParams.defaultValue] as? Double else {
+            failWithIllegalArgumentException(result: result)
             return
         }
         do {
@@ -152,12 +152,12 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
     }
 
     private func boolVariation(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        guard let featureId = arguments?["featureId"] as? String else {
-            failWithIllegalArgumentException(result: result, message: "featureId is required")
+        guard let featureId = arguments?[BKTFlutterCallParams.featureId] as? String else {
+            failParamFeatureIdRequired(result: result)
             return
         }
-        guard let defaultValue = arguments?["defaultValue"] as? Bool else {
-            failWithIllegalArgumentException(result: result, message: "defaultValue is required")
+        guard let defaultValue = arguments?[BKTFlutterCallParams.defaultValue] as? Bool else {
+            failWithIllegalArgumentException(result: result)
             return
         }
         do {
@@ -186,12 +186,12 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
     }
 
     private func jsonVariation(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        guard let featureId = arguments?["featureId"] as? String else {
-            failWithIllegalArgumentException(result: result, message: "featureId is required")
+        guard let featureId = arguments?[BKTFlutterCallParams.featureId] as? String else {
+            failParamFeatureIdRequired(result: result)
             return
         }
-        guard let defaultValue = arguments?["defaultValue"] as? [String: AnyHashable] else {
-            failWithIllegalArgumentException(result: result, message: "defaultValue is required")
+        guard let defaultValue = arguments?[BKTFlutterCallParams.defaultValue] as? [String: AnyHashable] else {
+            failWithIllegalArgumentException(result: result)
             return
         }
         do {
@@ -263,30 +263,127 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
         }
     }
 
+    private func stringVariationDetails(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
+        guard let featureId = arguments?[BKTFlutterCallParams.featureId] as? String else {
+            failParamFeatureIdRequired(result: result)
+            return
+        }
+        guard let defaultValue = arguments?[BKTFlutterCallParams.defaultValue] as? String else {
+            failWithIllegalArgumentException(result: result)
+            return
+        }
+        guard let client = try? BKTClient.shared else {
+            failClientIsNotInitialized(result: result)
+            return
+        }
+        
+        let response = client.stringVariationDetails(featureId: featureId, defaultValue: defaultValue)
+        success(
+            result: result,
+            response: response.toDictionary())
+    }
+    
+    private func intVariationDetails(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
+        guard let featureId = arguments?[BKTFlutterCallParams.featureId] as? String else {
+            failParamFeatureIdRequired(result: result)
+            return
+        }
+        guard let defaultValue = arguments?[BKTFlutterCallParams.defaultValue] as? Int else {
+            failWithIllegalArgumentException(result: result)
+            return
+        }
+        guard let client = try? BKTClient.shared else {
+            failClientIsNotInitialized(result: result)
+            return
+        }
+        
+        let response = client.intVariationDetails(featureId: featureId, defaultValue: defaultValue)
+        success(
+            result: result,
+            response: response.toDictionary())
+    }
+    
+    private func doubleVariationDetails(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
+        guard let featureId = arguments?[BKTFlutterCallParams.featureId] as? String else {
+            failParamFeatureIdRequired(result: result)
+            return
+        }
+        guard let defaultValue = arguments?[BKTFlutterCallParams.defaultValue] as? Double else {
+            failWithIllegalArgumentException(result: result)
+            return
+        }
+        guard let client = try? BKTClient.shared else {
+            failClientIsNotInitialized(result: result)
+            return
+        }
+        
+        let response = client.doubleVariationDetails(featureId: featureId, defaultValue: defaultValue)
+        success(
+            result: result,
+            response: response.toDictionary())
+    }
+    
+    private func boolVariationDetails(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
+        guard let featureId = arguments?[BKTFlutterCallParams.featureId] as? String else {
+            failParamFeatureIdRequired(result: result)
+            return
+        }
+        guard let defaultValue = arguments?[BKTFlutterCallParams.defaultValue] as? Bool else {
+            failWithIllegalArgumentException(result: result)
+            return
+        }
+        guard let client = try? BKTClient.shared else {
+            failClientIsNotInitialized(result: result)
+            return
+        }
+        
+        let response = client.boolVariationDetails(featureId: featureId, defaultValue: defaultValue)
+        success(
+            result: result,
+            response: response.toDictionary())
+    }
+    
+    private func jsonVariationDetails(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
+        guard let featureId = arguments?[BKTFlutterCallParams.featureId] as? String else {
+            failParamFeatureIdRequired(result: result)
+            return
+        }
+        guard let defaultValue = arguments?[BKTFlutterCallParams.defaultValue] as? [String: AnyHashable] else {
+            failWithIllegalArgumentException(result: result)
+            return
+        }
+        guard let client = try? BKTClient.shared else {
+            failClientIsNotInitialized(result: result)
+            return
+        }
+        
+        let response = client.jsonVariationDetails(featureId: featureId, defaultValue: defaultValue)
+        
+        success(
+            result: result,
+            response: response.toDictionary())
+    }
+    
     private func evaluationDetails(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        guard let featureId = arguments?["featureId"] as? String else {
-            failWithIllegalArgumentException(result: result, message: "featureId is required")
+        guard let featureId = arguments?[BKTFlutterCallParams.featureId] as? String else {
+            failParamFeatureIdRequired(result: result)
             return
         }
-        var client: BKTClient?
-        do {
-            client = try BKTClient.shared
-        } catch {
-            fail(result: result, message: error.localizedDescription, error: error)
+        guard let client = try? BKTClient.shared else {
+            failClientIsNotInitialized(result: result)
             return
         }
-
-        guard let response = client?.evaluationDetails(featureId: featureId) else {
-            let message = "Feature flag not found"
-            let err = BKTError.notFound(message: message)
-            fail(result: result, message: message, error: err)
+        
+        guard let response = client.evaluationDetails(featureId: featureId) else {
+            failBecauseFeatureFlagNotFound(result: result)
             return
         }
+        
         success(
             result: result,
             response: [
                 "id": response.id,
-                "featureId": response.featureId,
+                BKTFlutterCallParams.featureId: response.featureId,
                 "featureVersion": response.featureVersion,
                 "userId": response.userId,
                 "variationId": response.variationId,
@@ -335,7 +432,22 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
 
         case .jsonVariation:
             jsonVariation(arguments, result)
-
+            
+        case .stringVariationDetails:
+            result(FlutterMethodNotImplemented)
+            
+        case .boolVariationDetails:
+            result(FlutterMethodNotImplemented)
+            
+        case .doubleVariationDetails:
+            result(FlutterMethodNotImplemented)
+            
+        case .intVariationDetails:
+            result(FlutterMethodNotImplemented)
+            
+        case .jsonVariationDetails:
+            result(FlutterMethodNotImplemented)
+            
         case .currentUser:
             currentUser(arguments, result)
 
@@ -394,5 +506,38 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
     func failWithIllegalArgumentException(result: @escaping FlutterResult, message: String = "") {
         let err = BKTError.illegalArgument(message: message)
         fail(result: result, message: err.errorDescription ?? "", error: err)
+    }
+    
+    func failParamFeatureIdRequired(result: @escaping FlutterResult) {
+        failWithIllegalArgumentException(result: result, message: "featureId is required")
+    }
+    
+    func failParamDefaultValueRequired(result: @escaping FlutterResult) {
+        failWithIllegalArgumentException(result: result, message: "defaultValue is required")
+    }
+    
+    func failClientIsNotInitialized(result: @escaping FlutterResult) {
+        let err = BKTError.illegalState(message: "BKTClient is not initialized")
+        fail(result: result, message: err.errorDescription ?? "", error: err)
+    }
+    
+    func failBecauseFeatureFlagNotFound(result: @escaping FlutterResult) {
+        let message = "Feature flag not found"
+        let err = BKTError.notFound(message: message)
+        fail(result: result, message: message, error: err)
+    }
+}
+
+extension BKTEvaluationDetails where T: Equatable {
+    func toDictionary() -> [String: Any] {
+        [
+            "featureId": featureId,
+            "featureVersion": featureVersion,
+            "userId": userId,
+            "variationId": variationId,
+            "variationName": variationName,
+            "variationValue": variationValue,
+            "reason": reason.rawValue
+        ]
     }
 }

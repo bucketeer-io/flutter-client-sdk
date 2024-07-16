@@ -1,7 +1,7 @@
 PODS:
-  - Bucketeer (2.1.4)
+  - Bucketeer (2.1.5)
   - bucketeer_flutter_client_sdk (2.0.0):
-    - Bucketeer (= 2.1.4)
+    - Bucketeer
     - Flutter
   - Flutter (1.0.0)
   - integration_test (0.0.1):
@@ -13,17 +13,18 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - Bucketeer (from `https://github.com/bucketeer-io/ios-client-sdk.git`, commit `d990311490bfbd235cb548df8b4aaf4bb48f88b9`)
   - bucketeer_flutter_client_sdk (from `.symlinks/plugins/bucketeer_flutter_client_sdk/ios`)
   - Flutter (from `Flutter`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - ua_client_hints (from `.symlinks/plugins/ua_client_hints/ios`)
 
-SPEC REPOS:
-  trunk:
-    - Bucketeer
-
 EXTERNAL SOURCES:
+  Bucketeer:
+    :commit: d990311490bfbd235cb548df8b4aaf4bb48f88b9
+    :git: https://github.com/bucketeer-io/ios-client-sd
+    :git: https://github.com/bucketeer-io/ios-client-sdk.gk.git
   bucketeer_flutter_client_sdk:
     :path: ".symlinks/plugins/bucketeer_flutter_client_sdk/ios"
   Flutter:
@@ -35,14 +36,19 @@ EXTERNAL SOURCES:
   ua_client_hints:
     :path: ".symlinks/plugins/ua_client_hints/ios"
 
+CHECKOUT OPTIONS:
+  Bucketeer:
+    :commit: d990311490bfbd235cb548df8b4aaf4bb48f88b9
+    :git: https://github.com/bucketeer-io/ios-client-sdk.git
+
 SPEC CHECKSUMS:
-  Bucketeer: 46c9b73442da08438c8cc28934de5e474e05181c
-  bucketeer_flutter_client_sdk: 6eb8f79a07c9b377fe89773c26bbe745298f3e4c
+  Bucketeer: 025af89b44ed9b7a2ee3dc2ce904efa8087d2193
+  bucketeer_flutter_client_sdk: eb98c98f1939158160e44323fd109a06c3622158
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   integration_test: 13825b8a9334a850581300559b8839134b124670
   shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
   ua_client_hints: 7f4e0f5d390685e8f7efd6eb363594f760108926
 
-PODFILE CHECKSUM: 59f8de8f40bb382091a43991ef43c063d955e661
+PODFILE CHECKSUM: 68c3b6ea363821109605b75a93813173983239da
 
 COCOAPODS: 1.15.2
