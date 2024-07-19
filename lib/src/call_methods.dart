@@ -21,3 +21,8 @@ enum CallMethods {
   doubleVariationDetails,
   stringVariationDetails,
 }
+
+abstract class CallMethodParams {
+  static const featureId = 'featureId';
+  static const defaultValue = 'defaultValue';
+}

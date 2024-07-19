@@ -66,8 +66,8 @@ class BKTClient {
       await _invokeMethod(
         CallMethods.stringVariation.name,
         argument: {
-          'featureId': featureId,
-          'defaultValue': defaultValue,
+          CallMethodParams.featureId: featureId,
+          CallMethodParams.defaultValue: defaultValue,
         },
       ),
     ).onError((error, stackTrace) {
@@ -84,8 +84,8 @@ class BKTClient {
       await _invokeMethod(
         CallMethods.intVariation.name,
         argument: {
-          'featureId': featureId,
-          'defaultValue': defaultValue,
+          CallMethodParams.featureId: featureId,
+          CallMethodParams.defaultValue: defaultValue,
         },
       ),
     ).onError((error, stackTrace) {
@@ -102,8 +102,8 @@ class BKTClient {
       await _invokeMethod(
         CallMethods.doubleVariation.name,
         argument: {
-          'featureId': featureId,
-          'defaultValue': defaultValue,
+          CallMethodParams.featureId: featureId,
+          CallMethodParams.defaultValue: defaultValue,
         },
       ),
     ).onError((error, stackTrace) {
@@ -120,8 +120,8 @@ class BKTClient {
       await _invokeMethod(
         CallMethods.boolVariation.name,
         argument: {
-          'featureId': featureId,
-          'defaultValue': defaultValue,
+          CallMethodParams.featureId: featureId,
+          CallMethodParams.defaultValue: defaultValue,
         },
       ),
     ).onError((error, stackTrace) {
@@ -138,8 +138,8 @@ class BKTClient {
       await _invokeMethod(
         CallMethods.jsonVariation.name,
         argument: {
-          'featureId': featureId,
-          'defaultValue': defaultValue,
+          CallMethodParams.featureId: featureId,
+          CallMethodParams.defaultValue: defaultValue,
         },
       ),
       customMapping: (response) {
@@ -183,7 +183,38 @@ class BKTClient {
       String featureId, {
         required Map<String, dynamic> defaultValue,
       }) async {
-    throw Exception("Not impl");
+    return valueGuard<BKTEvaluationDetails<Map<String, dynamic>>>(
+      await _invokeMethod(CallMethods.evaluationDetails.name, argument: {
+        CallMethodParams.featureId: featureId,
+      }),
+      customMapping: (response) {
+        final responseVariationValue = response['variationValue'];
+        if (responseVariationValue is Map<String, dynamic>) {
+          return BKTEvaluationDetails<Map<String, dynamic>>(
+            featureId: response['featureId'],
+            featureVersion: response['featureVersion'],
+            userId: response['userId'],
+            variationId: response['variationId'],
+            variationName: response['variationName'],
+            variationValue: response['variationValue'],
+            reason: response['reason'],
+          );
+        }
+
+        throw Exception("Invalid response");
+      },
+    ).onError((error, stackTrace) {
+      debugPrint("get jsonVariationDetails fail: ${error?.toString()}");
+      return BKTEvaluationDetails<Map<String, dynamic>>(
+        featureId: featureId,
+        featureVersion: 0,
+        userId: '',
+        variationId: '',
+        variationName: '',
+        variationValue: defaultValue,
+        reason: 'CLIENT',
+      );
+    });
   }
 
   Future<BKTResult<void>> track(
@@ -275,7 +306,7 @@ class BKTClient {
   Future<BKTEvaluation?> evaluationDetails(String featureId) async {
     return valueGuard<BKTEvaluation?>(
       await _invokeMethod(CallMethods.evaluationDetails.name, argument: {
-        'featureId': featureId,
+        CallMethodParams.featureId: featureId,
       }),
       customMapping: (response) {
         return BKTEvaluation(

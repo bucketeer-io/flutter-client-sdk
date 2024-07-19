@@ -1,9 +1,9 @@
+import 'package:bucketeer_flutter_client_sdk/bucketeer_flutter_client_sdk.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
 class BKTEvaluationDetails<T extends Object> {
   const BKTEvaluationDetails({
-    required this.id,
     required this.featureId,
     required this.featureVersion,
     required this.userId,
@@ -13,7 +13,6 @@ class BKTEvaluationDetails<T extends Object> {
     required this.reason,
   });
 
-  final String id;
   final String featureId;
   final int featureVersion;
   final String userId;
@@ -26,7 +25,6 @@ class BKTEvaluationDetails<T extends Object> {
   bool operator ==(Object other) =>
       other is BKTEvaluationDetails &&
       runtimeType == other.runtimeType &&
-      id == other.id &&
       featureId == other.featureId &&
       featureVersion == other.featureVersion &&
       userId == other.userId &&
@@ -37,7 +35,6 @@ class BKTEvaluationDetails<T extends Object> {
 
   @override
   int get hashCode =>
-      id.hashCode ^
       featureId.hashCode ^
       featureVersion.hashCode ^
       userId.hashCode ^
@@ -48,7 +45,7 @@ class BKTEvaluationDetails<T extends Object> {
 
   @override
   String toString() {
-    return 'Evaluation{id: $id, featureId: $featureId, '
+    return 'Evaluation{featureId: $featureId, '
         'featureVersion: $featureVersion, userId: $userId, '
         'variationId: $variationId, variationName: $variationName, '
         'variationValue: $variationValue, '
@@ -56,4 +53,29 @@ class BKTEvaluationDetails<T extends Object> {
   }
 }
 
-typedef BKTEvaluation = BKTEvaluationDetails<String>;
+@Deprecated("use BKTEvaluationDetails<String> instead")
+@immutable
+class BKTEvaluation extends BKTEvaluationDetails<String> {
+  final String id;
+
+  const BKTEvaluation(this.id,
+      {required super.featureId,
+      required super.featureVersion,
+      required super.userId,
+      required super.variationId,
+      required super.variationName,
+      required super.variationValue,
+      required super.reason});
+
+  @override
+  bool operator ==(Object other) =>
+      super == other && other is BKTEvaluation && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode ^ super.hashCode;
+
+  @override
+  String toString() {
+    return 'BKTEvaluation{id: $id, ${super.toString()}';
+  }
+}
