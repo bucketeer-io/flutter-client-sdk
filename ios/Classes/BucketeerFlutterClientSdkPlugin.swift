@@ -434,19 +434,19 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
             jsonVariation(arguments, result)
             
         case .stringVariationDetails:
-            result(FlutterMethodNotImplemented)
+            stringVariationDetails(arguments, result)
             
         case .boolVariationDetails:
-            result(FlutterMethodNotImplemented)
+            boolVariation(arguments, result)
             
         case .doubleVariationDetails:
-            result(FlutterMethodNotImplemented)
+            doubleVariationDetails(arguments, result)
             
         case .intVariationDetails:
-            result(FlutterMethodNotImplemented)
+            intVariationDetails(arguments, result)
             
         case .jsonVariationDetails:
-            result(FlutterMethodNotImplemented)
+            jsonVariationDetails(arguments, result)
             
         case .currentUser:
             currentUser(arguments, result)
