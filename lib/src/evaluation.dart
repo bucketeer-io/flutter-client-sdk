@@ -1,4 +1,3 @@
-import 'package:bucketeer_flutter_client_sdk/bucketeer_flutter_client_sdk.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
@@ -22,16 +21,31 @@ class BKTEvaluationDetails<T extends Object> {
   final String reason;
 
   @override
-  bool operator ==(Object other) =>
-      other is BKTEvaluationDetails &&
-      runtimeType == other.runtimeType &&
-      featureId == other.featureId &&
-      featureVersion == other.featureVersion &&
-      userId == other.userId &&
-      variationId == other.variationId &&
-      variationName == other.variationName &&
-      variationValue == other.variationValue &&
-      reason == other.reason;
+  bool operator ==(Object other) {
+    final bool isSameType = other is BKTEvaluationDetails<T>;
+    if (isSameType == false) {
+      return false;
+    }
+    final otherAsBKTEvaluationDetails = other as BKTEvaluationDetails<T>;
+    final bool isRuntimeTypeEqual = runtimeType == otherAsBKTEvaluationDetails.runtimeType;
+    final bool isFeatureIdEqual = featureId == otherAsBKTEvaluationDetails.featureId;
+    final bool isFeatureVersionEqual = featureVersion == otherAsBKTEvaluationDetails.featureVersion;
+    final bool isUserIdEqual = userId == otherAsBKTEvaluationDetails.userId;
+    final bool isVariationIdEqual = variationId == otherAsBKTEvaluationDetails.variationId;
+    final bool isVariationNameEqual = variationName == otherAsBKTEvaluationDetails.variationName;
+    final bool isVariationValueEqual = variationValue == otherAsBKTEvaluationDetails.variationValue;
+    final bool isReasonEqual = reason == otherAsBKTEvaluationDetails.reason;
+
+    return isSameType &&
+        isRuntimeTypeEqual &&
+        isFeatureIdEqual &&
+        isFeatureVersionEqual &&
+        isUserIdEqual &&
+        isVariationIdEqual &&
+        isVariationNameEqual &&
+        isVariationValueEqual &&
+        isReasonEqual;
+  }
 
   @override
   int get hashCode =>
@@ -51,6 +65,33 @@ class BKTEvaluationDetails<T extends Object> {
         'variationValue: $variationValue, '
         'reason: $reason}';
   }
+
+  static BKTEvaluationDetails<T> fromJson<T extends Object>(Map<String, dynamic> json) {
+    return BKTEvaluationDetails<T>(
+      featureId: json['featureId'],
+      featureVersion: json['featureVersion'],
+      userId: json['userId'],
+      variationId: json['variationId'],
+      variationName: json['variationName'],
+      // throw exception if type does not match
+      variationValue: json['variationValue'] as T,
+      reason: json['reason'],
+    );
+  }
+
+  static BKTEvaluationDetails<T> createDefaultValue<T extends Object>(String featureId, String userId, T defaultValue) {
+    return BKTEvaluationDetails<T>(
+      featureId: featureId,
+      featureVersion: 0,
+      userId: userId,
+      variationId: '',
+      variationName: '',
+      variationValue: defaultValue,
+      reason: evaluationDetailsDefaultReason,
+    );
+  }
+
+  static const evaluationDetailsDefaultReason = 'CLIENT';
 }
 
 @Deprecated("use BKTEvaluationDetails<String> instead")
@@ -58,8 +99,9 @@ class BKTEvaluationDetails<T extends Object> {
 class BKTEvaluation extends BKTEvaluationDetails<String> {
   final String id;
 
-  const BKTEvaluation(this.id,
-      {required super.featureId,
+  const BKTEvaluation(
+      {required this.id,
+      required super.featureId,
       required super.featureVersion,
       required super.userId,
       required super.variationId,

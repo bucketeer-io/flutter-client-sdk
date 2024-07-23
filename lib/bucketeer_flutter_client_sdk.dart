@@ -62,158 +62,197 @@ class BKTClient {
     String featureId, {
     required String defaultValue,
   }) async {
-    return valueGuard<String>(
-      await _invokeMethod(
-        CallMethods.stringVariation.name,
-        argument: {
-          CallMethodParams.featureId: featureId,
-          CallMethodParams.defaultValue: defaultValue,
-        },
-      ),
-    ).onError((error, stackTrace) {
-      debugPrint("get stringVariation fail: ${error?.toString()}");
-      return defaultValue;
-    });
+    return stringVariationDetails(featureId, defaultValue: defaultValue).then((value) => value.variationValue);
+    // return valueGuard<String>(
+    //   await _invokeMethod(
+    //     CallMethods.stringVariation.name,
+    //     argument: {
+    //       CallMethodParams.featureId: featureId,
+    //       CallMethodParams.defaultValue: defaultValue,
+    //     },
+    //   ),
+    // ).onError((error, stackTrace) {
+    //   debugPrint("get stringVariation fail: ${error?.toString()}");
+    //   return defaultValue;
+    // });
   }
 
   Future<int> intVariation(
     String featureId, {
     required int defaultValue,
   }) async {
-    return valueGuard<int>(
-      await _invokeMethod(
-        CallMethods.intVariation.name,
-        argument: {
-          CallMethodParams.featureId: featureId,
-          CallMethodParams.defaultValue: defaultValue,
-        },
-      ),
-    ).onError((error, stackTrace) {
-      debugPrint("get intVariation fail: ${error?.toString()}");
-      return defaultValue;
-    });
+    return intVariationDetails(featureId, defaultValue: defaultValue).then((value) => value.variationValue);
+    // return valueGuard<int>(
+    //   await _invokeMethod(
+    //     CallMethods.intVariation.name,
+    //     argument: {
+    //       CallMethodParams.featureId: featureId,
+    //       CallMethodParams.defaultValue: defaultValue,
+    //     },
+    //   ),
+    // ).onError((error, stackTrace) {
+    //   debugPrint("get intVariation fail: ${error?.toString()}");
+    //   return defaultValue;
+    // });
   }
 
   Future<double> doubleVariation(
     String featureId, {
     required double defaultValue,
   }) async {
-    return valueGuard<double>(
-      await _invokeMethod(
-        CallMethods.doubleVariation.name,
-        argument: {
-          CallMethodParams.featureId: featureId,
-          CallMethodParams.defaultValue: defaultValue,
-        },
-      ),
-    ).onError((error, stackTrace) {
-      debugPrint("get doubleVariation fail: ${error?.toString()}");
-      return defaultValue;
-    });
+    return doubleVariationDetails(featureId, defaultValue: defaultValue).then((value) => value.variationValue);
+    // return valueGuard<double>(
+    //   await _invokeMethod(
+    //     CallMethods.doubleVariation.name,
+    //     argument: {
+    //       CallMethodParams.featureId: featureId,
+    //       CallMethodParams.defaultValue: defaultValue,
+    //     },
+    //   ),
+    // ).onError((error, stackTrace) {
+    //   debugPrint("get doubleVariation fail: ${error?.toString()}");
+    //   return defaultValue;
+    // });
   }
 
   Future<bool> boolVariation(
     String featureId, {
     required bool defaultValue,
   }) async {
-    return valueGuard<bool>(
-      await _invokeMethod(
-        CallMethods.boolVariation.name,
-        argument: {
-          CallMethodParams.featureId: featureId,
-          CallMethodParams.defaultValue: defaultValue,
-        },
-      ),
-    ).onError((error, stackTrace) {
-      debugPrint("get boolVariation fail: ${error?.toString()}");
-      return defaultValue;
-    });
+    return boolVariationDetails(featureId, defaultValue: defaultValue).then((value) => value.variationValue);
+    // return valueGuard<bool>(
+    //   await _invokeMethod(
+    //     CallMethods.boolVariation.name,
+    //     argument: {
+    //       CallMethodParams.featureId: featureId,
+    //       CallMethodParams.defaultValue: defaultValue,
+    //     },
+    //   ),
+    // ).onError((error, stackTrace) {
+    //   debugPrint("get boolVariation fail: ${error?.toString()}");
+    //   return defaultValue;
+    // });
   }
 
   Future<Map<String, dynamic>> jsonVariation(
     String featureId, {
     required Map<String, dynamic> defaultValue,
   }) async {
-    return valueGuard<Map<String, dynamic>>(
-      await _invokeMethod(
-        CallMethods.jsonVariation.name,
-        argument: {
-          CallMethodParams.featureId: featureId,
-          CallMethodParams.defaultValue: defaultValue,
-        },
-      ),
-      customMapping: (response) {
-        return response;
-      },
-    ).onError((error, stackTrace) {
-      debugPrint("get jsonVariation fail: ${error?.toString()}");
-      return defaultValue;
-    });
+    return jsonVariationDetails(featureId, defaultValue: defaultValue).then((value) => value.variationValue);
+    //
+    //
+    // return valueGuard<Map<String, dynamic>>(
+    //   await _invokeMethod(
+    //     CallMethods.jsonVariation.name,
+    //     argument: {
+    //       CallMethodParams.featureId: featureId,
+    //       CallMethodParams.defaultValue: defaultValue,
+    //     },
+    //   ),
+    //   customMapping: (response) {
+    //     return response;
+    //   },
+    // ).onError((error, stackTrace) {
+    //   debugPrint("get jsonVariation fail: ${error?.toString()}");
+    //   return defaultValue;
+    // });
   }
 
   Future<BKTEvaluationDetails<String>> stringVariationDetails(
-      String featureId, {
-        required String defaultValue,
-      }) async {
-    throw Exception("Not impl");
-  }
-
-  Future<BKTEvaluationDetails<String>> intVariationDetails(
-      String featureId, {
-        required int defaultValue,
-      }) async {
-    throw Exception("Not impl");
-  }
-
-  Future<BKTEvaluationDetails<double>> doubleVariationDetails(
-      String featureId, {
-        required double defaultValue,
-      }) async {
-    throw Exception("Not impl");
-  }
-
-  Future<BKTEvaluationDetails<bool>> boolVariationDetails(
-      String featureId, {
-        required bool defaultValue,
-      }) async {
-    throw Exception("Not impl");
-  }
-
-  Future<BKTEvaluationDetails<Map<String, dynamic>>> jsonVariationDetails(
-      String featureId, {
-        required Map<String, dynamic> defaultValue,
-      }) async {
-    return valueGuard<BKTEvaluationDetails<Map<String, dynamic>>>(
-      await _invokeMethod(CallMethods.evaluationDetails.name, argument: {
+    String featureId, {
+    required String defaultValue,
+  }) async {
+    final userId = await _getCurrentUserIdOrEmpty();
+    return valueGuard<BKTEvaluationDetails<String>>(
+      await _invokeMethod(CallMethods.stringVariationDetails.name, argument: {
         CallMethodParams.featureId: featureId,
       }),
       customMapping: (response) {
-        final responseVariationValue = response['variationValue'];
-        if (responseVariationValue is Map<String, dynamic>) {
-          return BKTEvaluationDetails<Map<String, dynamic>>(
-            featureId: response['featureId'],
-            featureVersion: response['featureVersion'],
-            userId: response['userId'],
-            variationId: response['variationId'],
-            variationName: response['variationName'],
-            variationValue: response['variationValue'],
-            reason: response['reason'],
-          );
-        }
-
-        throw Exception("Invalid response");
+        return BKTEvaluationDetails.fromJson<String>(response);
       },
     ).onError((error, stackTrace) {
       debugPrint("get jsonVariationDetails fail: ${error?.toString()}");
-      return BKTEvaluationDetails<Map<String, dynamic>>(
-        featureId: featureId,
-        featureVersion: 0,
-        userId: '',
-        variationId: '',
-        variationName: '',
-        variationValue: defaultValue,
-        reason: 'CLIENT',
-      );
+      return BKTEvaluationDetails.createDefaultValue(
+          featureId, userId, defaultValue);
+    });
+  }
+
+  Future<BKTEvaluationDetails<int>> intVariationDetails(
+    String featureId, {
+    required int defaultValue,
+  }) async {
+    final userId = await _getCurrentUserIdOrEmpty();
+    return valueGuard<BKTEvaluationDetails<int>>(
+      await _invokeMethod(CallMethods.intVariationDetails.name, argument: {
+        CallMethodParams.featureId: featureId,
+      }),
+      customMapping: (response) {
+        return BKTEvaluationDetails.fromJson<int>(response);
+      },
+    ).onError((error, stackTrace) {
+      debugPrint("get jsonVariationDetails fail: ${error?.toString()}");
+      return BKTEvaluationDetails.createDefaultValue(
+          featureId, userId, defaultValue);
+    });
+  }
+
+  Future<BKTEvaluationDetails<double>> doubleVariationDetails(
+    String featureId, {
+    required double defaultValue,
+  }) async {
+    final userId = await _getCurrentUserIdOrEmpty();
+    return valueGuard<BKTEvaluationDetails<double>>(
+      await _invokeMethod(CallMethods.doubleVariationDetails.name, argument: {
+        CallMethodParams.featureId: featureId,
+      }),
+      customMapping: (response) {
+        return BKTEvaluationDetails.fromJson<double>(response);
+      },
+    ).onError((error, stackTrace) {
+      debugPrint("get jsonVariationDetails fail: ${error?.toString()}");
+      return BKTEvaluationDetails.createDefaultValue(
+          featureId, userId, defaultValue);
+    });
+  }
+
+  Future<BKTEvaluationDetails<bool>> boolVariationDetails(
+    String featureId, {
+    required bool defaultValue,
+  }) async {
+    final userId = await _getCurrentUserIdOrEmpty();
+    return valueGuard<BKTEvaluationDetails<bool>>(
+      await _invokeMethod(CallMethods.boolVariationDetails.name, argument: {
+        CallMethodParams.featureId: featureId,
+      }),
+      customMapping: (response) {
+        return BKTEvaluationDetails.fromJson<bool>(response);
+      },
+    ).onError((error, stackTrace) {
+      debugPrint("get jsonVariationDetails fail: ${error?.toString()}");
+      return BKTEvaluationDetails.createDefaultValue(
+          featureId, userId, defaultValue);
+    });
+  }
+
+  Future<BKTEvaluationDetails<Map<String, dynamic>>> jsonVariationDetails(
+    String featureId, {
+    required Map<String, dynamic> defaultValue,
+  }) async {
+    final userId = await _getCurrentUserIdOrEmpty();
+    return valueGuard<BKTEvaluationDetails<Map<String, dynamic>>>(
+      await _invokeMethod(CallMethods.jsonVariationDetails.name, argument: {
+        CallMethodParams.featureId: featureId,
+      }),
+      customMapping: (response) {
+        final jsonValueResponse = Map<String, dynamic>.from(response['variationValue']);
+        response['variationValue'] = jsonValueResponse;
+        final rs = BKTEvaluationDetails.fromJson<Map<String, dynamic>>(response);
+        return rs;
+      },
+    ).onError((error, stackTrace) {
+      debugPrint("get jsonVariationDetails fail: ${error?.toString()}");
+      return BKTEvaluationDetails.createDefaultValue(
+          featureId, userId, defaultValue);
     });
   }
 
@@ -233,6 +272,15 @@ class BKTClient {
       debugPrint("track fail: ${error.toString()}");
       return error.toBKTResultFailure();
     });
+  }
+
+  Future<String> _getCurrentUserIdOrEmpty() async {
+    String userId = '';
+    final user = await currentUser();
+    if (user.isSuccess) {
+      userId = user.asSuccess.data.id;
+    }
+    return userId;
   }
 
   Future<BKTResult<BKTUser>> currentUser() async {

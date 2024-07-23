@@ -1,3 +1,4 @@
+import 'package:bucketeer_flutter_client_sdk/src/evaluation.dart';
 import 'package:bucketeer_flutter_client_sdk/src/proxy_evaluation_update_listener.dart';
 import 'package:flutter/services.dart';
 import 'package:bucketeer_flutter_client_sdk/bucketeer_flutter_client_sdk.dart';
@@ -18,6 +19,7 @@ void main() {
       var callMethod = CallMethods.values.firstWhere(
           (element) => element.name == methodCall.method,
           orElse: () => CallMethods.unknown);
+      var featureId = methodCall.arguments[CallMethodParams.featureId];
       switch (callMethod) {
         case CallMethods.initialize:
         case CallMethods.updateUserAttributes:
@@ -35,13 +37,29 @@ void main() {
             }
           };
         case CallMethods.stringVariation:
-          return {'status': true, 'response': 'datadata'};
+          return {
+            'status': false,
+            'errorCode': -1,
+            'errorMessage': 'should not be called, should call stringVariationDetails instead'
+          };
         case CallMethods.intVariation:
-          return {'status': true, 'response': 1234};
+          return {
+            'status': false,
+            'errorCode': -1,
+            'errorMessage': 'should not be called, should call intVariationDetails instead'
+          };
         case CallMethods.doubleVariation:
-          return {'status': true, 'response': 55.2};
+          return {
+            'status': false,
+            'errorCode': -1,
+            'errorMessage': 'should not be called, should call doubleVariationDetails instead'
+          };
         case CallMethods.boolVariation:
-          return {'status': true, 'response': true};
+          return {
+            'status': false,
+            'errorCode': -1,
+            'errorMessage': 'should not be called, should call boolVariationDetails instead'
+          };
         case CallMethods.evaluationDetails:
           return {
             'status': true,
@@ -58,13 +76,9 @@ void main() {
           };
         case CallMethods.jsonVariation:
           return {
-            'status': true,
-            'response': {
-              'id': 'id123',
-              'featureId': 'featureId123',
-              'featureVersion': 123,
-              'enable': true,
-            }
+            'status': false,
+            'errorCode': -1,
+            'errorMessage': 'should not be called, should call jsonVariationDetails instead'
           };
         case CallMethods.addProxyEvaluationUpdateListener:
           return {
@@ -74,15 +88,84 @@ void main() {
         case CallMethods.unknown:
           return null;
         case CallMethods.jsonVariationDetails:
-          return null;
+          expect(featureId, 'jsonVariation', reason: "featureId is not match");
+          return {
+            'status': true,
+            'response': {
+              'featureId': 'jsonVariation',
+              'featureVersion': 123,
+              'userId': 'userId123',
+              'variationId': 'variationId123',
+              'variationName': 'variationName123',
+              'variationValue': {
+                'id': 'id123',
+                'featureId': 'featureId123',
+                'featureVersion': 123,
+                'enable': true
+              },
+              'reason': 'DEFAULT',
+            }
+          };
         case CallMethods.intVariationDetails:
-          return null;
+          expect(featureId, 'intVariation', reason: "featureId is not match");
+          return {
+            'status': true,
+            'response': {
+              'id': 'id123',
+              'featureId': 'intVariation',
+              'featureVersion': 123,
+              'userId': 'userId123',
+              'variationId': 'variationId123',
+              'variationName': 'variationName123',
+              'variationValue': 1234,
+              'reason': 'DEFAULT',
+            }
+          };
         case CallMethods.boolVariationDetails:
-          return null;
+          expect(featureId, 'boolVariation', reason: "featureId is not match");
+          return {
+            'status': true,
+            'response': {
+              'id': 'id123',
+              'featureId': 'boolVariation',
+              'featureVersion': 123,
+              'userId': 'userId123',
+              'variationId': 'variationId123',
+              'variationName': 'variationName123',
+              'variationValue': true,
+              'reason': 'DEFAULT',
+            }
+          };
         case CallMethods.doubleVariationDetails:
-          return null;
+          expect(featureId, 'doubleVariation', reason: "featureId is not match");
+          return {
+            'status': true,
+            'response': {
+              'id': 'id123',
+              'featureId': 'doubleVariation',
+              'featureVersion': 123,
+              'userId': 'userId123',
+              'variationId': 'variationId123',
+              'variationName': 'variationName123',
+              'variationValue': 55.2,
+              'reason': 'DEFAULT',
+            }
+          };
         case CallMethods.stringVariationDetails:
-          return null;
+          expect(featureId, 'stringVariation', reason: "featureId is not match");
+          return {
+            'status': true,
+            'response': {
+              'id': 'id123',
+              'featureId': 'stringVariation',
+              'featureVersion': 123,
+              'userId': 'userId123',
+              'variationId': 'variationId123',
+              'variationName': 'variationName123',
+              'variationValue': "datadata",
+              'reason': 'DEFAULT',
+            }
+          };
       }
     });
   });
@@ -156,14 +239,29 @@ void main() {
     );
 
     expectLater(
-      BKTClient.instance.stringVariation('feature-id', defaultValue: ''),
+      BKTClient.instance.stringVariation('stringVariation', defaultValue: ''),
       completion(
         equals('datadata'),
       ),
     );
 
+    expectLater(
+      BKTClient.instance.stringVariationDetails('stringVariation', defaultValue: ''),
+      completion(
+          const BKTEvaluationDetails<String>(
+            featureId: 'stringVariation',
+            featureVersion: 123,
+            userId: 'userId123',
+            variationId: 'variationId123',
+            variationName: 'variationName123',
+            variationValue: 'datadata',
+            reason: "DEFAULT",
+          ),
+      ),
+    );
+
     expect(
-      (await BKTClient.instance.jsonVariation('feature-id', defaultValue: {})),
+      (await BKTClient.instance.jsonVariation('jsonVariation', defaultValue: {})),
       Map<String, dynamic>.from(
         {
           'id': 'id123',
@@ -174,22 +272,60 @@ void main() {
       ),
     );
 
+    expect(
+      (await BKTClient.instance.jsonVariationDetails('jsonVariation', defaultValue: {})),
+      const BKTEvaluationDetails<Map<String, dynamic>>(
+        featureId: 'jsonVariation',
+        featureVersion: 123,
+        userId: 'userId123',
+        variationId: 'variationId123',
+        variationName: 'variationName123',
+        variationValue: {
+          'id': 'id123',
+          'featureId': 'featureId123',
+          'featureVersion': 123,
+          'enable': true,
+        },
+        reason: "DEFAULT",
+      ),
+    );
+
+    // expectLater(
+    //   BKTClient.instance.jsonVariationDetails('jsonVariation', defaultValue: {}),
+    //   completion(
+    //     const BKTEvaluationDetails<Map<String, dynamic>>(
+    //       featureId: 'jsonVariation',
+    //       featureVersion: 123,
+    //       userId: 'userId123',
+    //       variationId: 'variationId123',
+    //       variationName: 'variationName123',
+    //       variationValue: {
+    //         'id': 'id123',
+    //         'featureId': 'featureId123',
+    //         'featureVersion': 123,
+    //         'enable': true,
+    //       },
+    //       reason: "DEFAULT",
+    //     ),
+    //   ),
+    // );
+
     expectLater(
-      BKTClient.instance.intVariation('feature-id', defaultValue: 0),
+      BKTClient.instance.intVariation('intVariation', defaultValue: 0),
       completion(
         equals(1234),
       ),
     );
 
     expectLater(
-      BKTClient.instance.doubleVariation('feature-id', defaultValue: 0.0),
+      BKTClient.instance.doubleVariation('doubleVariation', defaultValue: 0.0),
       completion(
         equals(55.2),
       ),
     );
 
     expectLater(
-      BKTClient.instance.boolVariation('feature-id', defaultValue: false),
+      BKTClient.instance.boolVariation('boolVariation', defaultValue: false),
       completion(
         equals(true),
       ),
@@ -200,7 +336,7 @@ void main() {
       BKTClient.instance.evaluationDetails('featureId'),
       completion(
         equals(
-          const BKTEvaluationDetails<String>(
+          const BKTEvaluation(
             id: 'id123',
             featureId: 'featureId123',
             featureVersion: 123,
