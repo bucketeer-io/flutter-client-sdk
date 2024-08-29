@@ -1,4 +1,5 @@
 import 'package:bucketeer_flutter_client_sdk/src/proxy_evaluation_update_listener.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:bucketeer_flutter_client_sdk/bucketeer_flutter_client_sdk.dart';
 import 'package:bucketeer_flutter_client_sdk/src/call_methods.dart';
@@ -19,6 +20,7 @@ void main() {
           (element) => element.name == methodCall.method,
           orElse: () => CallMethods.unknown);
       var featureId = methodCall.arguments[CallMethodParams.featureId];
+      var defaultValue = methodCall.arguments[CallMethodParams.defaultValue];
       switch (callMethod) {
         case CallMethods.initialize:
         case CallMethods.updateUserAttributes:
@@ -86,6 +88,7 @@ void main() {
           };
         case CallMethods.jsonVariation:
           expect(featureId, 'jsonVariation', reason: "featureId is not match");
+          expect(defaultValue is Map && mapEquals(defaultValue, {}) , true, reason: "defaultValue is not match");
           return {
             'status': true,
             'response': {
@@ -104,6 +107,7 @@ void main() {
           return null;
         case CallMethods.objectVariationDetails:
           expect(featureId, 'jsonVariation', reason: "featureId is not match");
+          expect(defaultValue is Map && mapEquals(defaultValue, {}), true, reason: "defaultValue is not match");
           return {
             'status': true,
             'response': {
@@ -123,6 +127,7 @@ void main() {
           };
         case CallMethods.intVariationDetails:
           expect(featureId, 'intVariation', reason: "featureId is not match");
+          expect(defaultValue is int && defaultValue == 1, true, reason: "defaultValue is not match");
           return {
             'status': true,
             'response': {
@@ -138,6 +143,7 @@ void main() {
           };
         case CallMethods.boolVariationDetails:
           expect(featureId, 'boolVariation', reason: "featureId is not match");
+          expect(defaultValue is bool && defaultValue == false, true, reason: "defaultValue is not match");
           return {
             'status': true,
             'response': {
@@ -154,6 +160,7 @@ void main() {
         case CallMethods.doubleVariationDetails:
           expect(featureId, 'doubleVariation',
               reason: "featureId is not match");
+          expect(defaultValue is double && defaultValue == 1.0, true, reason: "defaultValue is not match");
           return {
             'status': true,
             'response': {
@@ -170,6 +177,7 @@ void main() {
         case CallMethods.stringVariationDetails:
           expect(featureId, 'stringVariation',
               reason: "featureId is not match");
+          expect(defaultValue is String && defaultValue == "default", true, reason: "defaultValue is not match");
           return {
             'status': true,
             'response': {
@@ -201,7 +209,7 @@ void main() {
         .id("userI123")
         .customAttributes({'app_version': '1.0.0'}).build();
 
-    expectLater(
+    await expectLater(
       BKTClient.initialize(
         config: config,
         user: user,
@@ -212,9 +220,9 @@ void main() {
     );
   });
 
-  tearDown(() {
+  tearDown(() async {
     /// Void method should not throw exception
-    expectLater(
+    await expectLater(
       BKTClient.instance.destroy().onError((error, stackTrace) =>
           fail("BKTClient.instance.destroy should not throw an exception")),
       completion(
@@ -224,7 +232,7 @@ void main() {
   });
 
   test('Bucketeer Success Cases Tests', () async {
-    expectLater(
+    await expectLater(
       BKTClient.instance
           .addEvaluationUpdateListener(MockEvaluationUpdateListener())
           .then((value) {
@@ -235,21 +243,21 @@ void main() {
       ),
     );
 
-    expectLater(
+    await expectLater(
       BKTClient.instance.flush(),
       completion(
         equals(const BKTResult.success()),
       ),
     );
 
-    expectLater(
+    await expectLater(
       BKTClient.instance.fetchEvaluations(timeoutMillis: 10000),
       completion(
         equals(const BKTResult.success()),
       ),
     );
 
-    expectLater(
+    await expectLater(
       BKTClient.instance.currentUser(),
       completion(
         equals(
@@ -264,16 +272,16 @@ void main() {
       ),
     );
 
-    expectLater(
-      BKTClient.instance.stringVariation('stringVariation', defaultValue: ''),
+    await expectLater(
+      BKTClient.instance.stringVariation('stringVariation', defaultValue: 'default'),
       completion(
         equals('datadata'),
       ),
     );
 
-    expectLater(
+    await expectLater(
       BKTClient.instance
-          .stringVariationDetails('stringVariation', defaultValue: ''),
+          .stringVariationDetails('stringVariation', defaultValue: 'default'),
       completion(
         const BKTEvaluationDetails<String>(
           featureId: 'stringVariation',
@@ -354,28 +362,76 @@ void main() {
           ),
         )));
 
-    expectLater(
-      BKTClient.instance.intVariation('intVariation', defaultValue: 0),
+    await expectLater(
+      BKTClient.instance.intVariation('intVariation', defaultValue: 1),
       completion(
         equals(1234),
       ),
     );
 
-    expectLater(
-      BKTClient.instance.doubleVariation('doubleVariation', defaultValue: 0.0),
+    await expectLater(
+      BKTClient.instance
+          .intVariationDetails('intVariation', defaultValue: 1),
+      completion(
+        const BKTEvaluationDetails<int>(
+          featureId: 'intVariation',
+          featureVersion: 123,
+          userId: 'userId123',
+          variationId: 'variationId123',
+          variationName: 'variationName123',
+          variationValue: 1234,
+          reason: "DEFAULT",
+        ),
+      ),
+    );
+
+    await expectLater(
+      BKTClient.instance.doubleVariation('doubleVariation', defaultValue: 1.0),
       completion(
         equals(55.2),
       ),
     );
 
-    expectLater(
+    await expectLater(
+      BKTClient.instance
+          .doubleVariationDetails('doubleVariation', defaultValue: 1.0),
+      completion(
+        const BKTEvaluationDetails<double>(
+          featureId: 'doubleVariation',
+          featureVersion: 123,
+          userId: 'userId123',
+          variationId: 'variationId123',
+          variationName: 'variationName123',
+          variationValue: 55.2,
+          reason: "DEFAULT",
+        ),
+      ),
+    );
+
+    await expectLater(
       BKTClient.instance.boolVariation('boolVariation', defaultValue: false),
       completion(
         equals(true),
       ),
     );
 
-    expectLater(
+    await expectLater(
+      BKTClient.instance
+          .boolVariationDetails('boolVariation', defaultValue: false),
+      completion(
+        const BKTEvaluationDetails<bool>(
+          featureId: 'boolVariation',
+          featureVersion: 123,
+          userId: 'userId123',
+          variationId: 'variationId123',
+          variationName: 'variationName123',
+          variationValue: true,
+          reason: "DEFAULT",
+        ),
+      ),
+    );
+
+    await expectLater(
       // ignore: deprecated_member_use_from_same_package
       BKTClient.instance.evaluationDetails('featureId'),
       completion(
@@ -395,7 +451,7 @@ void main() {
     );
 
     /// Void method should not throw exception
-    expectLater(
+    await expectLater(
       BKTClient.instance.updateUserAttributes(
         {'app_version': '1.0.0'},
       ).onError((error, stackTrace) => fail(
@@ -406,7 +462,7 @@ void main() {
     );
 
     /// Void method should not throw exception
-    expectLater(
+    await expectLater(
       BKTClient.instance.track('goal-id').onError((error, stackTrace) =>
           fail("BKTClient.instance.track should not throw an exception")),
       completion(
@@ -416,7 +472,7 @@ void main() {
   });
 
   test('Bucketeer Should Return Default Value Cases Tests', () async {
-    expectLater(
+    await expectLater(
       BKTClient.instance
           .stringVariation('stringVariationNotFound', defaultValue: ''),
       completion(
@@ -424,7 +480,7 @@ void main() {
       ),
     );
 
-    expectLater(
+    await expectLater(
       BKTClient.instance.stringVariationDetails('stringVariationNotFound',
           defaultValue: 'default'),
       completion(
@@ -484,14 +540,14 @@ void main() {
       ),
     );
 
-    expectLater(
+    await expectLater(
       BKTClient.instance.intVariation('intVariationNotFound', defaultValue: 1),
       completion(
         equals(1),
       ),
     );
 
-    expectLater(
+    await expectLater(
       BKTClient.instance
           .doubleVariation('doubleVariationNotFound', defaultValue: 0.1),
       completion(
@@ -499,7 +555,7 @@ void main() {
       ),
     );
 
-    expectLater(
+    await expectLater(
       BKTClient.instance
           .boolVariation('boolVariationNotFound', defaultValue: true),
       completion(

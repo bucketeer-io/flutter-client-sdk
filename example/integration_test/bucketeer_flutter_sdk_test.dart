@@ -82,7 +82,7 @@ void main() async {
     });
 
     test('testStringVariation', () async {
-      expectLater(
+      await expectLater(
         BKTClient.instance
             .stringVariation(featureIdString, defaultValue: "test"),
         completion(
@@ -92,20 +92,32 @@ void main() async {
     });
 
     testWidgets('testStringVariationDetail', (WidgetTester _) async {
-      var result = await BKTClient.instance.evaluationDetails(featureIdString);
-      var expected = const BKTEvaluationDetails<String>(
-          featureId: featureIdString,
-          featureVersion: 4,
-          userId: userId,
-          variationId: "2e696c59-ac2f-4b54-82a7-4aecfdd80224",
-          variationName: "variation 1",
-          variationValue: "value-1",
-          reason: "DEFAULT");
-      expect(result, expected);
+      expect(
+          await BKTClient.instance
+              .stringVariationDetails(featureIdString, defaultValue: "default"),
+          const BKTEvaluationDetails<String>(
+              featureId: featureIdString,
+              featureVersion: 4,
+              userId: userId,
+              variationId: "2e696c59-ac2f-4b54-82a7-4aecfdd80224",
+              variationName: "variation 1",
+              variationValue: "value-1",
+              reason: "DEFAULT"));
+      expect(
+          await BKTClient.instance.evaluationDetails(featureIdString),
+          const BKTEvaluation(
+              id: "feature-flutter-e2e-string:4:bucketeer-flutter-user-id-1",
+              featureId: featureIdString,
+              featureVersion: 4,
+              userId: userId,
+              variationId: "2e696c59-ac2f-4b54-82a7-4aecfdd80224",
+              variationName: "variation 1",
+              variationValue: "value-1",
+              reason: "DEFAULT"));
     });
 
     testWidgets('testDoubleVariation', (WidgetTester _) async {
-      expectLater(
+      await expectLater(
         BKTClient.instance
             .doubleVariation(featureIdDouble, defaultValue: 100.0),
         completion(
@@ -115,7 +127,8 @@ void main() async {
     });
 
     testWidgets('testDoubleVariationDetail', (WidgetTester _) async {
-      var result = await BKTClient.instance.evaluationDetails(featureIdDouble);
+      var result = await BKTClient.instance
+          .doubleVariationDetails(featureIdDouble, defaultValue: 1.0);
       var expected = const BKTEvaluationDetails<double>(
           featureId: featureIdDouble,
           featureVersion: 3,
@@ -128,7 +141,7 @@ void main() async {
     });
 
     testWidgets('testBoolVariation', (WidgetTester _) async {
-      expectLater(
+      await expectLater(
         BKTClient.instance.boolVariation(featureIdBoolean, defaultValue: false),
         completion(
           equals(featureIdBooleanValue),
@@ -136,7 +149,8 @@ void main() async {
       );
     });
     testWidgets('testBoolVariationDetail', (WidgetTester _) async {
-      var result = await BKTClient.instance.evaluationDetails(featureIdBoolean);
+      var result = await BKTClient.instance
+          .boolVariationDetails(featureIdBoolean, defaultValue: false);
       var expected = const BKTEvaluationDetails<bool>(
           featureId: featureIdBoolean,
           featureVersion: 3,
@@ -149,7 +163,7 @@ void main() async {
     });
 
     testWidgets('testIntVariation', (WidgetTester _) async {
-      expectLater(
+      await expectLater(
         BKTClient.instance.intVariation(featureIdInt, defaultValue: 1000),
         completion(
           equals(featureIdIntValue),
@@ -157,7 +171,8 @@ void main() async {
       );
     });
     testWidgets('testIntVariationDetail', (WidgetTester _) async {
-      var result = await BKTClient.instance.evaluationDetails(featureIdInt);
+      var result = await BKTClient.instance
+          .intVariationDetails(featureIdInt, defaultValue: 1);
       var expected = const BKTEvaluationDetails<int>(
           featureId: featureIdInt,
           featureVersion: 3,
@@ -174,15 +189,24 @@ void main() async {
           .jsonVariation(featureIdJson, defaultValue: {});
       expect(result, featureIdJsonValue);
     });
-    testWidgets('testJSONVariationDetail', (WidgetTester _) async {
-      var result = await BKTClient.instance.evaluationDetails(featureIdJson);
-      var expected = const BKTEvaluationDetails<Map<String, dynamic>>(
+
+    testWidgets('testObjectVariation', (WidgetTester _) async {
+      var result = await BKTClient.instance.objectVariation(featureIdJson,
+          defaultValue: const BKTBoolean(false));
+      expect(result, const BKTStructure({"key": BKTString("value-1")}));
+    });
+
+    testWidgets('testObjectVariationDetail', (WidgetTester _) async {
+      var result = await BKTClient.instance.objectVariationDetails(
+          featureIdJson,
+          defaultValue: const BKTNumber(0));
+      var expected = const BKTEvaluationDetails<BKTValue>(
           featureId: featureIdJson,
           featureVersion: 3,
           userId: userId,
           variationId: "813070cf-7d6b-45a9-8713-cf9816d63997",
           variationName: "variation 1",
-          variationValue: { "key": "value-1" },
+          variationValue: BKTStructure({"key": BKTString("value-1")}),
           reason: "DEFAULT");
       expect(result, expected);
     });
@@ -515,7 +539,8 @@ extension E2EBKTClient on BKTClient {
         user: user,
         timeoutMillis: timeoutMillis,
       );
-      bool shouldRetry = result.isFailure && result.asFailure is BKTNetworkException;
+      bool shouldRetry =
+          result.isFailure && result.asFailure is BKTNetworkException;
       if (shouldRetry) {
         retryCount++;
         continue;

@@ -127,7 +127,7 @@ void main() {
       final user = BKTUserBuilder()
           .id("2023")
           .customAttributes({'app_version': '1.0.0'}).build();
-      expectLater(
+      await expectLater(
         BKTClient.initialize(
           config: config,
           user: user,
@@ -177,7 +177,7 @@ void main() {
           reason: "BKTClient.instance.evaluationDetails should return null");
 
       /// Should return the default value 200.0 when catching an error
-      expectLater(
+      await expectLater(
         BKTClient.instance.stringVariation('feature-id', defaultValue: 'bkt'),
         completion(
           equals('bkt'),
@@ -192,21 +192,21 @@ void main() {
         {'value': 'default'},
       );
 
-      expectLater(
+      await expectLater(
         BKTClient.instance.intVariation('feature-id', defaultValue: 90),
         completion(
           equals(90),
         ),
       );
 
-      expectLater(
+      await expectLater(
         BKTClient.instance.doubleVariation('feature-id', defaultValue: 110.0),
         completion(
           equals(110.0),
         ),
       );
 
-      expectLater(
+      await expectLater(
         BKTClient.instance.boolVariation('feature-id', defaultValue: false),
         completion(
           equals(false),
@@ -273,7 +273,7 @@ void main() {
       final user = BKTUserBuilder()
           .id("2023")
           .customAttributes({'app_version': '1.0.0'}).build();
-      expectLater(
+      await expectLater(
         BKTClient.initialize(
           config: config,
           user: user,
@@ -323,7 +323,7 @@ void main() {
           reason: "BKTClient.instance.evaluationDetails should return null");
 
       /// Should return the default value 200.0 when catching an error
-      expectLater(
+      await expectLater(
         BKTClient.instance.stringVariation('feature-id', defaultValue: 'bkt'),
         completion(
           equals('bkt'),
@@ -338,21 +338,21 @@ void main() {
         {'value': 'default'},
       );
 
-      expectLater(
+      await expectLater(
         BKTClient.instance.intVariation('feature-id', defaultValue: 90),
         completion(
           equals(90),
         ),
       );
 
-      expectLater(
+      await expectLater(
         BKTClient.instance.doubleVariation('feature-id', defaultValue: 110.0),
         completion(
           equals(110.0),
         ),
       );
 
-      expectLater(
+      await expectLater(
         BKTClient.instance.boolVariation('feature-id', defaultValue: false),
         completion(
           equals(false),

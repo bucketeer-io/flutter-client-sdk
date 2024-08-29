@@ -77,6 +77,7 @@ class BKTClient {
     return valueGuard<BKTEvaluationDetails<bool>>(
       await _invokeMethod(CallMethods.boolVariationDetails.name, argument: {
         CallMethodParams.featureId: featureId,
+        CallMethodParams.defaultValue: defaultValue,
       }),
       customMapping: (response) {
         return BKTEvaluationDetails.fromJson<bool>(
@@ -84,7 +85,7 @@ class BKTClient {
         );
       },
     ).onError((error, stackTrace) {
-      debugPrint("get jsonVariationDetails fail: ${error?.toString()}");
+      debugPrint("get boolVariationDetails fail: ${error?.toString()}");
       return BKTEvaluationDetails.createDefaultValue(
           featureId, userId, defaultValue);
     });
@@ -106,6 +107,7 @@ class BKTClient {
     return valueGuard<BKTEvaluationDetails<int>>(
       await _invokeMethod(CallMethods.intVariationDetails.name, argument: {
         CallMethodParams.featureId: featureId,
+        CallMethodParams.defaultValue: defaultValue,
       }),
       customMapping: (response) {
         return BKTEvaluationDetails.fromJson<int>(
@@ -113,7 +115,7 @@ class BKTClient {
         );
       },
     ).onError((error, stackTrace) {
-      debugPrint("get jsonVariationDetails fail: ${error?.toString()}");
+      debugPrint("get intVariationDetails fail: ${error?.toString()}");
       return BKTEvaluationDetails.createDefaultValue(
           featureId, userId, defaultValue);
     });
@@ -135,6 +137,7 @@ class BKTClient {
     return valueGuard<BKTEvaluationDetails<double>>(
       await _invokeMethod(CallMethods.doubleVariationDetails.name, argument: {
         CallMethodParams.featureId: featureId,
+        CallMethodParams.defaultValue: defaultValue,
       }),
       customMapping: (response) {
         return BKTEvaluationDetails.fromJson<double>(
@@ -142,7 +145,7 @@ class BKTClient {
         );
       },
     ).onError((error, stackTrace) {
-      debugPrint("get jsonVariationDetails fail: ${error?.toString()}");
+      debugPrint("get doubleVariationDetails fail: ${error?.toString()}");
       return BKTEvaluationDetails.createDefaultValue(
           featureId, userId, defaultValue);
     });
@@ -164,6 +167,7 @@ class BKTClient {
     return valueGuard<BKTEvaluationDetails<String>>(
       await _invokeMethod(CallMethods.stringVariationDetails.name, argument: {
         CallMethodParams.featureId: featureId,
+        CallMethodParams.defaultValue: defaultValue,
       }),
       customMapping: (response) {
         return BKTEvaluationDetails.fromJson<String>(
@@ -171,7 +175,7 @@ class BKTClient {
         );
       },
     ).onError((error, stackTrace) {
-      debugPrint("get jsonVariationDetails fail: ${error?.toString()}");
+      debugPrint("get stringVariationDetails fail: ${error?.toString()}");
       return BKTEvaluationDetails.createDefaultValue(
           featureId, userId, defaultValue);
     });
@@ -324,7 +328,7 @@ class BKTClient {
     });
   }
 
-  @Deprecated("use BKTEvaluationDetails<String> instead")
+  @Deprecated("use stringVariationDetails() instead")
   Future<BKTEvaluation?> evaluationDetails(String featureId) async {
     return valueGuard<BKTEvaluation?>(
       await _invokeMethod(CallMethods.evaluationDetails.name, argument: {
