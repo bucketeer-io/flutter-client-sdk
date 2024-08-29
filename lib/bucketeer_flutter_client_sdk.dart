@@ -8,6 +8,8 @@ export 'src/config.dart';
 export 'src/exception.dart';
 export 'src/value.dart';
 
+import 'dart:convert';
+
 import 'package:bucketeer_flutter_client_sdk/src/value_parser.dart';
 
 import 'src/native_channel_result_parser.dart';
@@ -218,7 +220,8 @@ class BKTClient {
     return valueGuard<BKTEvaluationDetails<BKTValue>>(
       await _invokeMethod(CallMethods.objectVariationDetails.name, argument: {
         CallMethodParams.featureId: featureId,
-        CallMethodParams.defaultValue: defaultValue.toJson(),
+        // Important: need encode the default value as json String
+        CallMethodParams.defaultValue: jsonEncode(defaultValue.toJson()),
       }),
       customMapping: (response) {
         final rs = BKTEvaluationDetails.fromJson<BKTValue>(

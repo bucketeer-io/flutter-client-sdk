@@ -363,11 +363,12 @@ void main() {
       );
 
       expect(
-          (await BKTClient.instance.objectVariationDetails(
-            'jsonVariation',
-            defaultValue: const BKTStructure({}),
-          )),
-          isNot(equals(
+        (await BKTClient.instance.objectVariationDetails(
+          'jsonVariation',
+          defaultValue: const BKTStructure({}),
+        )),
+        isNot(
+          equals(
             const BKTEvaluationDetails<BKTValue>(
               featureId: 'jsonVariation',
               featureVersion: 123,
@@ -380,7 +381,9 @@ void main() {
               }),
               reason: "DEFAULT",
             ),
-          )));
+          ),
+        ),
+      );
     });
 
     test("intVariation", () async {
@@ -590,8 +593,8 @@ void main() {
       );
 
       await expectLater(
-        BKTClient.instance.intVariationDetails('intVariationNotFound',
-            defaultValue: 1),
+        BKTClient.instance
+            .intVariationDetails('intVariationNotFound', defaultValue: 1),
         completion(
           const BKTEvaluationDetails<int>(
             featureId: 'intVariationNotFound',

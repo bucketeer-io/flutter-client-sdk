@@ -322,7 +322,7 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
             boolVariation(arguments, result)
             
         case .boolVariationDetails:
-            boolVariation(arguments, result)
+            boolVariationDetails(arguments, result)
             
         case .intVariation:
             intVariation(arguments, result)
