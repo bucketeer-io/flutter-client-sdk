@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 
 abstract class BKTValue {
   const BKTValue();
@@ -14,8 +15,8 @@ abstract class BKTValue {
     } else if (json is List) {
       return BKTList(json.map((e) => BKTValue.fromJson(e)).toList());
     } else if (json is Map) {
-      return BKTStructure(
-          json.map((key, value) => MapEntry(key.toString(), BKTValue.fromJson(value))));
+      return BKTStructure(json.map(
+          (key, value) => MapEntry(key.toString(), BKTValue.fromJson(value))));
     } else if (json == null) {
       return const BKTNull();
     } else {
@@ -36,6 +37,16 @@ abstract class BKTValue {
 
   @override
   String toString();
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! BKTValue) return false;
+    return runtimeType == other.runtimeType;
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 }
 
 class BKTBoolean extends BKTValue {
@@ -51,6 +62,16 @@ class BKTBoolean extends BKTValue {
 
   @override
   String toString() => value.toString();
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BKTBoolean &&
+          runtimeType == other.runtimeType &&
+          value == other.value;
+
+  @override
+  int get hashCode => value.hashCode;
 }
 
 class BKTString extends BKTValue {
@@ -66,6 +87,16 @@ class BKTString extends BKTValue {
 
   @override
   String toString() => value;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BKTString &&
+          runtimeType == other.runtimeType &&
+          value == other.value;
+
+  @override
+  int get hashCode => value.hashCode;
 }
 
 class BKTNumber extends BKTValue {
@@ -84,6 +115,16 @@ class BKTNumber extends BKTValue {
 
   @override
   String toString() => value.toString();
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BKTNumber &&
+          runtimeType == other.runtimeType &&
+          value == other.value;
+
+  @override
+  int get hashCode => value.hashCode;
 }
 
 class BKTList extends BKTValue {
@@ -99,6 +140,24 @@ class BKTList extends BKTValue {
 
   @override
   String toString() => value.map((e) => e.toString()).toList().toString();
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BKTList &&
+          runtimeType == other.runtimeType &&
+          _listEquals(value, other.value);
+
+  @override
+  int get hashCode => value.hashCode;
+
+  bool _listEquals(List<BKTValue> a, List<BKTValue> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
 }
 
 class BKTStructure extends BKTValue {
@@ -110,12 +169,21 @@ class BKTStructure extends BKTValue {
   Map<String, BKTValue>? asDictionary() => value;
 
   @override
-  dynamic toJson() =>
-      value.map((key, value) => MapEntry(key, value.toJson()));
+  dynamic toJson() => value.map((key, value) => MapEntry(key, value.toJson()));
 
   @override
   String toString() =>
       value.map((key, value) => MapEntry(key, value.toString())).toString();
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BKTStructure &&
+          runtimeType == other.runtimeType &&
+          mapEquals(value, other.value);
+
+  @override
+  int get hashCode => value.hashCode;
 }
 
 class BKTNull extends BKTValue {
@@ -126,4 +194,12 @@ class BKTNull extends BKTValue {
 
   @override
   String toString() => 'null';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BKTNull && runtimeType == other.runtimeType;
+
+  @override
+  int get hashCode => 0;
 }

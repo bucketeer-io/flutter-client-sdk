@@ -39,9 +39,15 @@ class BKTEvaluationDetails<T extends Object> {
         variationId == otherAsBKTEvaluationDetails.variationId;
     final bool isVariationNameEqual =
         variationName == otherAsBKTEvaluationDetails.variationName;
-    final bool isVariationValueEqual =
+    bool isVariationValueEqual =
         variationValue == otherAsBKTEvaluationDetails.variationValue;
     final bool isReasonEqual = reason == otherAsBKTEvaluationDetails.reason;
+
+    if (variationValue is Map) {
+      final variationValueMap = variationValue as Map;
+      final otherVariationValueMap = otherAsBKTEvaluationDetails.variationValue as Map;
+      isVariationValueEqual = mapEquals(variationValueMap, otherVariationValueMap);
+    }
 
     return isSameType &&
         isRuntimeTypeEqual &&
