@@ -31,7 +31,7 @@ void main() {
           return {
             'status': true,
             'response': {
-              'id': 'userId',
+              'id': 'userId123',
               'data': {'appVersion': '9.9.9', 'platform': 'iOS'}
             }
           };
@@ -68,7 +68,7 @@ void main() {
             'status': false,
             'errorCode': -1,
             'errorMessage':
-            'should not be called, should call objectVariationDetails instead'
+                'should not be called, should call objectVariationDetails instead'
           };
         case CallMethods.evaluationDetails:
           return {
@@ -185,11 +185,7 @@ void main() {
           };
       }
     });
-  });
 
-  tearDown(() {});
-
-  test('Bucketeer Success Cases Tests', () async {
     final config = BKTConfigBuilder()
         .apiKey("apikey")
         .apiEndpoint("api.bucketeer.io")
@@ -202,7 +198,7 @@ void main() {
         .appVersion("1.0.0")
         .build();
     final user = BKTUserBuilder()
-        .id("2023")
+        .id("userI123")
         .customAttributes({'app_version': '1.0.0'}).build();
 
     expectLater(
@@ -214,7 +210,20 @@ void main() {
         equals(const BKTResult.success()),
       ),
     );
+  });
 
+  tearDown(() {
+    /// Void method should not throw exception
+    expectLater(
+      BKTClient.instance.destroy().onError((error, stackTrace) =>
+          fail("BKTClient.instance.destroy should not throw an exception")),
+      completion(
+        equals(const BKTResult.success()),
+      ),
+    );
+  });
+
+  test('Bucketeer Success Cases Tests', () async {
     expectLater(
       BKTClient.instance
           .addEvaluationUpdateListener(MockEvaluationUpdateListener())
@@ -245,7 +254,7 @@ void main() {
       completion(
         equals(
           BKTResult<BKTUser>.success(
-              data: BKTUserBuilder().id('userId').customAttributes(
+              data: BKTUserBuilder().id('userId123').customAttributes(
             {
               'appVersion': '9.9.9',
               'platform': 'iOS',
@@ -292,11 +301,24 @@ void main() {
     );
 
     expect(
+      (await BKTClient.instance.objectVariation(
+        'jsonVariation',
+        defaultValue: const BKTStructure({}),
+      )),
+      const BKTStructure({
+        'id': BKTString('id123'),
+        'featureId': BKTString('featureId123'),
+        'featureVersion': BKTNumber(123),
+        'enable': BKTBoolean(true),
+      }),
+    );
+
+    expect(
       (await BKTClient.instance.objectVariationDetails(
         'jsonVariation',
         defaultValue: const BKTStructure({}),
       )),
-      const BKTEvaluationDetails<BKTStructure>(
+      const BKTEvaluationDetails<BKTValue>(
         featureId: 'jsonVariation',
         featureVersion: 123,
         userId: 'userId123',
@@ -312,25 +334,25 @@ void main() {
       ),
     );
 
-    // expectLater(
-    //   BKTClient.instance.jsonVariationDetails('jsonVariation', defaultValue: {}),
-    //   completion(
-    //     const BKTEvaluationDetails<Map<String, dynamic>>(
-    //       featureId: 'jsonVariation',
-    //       featureVersion: 123,
-    //       userId: 'userId123',
-    //       variationId: 'variationId123',
-    //       variationName: 'variationName123',
-    //       variationValue: {
-    //         'id': 'id123',
-    //         'featureId': 'featureId123',
-    //         'featureVersion': 123,
-    //         'enable': true,
-    //       },
-    //       reason: "DEFAULT",
-    //     ),
-    //   ),
-    // );
+    expect(
+        (await BKTClient.instance.objectVariationDetails(
+          'jsonVariation',
+          defaultValue: const BKTStructure({}),
+        )),
+        isNot(equals(
+          const BKTEvaluationDetails<BKTValue>(
+            featureId: 'jsonVariation',
+            featureVersion: 123,
+            userId: 'userId123',
+            variationId: 'variationId123',
+            variationName: 'variationName123',
+            variationValue: BKTStructure({
+              'id': BKTString('id123'),
+              'featureId': BKTString('featureId123'),
+            }),
+            reason: "DEFAULT",
+          ),
+        )));
 
     expectLater(
       BKTClient.instance.intVariation('intVariation', defaultValue: 0),
@@ -391,13 +413,97 @@ void main() {
         equals(const BKTResult.success()),
       ),
     );
+  });
 
-    /// Void method should not throw exception
+  test('Bucketeer Should Return Default Value Cases Tests', () async {
     expectLater(
-      BKTClient.instance.destroy().onError((error, stackTrace) =>
-          fail("BKTClient.instance.destroy should not throw an exception")),
+      BKTClient.instance
+          .stringVariation('stringVariationNotFound', defaultValue: ''),
       completion(
-        equals(const BKTResult.success()),
+        equals(''),
+      ),
+    );
+
+    expectLater(
+      BKTClient.instance.stringVariationDetails('stringVariationNotFound',
+          defaultValue: 'default'),
+      completion(
+        const BKTEvaluationDetails<String>(
+          featureId: 'stringVariationNotFound',
+          featureVersion: 0,
+          userId: 'userId123',
+          variationId: '',
+          variationName: '',
+          variationValue: 'default',
+          reason: "CLIENT",
+        ),
+      ),
+    );
+
+    expect(
+      (await BKTClient.instance
+          .jsonVariation('jsonVariationNotFound', defaultValue: {
+        'id': 'id123',
+      })),
+      Map<String, dynamic>.from(
+        {
+          'id': 'id123',
+        },
+      ),
+    );
+
+    expect(
+      (await BKTClient.instance.objectVariation(
+        'jsonVariationNotFound',
+        defaultValue: const BKTStructure({
+          'id': BKTString('id123'),
+        }),
+      )),
+      const BKTStructure({
+        'id': BKTString('id123'),
+      }),
+    );
+
+    expect(
+      (await BKTClient.instance.objectVariationDetails(
+        'jsonVariationNotFound',
+        defaultValue: const BKTStructure({
+          'id': BKTString('id123'),
+        }),
+      )),
+      const BKTEvaluationDetails<BKTValue>(
+        featureId: 'jsonVariationNotFound',
+        featureVersion: 0,
+        userId: 'userId123',
+        variationId: '',
+        variationName: '',
+        variationValue: BKTStructure({
+          'id': BKTString('id123'),
+        }),
+        reason: "CLIENT",
+      ),
+    );
+
+    expectLater(
+      BKTClient.instance.intVariation('intVariationNotFound', defaultValue: 1),
+      completion(
+        equals(1),
+      ),
+    );
+
+    expectLater(
+      BKTClient.instance
+          .doubleVariation('doubleVariationNotFound', defaultValue: 0.1),
+      completion(
+        equals(0.1),
+      ),
+    );
+
+    expectLater(
+      BKTClient.instance
+          .boolVariation('boolVariationNotFound', defaultValue: true),
+      completion(
+        equals(true),
       ),
     );
   });

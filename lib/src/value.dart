@@ -176,11 +176,13 @@ class BKTStructure extends BKTValue {
       value.map((key, value) => MapEntry(key, value.toString())).toString();
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is BKTStructure &&
-          runtimeType == other.runtimeType &&
-          mapEquals(value, other.value);
+  bool operator ==(Object other) {
+    final bool isIdentical = identical(this, other);
+    final bool isSameType = other is BKTStructure && runtimeType == other.runtimeType;
+    final bool isMapEqual = isSameType && mapEquals(value, (other as BKTStructure).value);
+
+    return isIdentical || isMapEqual;
+  }
 
   @override
   int get hashCode => value.hashCode;

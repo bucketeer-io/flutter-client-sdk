@@ -214,7 +214,7 @@ class BKTClient {
     return valueGuard<BKTEvaluationDetails<BKTValue>>(
       await _invokeMethod(CallMethods.objectVariationDetails.name, argument: {
         CallMethodParams.featureId: featureId,
-        CallMethodParams.defaultValue: defaultValue,
+        CallMethodParams.defaultValue: defaultValue.toJson(),
       }),
       customMapping: (response) {
         final rs = BKTEvaluationDetails.fromJson<BKTValue>(
