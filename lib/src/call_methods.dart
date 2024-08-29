@@ -15,7 +15,8 @@ enum CallMethods {
   destroy,
   unknown,
 
-  jsonVariationDetails,
+  objectVariation,
+  objectVariationDetails,
   intVariationDetails,
   boolVariationDetails,
   doubleVariationDetails,

@@ -1,4 +1,3 @@
-import 'package:bucketeer_flutter_client_sdk/src/evaluation.dart';
 import 'package:bucketeer_flutter_client_sdk/src/proxy_evaluation_update_listener.dart';
 import 'package:flutter/services.dart';
 import 'package:bucketeer_flutter_client_sdk/bucketeer_flutter_client_sdk.dart';
@@ -40,25 +39,36 @@ void main() {
           return {
             'status': false,
             'errorCode': -1,
-            'errorMessage': 'should not be called, should call stringVariationDetails instead'
+            'errorMessage':
+                'should not be called, should call stringVariationDetails instead'
           };
         case CallMethods.intVariation:
           return {
             'status': false,
             'errorCode': -1,
-            'errorMessage': 'should not be called, should call intVariationDetails instead'
+            'errorMessage':
+                'should not be called, should call intVariationDetails instead'
           };
         case CallMethods.doubleVariation:
           return {
             'status': false,
             'errorCode': -1,
-            'errorMessage': 'should not be called, should call doubleVariationDetails instead'
+            'errorMessage':
+                'should not be called, should call doubleVariationDetails instead'
           };
         case CallMethods.boolVariation:
           return {
             'status': false,
             'errorCode': -1,
-            'errorMessage': 'should not be called, should call boolVariationDetails instead'
+            'errorMessage':
+                'should not be called, should call boolVariationDetails instead'
+          };
+        case CallMethods.objectVariation:
+          return {
+            'status': false,
+            'errorCode': -1,
+            'errorMessage':
+            'should not be called, should call objectVariationDetails instead'
           };
         case CallMethods.evaluationDetails:
           return {
@@ -75,10 +85,15 @@ void main() {
             }
           };
         case CallMethods.jsonVariation:
+          expect(featureId, 'jsonVariation', reason: "featureId is not match");
           return {
-            'status': false,
-            'errorCode': -1,
-            'errorMessage': 'should not be called, should call jsonVariationDetails instead'
+            'status': true,
+            'response': {
+              'id': 'id123',
+              'featureId': 'featureId123',
+              'featureVersion': 123,
+              'enable': true
+            }
           };
         case CallMethods.addProxyEvaluationUpdateListener:
           return {
@@ -87,7 +102,7 @@ void main() {
           };
         case CallMethods.unknown:
           return null;
-        case CallMethods.jsonVariationDetails:
+        case CallMethods.objectVariationDetails:
           expect(featureId, 'jsonVariation', reason: "featureId is not match");
           return {
             'status': true,
@@ -137,7 +152,8 @@ void main() {
             }
           };
         case CallMethods.doubleVariationDetails:
-          expect(featureId, 'doubleVariation', reason: "featureId is not match");
+          expect(featureId, 'doubleVariation',
+              reason: "featureId is not match");
           return {
             'status': true,
             'response': {
@@ -152,7 +168,8 @@ void main() {
             }
           };
         case CallMethods.stringVariationDetails:
-          expect(featureId, 'stringVariation', reason: "featureId is not match");
+          expect(featureId, 'stringVariation',
+              reason: "featureId is not match");
           return {
             'status': true,
             'response': {
@@ -246,22 +263,24 @@ void main() {
     );
 
     expectLater(
-      BKTClient.instance.stringVariationDetails('stringVariation', defaultValue: ''),
+      BKTClient.instance
+          .stringVariationDetails('stringVariation', defaultValue: ''),
       completion(
-          const BKTEvaluationDetails<String>(
-            featureId: 'stringVariation',
-            featureVersion: 123,
-            userId: 'userId123',
-            variationId: 'variationId123',
-            variationName: 'variationName123',
-            variationValue: 'datadata',
-            reason: "DEFAULT",
-          ),
+        const BKTEvaluationDetails<String>(
+          featureId: 'stringVariation',
+          featureVersion: 123,
+          userId: 'userId123',
+          variationId: 'variationId123',
+          variationName: 'variationName123',
+          variationValue: 'datadata',
+          reason: "DEFAULT",
+        ),
       ),
     );
 
     expect(
-      (await BKTClient.instance.jsonVariation('jsonVariation', defaultValue: {})),
+      (await BKTClient.instance
+          .jsonVariation('jsonVariation', defaultValue: {})),
       Map<String, dynamic>.from(
         {
           'id': 'id123',
@@ -273,19 +292,22 @@ void main() {
     );
 
     expect(
-      (await BKTClient.instance.jsonVariationDetails('jsonVariation', defaultValue: {})),
-      const BKTEvaluationDetails<Map<String, dynamic>>(
+      (await BKTClient.instance.objectVariationDetails(
+        'jsonVariation',
+        defaultValue: const BKTStructure({}),
+      )),
+      const BKTEvaluationDetails<BKTStructure>(
         featureId: 'jsonVariation',
         featureVersion: 123,
         userId: 'userId123',
         variationId: 'variationId123',
         variationName: 'variationName123',
-        variationValue: {
-          'id': 'id123',
-          'featureId': 'featureId123',
-          'featureVersion': 123,
-          'enable': true,
-        },
+        variationValue: BKTStructure({
+          'id': BKTString('id123'),
+          'featureId': BKTString('featureId123'),
+          'featureVersion': BKTNumber(123),
+          'enable': BKTBoolean(true),
+        }),
         reason: "DEFAULT",
       ),
     );

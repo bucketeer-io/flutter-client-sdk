@@ -13,7 +13,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - Bucketeer (from `https://github.com/bucketeer-io/ios-client-sdk.git`, commit `d990311490bfbd235cb548df8b4aaf4bb48f88b9`)
+  - Bucketeer (from `https://github.com/bucketeer-io/ios-client-sdk.git`, commit `3515534d3a7faae2f048afce54bad82c31c9dc76`)
   - bucketeer_flutter_client_sdk (from `.symlinks/plugins/bucketeer_flutter_client_sdk/ios`)
   - Flutter (from `Flutter`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
@@ -22,7 +22,7 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   Bucketeer:
-    :commit: d990311490bfbd235cb548df8b4aaf4bb48f88b9
+    :commit: 3515534d3a7faae2f048afce54bad82c31c9dc76
     :git: https://github.com/bucketeer-io/ios-client-sdk.git
   bucketeer_flutter_client_sdk:
     :path: ".symlinks/plugins/bucketeer_flutter_client_sdk/ios"
@@ -37,7 +37,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   Bucketeer:
-    :commit: d990311490bfbd235cb548df8b4aaf4bb48f88b9
+    :commit: 3515534d3a7faae2f048afce54bad82c31c9dc76
     :git: https://github.com/bucketeer-io/ios-client-sdk.git
 
 SPEC CHECKSUMS:
@@ -48,6 +48,6 @@ SPEC CHECKSUMS:
   shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
   ua_client_hints: 7f4e0f5d390685e8f7efd6eb363594f760108926
 
-PODFILE CHECKSUM: 68c3b6ea363821109605b75a93813173983239da
+PODFILE CHECKSUM: ded9b13f8bbc6aa4ff5bf5b6d191544da9e03754
 
 COCOAPODS: 1.15.2

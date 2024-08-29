@@ -268,7 +268,7 @@ void main() {
             reason: "DEFAULT",
           ),
           equals(
-            BKTEvaluationDetails.fromJson<bool>(
+            BKTEvaluationDetails.fromJson<String>(
               {
                 'featureId': 'jsonVariation',
                 'featureVersion': 123,
