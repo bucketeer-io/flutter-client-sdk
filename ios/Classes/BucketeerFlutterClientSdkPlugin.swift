@@ -101,14 +101,14 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
     }
     
     private func boolVariation(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        guard let context : VariationRequestContext<Bool> = requiredRequestVariationContext(arguments, result) else { return }
+        guard let context : VariationRequestContext<Bool> = requiredVariationContext(arguments, result) else { return }
         
         let response = context.client.boolVariation(featureId: context.featureId, defaultValue: context.defaultValue)
         success(result: result, response: response)
     }
     
     private func boolVariationDetails(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        guard let context : VariationRequestContext<Bool> = requiredRequestVariationContext(arguments, result) else { return }
+        guard let context : VariationRequestContext<Bool> = requiredVariationContext(arguments, result) else { return }
         
         let response = context.client.boolVariationDetails(featureId: context.featureId, defaultValue: context.defaultValue)
         success(
@@ -117,14 +117,14 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
     }
     
     private func stringVariation(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        guard let context : VariationRequestContext<String> = requiredRequestVariationContext(arguments, result) else { return }
+        guard let context : VariationRequestContext<String> = requiredVariationContext(arguments, result) else { return }
         
         let response = context.client.stringVariation(featureId: context.featureId, defaultValue: context.defaultValue)
         success(result: result, response: response)
     }
     
     private func stringVariationDetails(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        guard let context : VariationRequestContext<String> = requiredRequestVariationContext(arguments, result) else { return }
+        guard let context : VariationRequestContext<String> = requiredVariationContext(arguments, result) else { return }
         
         let response = context.client.stringVariationDetails(featureId: context.featureId, defaultValue: context.defaultValue)
         success(
@@ -133,14 +133,14 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
     }
     
     private func intVariation(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        guard let context : VariationRequestContext<Int> = requiredRequestVariationContext(arguments, result) else { return }
+        guard let context : VariationRequestContext<Int> = requiredVariationContext(arguments, result) else { return }
         
         let response = context.client.intVariation(featureId: context.featureId, defaultValue: context.defaultValue)
         success(result: result, response: response)
     }
     
     private func intVariationDetails(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        guard let context : VariationRequestContext<Int> = requiredRequestVariationContext(arguments, result) else { return }
+        guard let context : VariationRequestContext<Int> = requiredVariationContext(arguments, result) else { return }
         
         let response = context.client.intVariationDetails(featureId: context.featureId, defaultValue: context.defaultValue)
         success(
@@ -149,14 +149,14 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
     }
     
     private func doubleVariation(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        guard let context : VariationRequestContext<Double> = requiredRequestVariationContext(arguments, result) else { return }
+        guard let context : VariationRequestContext<Double> = requiredVariationContext(arguments, result) else { return }
         
         let response = context.client.doubleVariation(featureId: context.featureId, defaultValue: context.defaultValue)
         success(result: result, response: response)
     }
     
     private func doubleVariationDetails(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        guard let context : VariationRequestContext<Double> = requiredRequestVariationContext(arguments, result) else { return }
+        guard let context : VariationRequestContext<Double> = requiredVariationContext(arguments, result) else { return }
         
         let response = context.client.doubleVariationDetails(featureId: context.featureId, defaultValue: context.defaultValue)
         success(
@@ -165,14 +165,14 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
     }
     
     private func objectVariation(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        guard let context : VariationRequestContext<String> = requiredRequestVariationContext(arguments, result) else { return }
+        guard let context : VariationRequestContext<String> = requiredVariationContext(arguments, result) else { return }
         
         let response = context.client.objectVariation(featureId: context.featureId, defaultValue: context.defaultValue.jsonStringToBKTValue())
         success(result: result, response: response)
     }
     
     private func objectVariationDetails(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        guard let context : VariationRequestContext<String> = requiredRequestVariationContext(arguments, result) else { return }
+        guard let context : VariationRequestContext<String> = requiredVariationContext(arguments, result) else { return }
   
         let response = context.client.objectVariationDetails(featureId: context.featureId, defaultValue: context.defaultValue.jsonStringToBKTValue())
         success(
@@ -182,7 +182,7 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
     
     @available(*, deprecated, message: "will remove it after the iOS native SDK remove it")
     private func jsonVariation(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) {
-        guard let context : VariationRequestContext<[String: AnyHashable]> = requiredRequestVariationContext(arguments, result) else { return }
+        guard let context : VariationRequestContext<[String: AnyHashable]> = requiredVariationContext(arguments, result) else { return }
         
         let response = context.client.jsonVariation(featureId: context.featureId, defaultValue: context.defaultValue)
         success(result: result, response: response)
@@ -434,7 +434,7 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
     }
     
 
-    private func requiredRequestVariationContext<T>(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) -> VariationRequestContext<T>? {
+    private func requiredVariationContext<T>(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) -> VariationRequestContext<T>? {
         guard let featureId = arguments?[BKTFlutterCallParams.featureId] as? String else {
             failParamFeatureIdRequired(result: result)
             return nil

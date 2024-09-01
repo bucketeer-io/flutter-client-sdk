@@ -2,14 +2,19 @@ package io.bucketeer.sdk.flutter
 
 import androidx.annotation.VisibleForTesting
 
-@VisibleForTesting
 internal enum class CallMethods {
   Initialize,
   StringVariation,
+  StringVariationDetails,
   IntVariation,
+  IntVariationDetails,
   DoubleVariation,
+  DoubleVariationDetails,
   BoolVariation,
+  BoolVariationDetails,
   JsonVariation,
+  ObjectVariation,
+  ObjectVariationDetails,
   Track,
   CurrentUser,
   UpdateUserAttributes,

@@ -108,7 +108,7 @@ void main() {
           return null;
         case CallMethods.objectVariationDetails:
           expect(featureId, 'jsonVariation', reason: "featureId is not match");
-          expect(defaultValue is Map && mapEquals(defaultValue, {}), true,
+          expect(defaultValue is String && defaultValue == "{}", true,
               reason: "defaultValue is not match");
           return {
             'status': true,

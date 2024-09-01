@@ -54,9 +54,9 @@ android {
 }
 
 dependencies {
-  implementation 'androidx.annotation:annotation:1.7.1'
-  //implementation 'io.bucketeer:android-client-sdk:2.1.5'
-  implementation 'com.github.duyhungtnn:android-client-sdk:feat~get-variation-details-by-variation-type-SNAPSHOT'
+  implementation 'androidx.annotation:annotation:1.8.2'
+  //implementation 'io.bucketeer:android-client-sdk:2.1.6'
+  implementation 'com.github.duyhungtnn:android-client-sdk:e41aca82a2'
   testImplementation 'junit:junit:4.13.2'
   testImplementation 'org.json:json:20240205'
 }

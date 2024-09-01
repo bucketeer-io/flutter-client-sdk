@@ -4,8 +4,11 @@ import android.content.Context
 import android.util.Log
 import io.bucketeer.sdk.android.BKTClient
 import io.bucketeer.sdk.android.BKTConfig
+import io.bucketeer.sdk.android.BKTEvaluationDetails
 import io.bucketeer.sdk.android.BKTException
 import io.bucketeer.sdk.android.BKTUser
+import io.bucketeer.sdk.android.BKTValue
+import io.bucketeer.sdk.android.internal.evaluation.getBKTValue
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.BinaryMessenger
@@ -29,7 +32,6 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
     const val METHOD_CHANNEL_NAME = "io.bucketeer.sdk.plugin.flutter"
     const val EVALUATION_UPDATE_EVENT_CHANNEL_NAME =
       "$METHOD_CHANNEL_NAME::evaluation.update.listener"
-    const val TAG = "BucketeerFlutter"
   }
 
   private var applicationContext: Context? = null
@@ -156,7 +158,7 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
     }
   }
 
-  private fun registerProxyEvaluationUpdateListener(logger: BucketeerPluginLogger): String {
+  private fun registerProxyEvaluationUpdateListener(): String {
     return BKTClient.getInstance().addEvaluationUpdateListener(
       evaluationUpdateListener
     )
@@ -170,13 +172,17 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
     success(result, map)
   }
 
+  @Deprecated(
+    message =
+    "evaluationDetails() is deprecated",
+  )
   private fun evaluationDetails(call: MethodCall, result: MethodChannel.Result) {
     val args = call.arguments<Map<String, Any>>()!!
     val featureId = args["featureId"] as? String
       ?: return failWithIllegalArgumentException(result, "featureId is required")
     val evaluation = BKTClient.getInstance().evaluationDetails(featureId)
     if (evaluation == null) {
-      val ex = BKTException.FeatureNotFoundException(message = "Feature flag not found");
+      val ex = BKTException.FeatureNotFoundException(message = "Feature flag not found")
       fail(result, ex.message, exception = ex)
     } else {
       val map: MutableMap<String, Any> = HashMap()
@@ -193,43 +199,101 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
   }
 
   private fun stringVariation(call: MethodCall, result: MethodChannel.Result) {
-    val args = call.arguments<Map<String, Any>>()!!
-    val featureId = args["featureId"] as? String
-      ?: return failWithIllegalArgumentException(result, "featureId is required")
-    val defaultValue = args["defaultValue"] as? String
-      ?: return failWithIllegalArgumentException(result, "defaultValue is required")
-    val response = BKTClient.getInstance().stringVariation(featureId, defaultValue)
-    success(result, response)
+    val requestContext = requiredVariationContext<String>(call, result)
+    requestContext?.let {
+      val response = BKTClient.getInstance().stringVariation(requestContext.featureId, requestContext.defaultValue)
+      success(result, response)
+    }
+  }
+
+  private fun stringVariationDetails(call: MethodCall, result: MethodChannel.Result) {
+    val requestContext = requiredVariationContext<String>(call, result)
+    requestContext?.let {
+      val response = BKTClient.getInstance().stringVariationDetails(requestContext.featureId, requestContext.defaultValue)
+      success(result, response.toMap())
+    }
   }
 
   private fun intVariation(call: MethodCall, result: MethodChannel.Result) {
-    val args = call.arguments<Map<String, Any>>()!!
-    val featureId = args["featureId"] as? String
-      ?: return failWithIllegalArgumentException(result, "featureId is required")
-    val defaultValue = args["defaultValue"] as? Int
-      ?: return failWithIllegalArgumentException(result, "defaultValue is required")
-    val response = BKTClient.getInstance().intVariation(featureId, defaultValue)
-    success(result, response)
+    val requestContext = requiredVariationContext<Int>(call, result)
+    requestContext?.let {
+      val response = BKTClient.getInstance().intVariation(requestContext.featureId, requestContext.defaultValue)
+      success(result, response)
+    }
+  }
+
+  private fun intVariationDetails(call: MethodCall, result: MethodChannel.Result) {
+    val requestContext = requiredVariationContext<Int>(call, result)
+    requestContext?.let {
+      val response = BKTClient.getInstance().intVariationDetails(requestContext.featureId, requestContext.defaultValue)
+      success(result, response.toMap())
+    }
   }
 
   private fun doubleVariation(call: MethodCall, result: MethodChannel.Result) {
-    val args = call.arguments<Map<String, Any>>()!!
-    val featureId = args["featureId"] as? String
-      ?: return failWithIllegalArgumentException(result, "featureId is required")
-    val defaultValue = args["defaultValue"] as? Double
-      ?: return failWithIllegalArgumentException(result, "defaultValue is required")
-    val response = BKTClient.getInstance().doubleVariation(featureId, defaultValue)
-    success(result, response)
+    val requestContext = requiredVariationContext<Double>(call, result)
+    requestContext?.let {
+      val response = BKTClient.getInstance().doubleVariation(requestContext.featureId, requestContext.defaultValue)
+      success(result, response)
+    }
+  }
+
+  private fun doubleVariationDetails(call: MethodCall, result: MethodChannel.Result) {
+    val requestContext = requiredVariationContext<Double>(call, result)
+    requestContext?.let {
+      val response = BKTClient.getInstance().doubleVariationDetails(requestContext.featureId, requestContext.defaultValue)
+      success(result, response.toMap())
+    }
   }
 
   private fun boolVariation(call: MethodCall, result: MethodChannel.Result) {
-    val args = call.arguments<Map<String, Any>>()!!
-    val featureId = args["featureId"] as? String
-      ?: return failWithIllegalArgumentException(result, "featureId is required")
-    val defaultValue = args["defaultValue"] as? Boolean
-      ?: return failWithIllegalArgumentException(result, "defaultValue is required")
-    val response = BKTClient.getInstance().booleanVariation(featureId, defaultValue)
-    success(result, response)
+    val requestContext = requiredVariationContext<Boolean>(call, result)
+    requestContext?.let {
+      val response = BKTClient.getInstance().booleanVariation(requestContext.featureId, requestContext.defaultValue)
+      success(result, response)
+    }
+  }
+
+  private fun boolVariationDetails(call: MethodCall, result: MethodChannel.Result) {
+    val requestContext = requiredVariationContext<Boolean>(call, result)
+    requestContext?.let {
+      val response = BKTClient.getInstance().boolVariationDetails(requestContext.featureId, requestContext.defaultValue)
+      success(result, response.toMap())
+    }
+  }
+
+  private fun objectVariation(call: MethodCall, result: MethodChannel.Result) {
+    val requestContext = requiredVariationContext<String>(call, result)
+    requestContext?.let {
+      val response = BKTClient.getInstance().objectVariation(requestContext.featureId, requestContext.defaultValue.getBKTValue())
+      success(result, response)
+    }
+  }
+
+  private fun objectVariationDetails(call: MethodCall, result: MethodChannel.Result) {
+    val requestContext = requiredVariationContext<String>(call, result)
+    requestContext?.let {
+      val response = BKTClient.getInstance().objectVariationDetails(requestContext.featureId, requestContext.defaultValue.getBKTValue())
+      success(result, response.toMap())
+    }
+  }
+
+  @Deprecated(
+    message =
+    "jsonVariation() is deprecated",
+  )
+  private fun jsonVariation(call: MethodCall, result: MethodChannel.Result) {
+    try {
+      val requestContext = requiredVariationContext<Map<*, *>>(call, result)
+      requestContext?.let {
+        val response =
+          BKTClient.getInstance().jsonVariation(requestContext.featureId, JSONObject(requestContext.defaultValue))
+        val rawJson = response.toMap()
+        success(result, rawJson)
+      }
+    } catch (ex: Exception) {
+      fail(result, message = ex.message ?: "Failed to get JSON variation.", exception = ex)
+    }
   }
 
   private fun track(call: MethodCall, result: MethodChannel.Result) {
@@ -243,22 +307,6 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
       BKTClient.getInstance().track(goalId)
     }
     success(result)
-  }
-
-  private fun jsonVariation(call: MethodCall, result: MethodChannel.Result) {
-    try {
-      val args = call.arguments<Map<String, Any>>()!!
-      val featureId = args["featureId"] as? String
-        ?: return failWithIllegalArgumentException(result, "featureId is required")
-      val defaultValue =
-        args["defaultValue"] as? Map<*, *> ?: return failWithIllegalArgumentException(result, "defaultValue is required")
-      val response =
-        BKTClient.getInstance().jsonVariation(featureId, JSONObject(defaultValue))
-      val rawJson = response.toMap()
-      success(result, rawJson)
-    } catch (ex: Exception) {
-      fail(result, message = ex.message ?: "Failed to get JSON variation.", exception = ex)
-    }
   }
 
   private fun updateUserAttributes(call: MethodCall, result: MethodChannel.Result) {
@@ -305,7 +353,7 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
 
   override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
     try {
-      val callMethod = CallMethods.values().firstOrNull { call.method.lowercase() == it.name.lowercase() }
+      val callMethod = CallMethods.entries.firstOrNull { call.method.lowercase() == it.name.lowercase() }
         ?: CallMethods.Unknown
 
       if (CallMethods.shouldAssertInitialize(callMethod)) {
@@ -330,24 +378,48 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
           stringVariation(call, result)
         }
 
+        CallMethods.StringVariationDetails -> {
+          stringVariationDetails(call, result)
+        }
+
         CallMethods.IntVariation -> {
           intVariation(call, result)
+        }
+
+        CallMethods.IntVariationDetails -> {
+          intVariationDetails(call, result)
         }
 
         CallMethods.DoubleVariation -> {
           doubleVariation(call, result)
         }
 
+        CallMethods.DoubleVariationDetails -> {
+          doubleVariationDetails(call, result)
+        }
+
         CallMethods.BoolVariation -> {
           boolVariation(call, result)
         }
 
-        CallMethods.Track -> {
-          track(call, result)
+        CallMethods.BoolVariationDetails -> {
+          boolVariationDetails(call, result)
+        }
+
+        CallMethods.ObjectVariation -> {
+          objectVariation(call, result)
+        }
+
+        CallMethods.ObjectVariationDetails -> {
+          objectVariationDetails(call, result)
         }
 
         CallMethods.JsonVariation -> {
           jsonVariation(call, result)
+        }
+
+        CallMethods.Track -> {
+          track(call, result)
         }
 
         CallMethods.UpdateUserAttributes -> {
@@ -369,7 +441,7 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
           // Register the proxy listener if needed
           var listenToken = evaluationUpdateListenToken
           if (listenToken == null) {
-            listenToken = registerProxyEvaluationUpdateListener(logger)
+            listenToken = registerProxyEvaluationUpdateListener()
             evaluationUpdateListenToken = listenToken
           }
           success(result, listenToken)
@@ -425,4 +497,50 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
     map["errorCode"] = exception?.toErrorCode() ?: 0
     result?.success(map)
   }
+
+  private inline fun <reified T> requiredVariationContext(call: MethodCall, result: MethodChannel.Result): VariationRequestContext<T>? {
+    val args = call.arguments<Map<String, Any>>()!!
+    val featureId = args["featureId"] as? String
+    if (featureId == null) {
+      failWithIllegalArgumentException(result, "featureId is required")
+      return null
+    }
+    val defaultValue = args["defaultValue"]
+    if (defaultValue is T) {
+      return VariationRequestContext(featureId, defaultValue)
+    }
+    failWithIllegalArgumentException(result, "defaultValue is required")
+    return null
+  }
+}
+
+class VariationRequestContext<T>(
+  val featureId: String,
+  val defaultValue: T
+)
+
+inline fun <reified T : Any> BKTEvaluationDetails<T>.toMap(): Map<String, Any> {
+  val map: MutableMap<String, Any> = HashMap()
+  val evaluation = this
+  map["featureId"] = evaluation.featureId
+  map["featureVersion"] = evaluation.featureVersion
+  map["userId"] = evaluation.userId
+  map["variationId"] = evaluation.variationId
+  map["variationName"] = evaluation.variationName
+  if (evaluation.variationValue is BKTValue) {
+    map["variationValue"] = (evaluation.variationValue as BKTValue).toRawData()
+  } else {
+    map["variationValue"] = evaluation.variationValue
+  }
+  map["reason"] = evaluation.reason.name
+  return map
+}
+
+fun BKTValue.toRawData(): Any = when (this) {
+  is BKTValue.String -> this.string
+  is BKTValue.Boolean -> this.boolean
+  is BKTValue.Number -> this.number
+  is BKTValue.Structure -> this.structure.mapValues { it.value.toRawData() }
+  is BKTValue.List -> this.list.map { it.toRawData() }
+  BKTValue.Null -> "null"
 }
