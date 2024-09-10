@@ -79,7 +79,7 @@ void main() async {
       debugPrint("Bucketeer tests finished");
     });
 
-    testWidgets('testStringVariation', (WidgetTester _) async {
+    test('testStringVariation', () async {
       await expectLater(
         BKTClient.instance
             .stringVariation(featureIdString, defaultValue: "test"),
@@ -89,201 +89,200 @@ void main() async {
       );
     });
 
-    // testWidgets('testStringVariationDetail', (WidgetTester _) async {
-    //   expect(
-    //       await BKTClient.instance
-    //           .stringVariationDetails(featureIdString, defaultValue: "default"),
-    //       const BKTEvaluationDetails<String>(
-    //           featureId: featureIdString,
-    //           featureVersion: 4,
-    //           userId: userId,
-    //           variationId: "2e696c59-ac2f-4b54-82a7-4aecfdd80224",
-    //           variationName: "variation 1",
-    //           variationValue: "value-1",
-    //           reason: "DEFAULT"));
-    //
-    //   expect(
-    //       await BKTClient.instance.objectVariationDetails(featureIdString,
-    //           defaultValue: const BKTString("default")),
-    //       const BKTEvaluationDetails<BKTValue>(
-    //           featureId: featureIdString,
-    //           featureVersion: 4,
-    //           userId: userId,
-    //           variationId: "2e696c59-ac2f-4b54-82a7-4aecfdd80224",
-    //           variationName: "variation 1",
-    //           variationValue: BKTString("value-1"),
-    //           reason: "DEFAULT"));
-    //
-    //   expect(
-    //       await BKTClient.instance.evaluationDetails(featureIdString),
-    //       const BKTEvaluation(
-    //           id: "feature-flutter-e2e-string:4:bucketeer-flutter-user-id-1",
-    //           featureId: featureIdString,
-    //           featureVersion: 4,
-    //           userId: userId,
-    //           variationId: "2e696c59-ac2f-4b54-82a7-4aecfdd80224",
-    //           variationName: "variation 1",
-    //           variationValue: "value-1",
-    //           reason: "DEFAULT"));
-    // });
+    testWidgets('testStringVariationDetail', (WidgetTester _) async {
+      expect(
+          await BKTClient.instance
+              .stringVariationDetails(featureIdString, defaultValue: "default"),
+          const BKTEvaluationDetails<String>(
+              featureId: featureIdString,
+              featureVersion: 4,
+              userId: userId,
+              variationId: "2e696c59-ac2f-4b54-82a7-4aecfdd80224",
+              variationName: "variation 1",
+              variationValue: "value-1",
+              reason: "DEFAULT"));
 
-    // testWidgets('testDoubleVariation', (WidgetTester _) async {
-    //   await expectLater(
-    //     BKTClient.instance
-    //         .doubleVariation(featureIdDouble, defaultValue: 100.0),
-    //     completion(
-    //       equals(featureIdDoubleValue),
-    //     ),
-    //   );
-    // });
+      expect(
+          await BKTClient.instance.objectVariationDetails(featureIdString,
+              defaultValue: const BKTString("default")),
+          const BKTEvaluationDetails<BKTValue>(
+              featureId: featureIdString,
+              featureVersion: 4,
+              userId: userId,
+              variationId: "2e696c59-ac2f-4b54-82a7-4aecfdd80224",
+              variationName: "variation 1",
+              variationValue: BKTString("value-1"),
+              reason: "DEFAULT"));
 
-    // testWidgets('testDoubleVariationDetail', (WidgetTester _) async {
-    //   expect(
-    //       await BKTClient.instance
-    //           .doubleVariationDetails(featureIdDouble, defaultValue: 1.0),
-    //       const BKTEvaluationDetails<double>(
-    //           featureId: featureIdDouble,
-    //           featureVersion: 3,
-    //           userId: userId,
-    //           variationId: "a141d1fa-85ef-4124-af5e-25374225474b",
-    //           variationName: "variation 2.1",
-    //           variationValue: 2.1,
-    //           reason: "DEFAULT"));
-    //
-    //   expect(
-    //       await BKTClient.instance.objectVariationDetails(featureIdDouble,
-    //           defaultValue: const BKTNumber(1.0)),
-    //       const BKTEvaluationDetails<BKTValue>(
-    //           featureId: featureIdDouble,
-    //           featureVersion: 3,
-    //           userId: userId,
-    //           variationId: "a141d1fa-85ef-4124-af5e-25374225474b",
-    //           variationName: "variation 2.1",
-    //           variationValue: BKTNumber(2.1),
-    //           reason: "DEFAULT"));
-    // });
+      expect(
+          await BKTClient.instance.evaluationDetails(featureIdString),
+          const BKTEvaluation(
+              id: "feature-flutter-e2e-string:4:bucketeer-flutter-user-id-1",
+              featureId: featureIdString,
+              featureVersion: 4,
+              userId: userId,
+              variationId: "2e696c59-ac2f-4b54-82a7-4aecfdd80224",
+              variationName: "variation 1",
+              variationValue: "value-1",
+              reason: "DEFAULT"));
+    });
 
-    // testWidgets('testBoolVariation', (WidgetTester _) async {
-    //   await expectLater(
-    //     BKTClient.instance.boolVariation(featureIdBoolean, defaultValue: false),
-    //     completion(
-    //       equals(featureIdBooleanValue),
-    //     ),
-    //   );
-    // });
-    // testWidgets('testBoolVariationDetail', (WidgetTester _) async {
-    //   expect(
-    //       await BKTClient.instance
-    //           .boolVariationDetails(featureIdBoolean, defaultValue: false),
-    //       const BKTEvaluationDetails<bool>(
-    //           featureId: featureIdBoolean,
-    //           featureVersion: 3,
-    //           userId: userId,
-    //           variationId: "cbd42331-094e-4306-aacd-d7bf3f07cf65",
-    //           variationName: "variation true",
-    //           variationValue: true,
-    //           reason: "DEFAULT"));
-    //
-    //   expect(
-    //       await BKTClient.instance.objectVariationDetails(featureIdBoolean,
-    //           defaultValue: const BKTBoolean(false)),
-    //       const BKTEvaluationDetails<BKTValue>(
-    //           featureId: featureIdBoolean,
-    //           featureVersion: 3,
-    //           userId: userId,
-    //           variationId: "cbd42331-094e-4306-aacd-d7bf3f07cf65",
-    //           variationName: "variation true",
-    //           variationValue: BKTBoolean(true),
-    //           reason: "DEFAULT"));
-    // });
-    //
-    // testWidgets('testIntVariation', (WidgetTester _) async {
-    //   await expectLater(
-    //     BKTClient.instance.intVariation(featureIdInt, defaultValue: 1000),
-    //     completion(
-    //       equals(featureIdIntValue),
-    //     ),
-    //   );
-    // });
+    testWidgets('testDoubleVariation', (WidgetTester _) async {
+      await expectLater(
+        BKTClient.instance
+            .doubleVariation(featureIdDouble, defaultValue: 100.0),
+        completion(
+          equals(featureIdDoubleValue),
+        ),
+      );
+    });
 
-    // testWidgets('testIntVariationDetail', (WidgetTester _) async {
-    //   expect(
-    //       await BKTClient.instance
-    //           .intVariationDetails(featureIdInt, defaultValue: 1),
-    //       const BKTEvaluationDetails<int>(
-    //           featureId: featureIdInt,
-    //           featureVersion: 3,
-    //           userId: userId,
-    //           variationId: "36f14c02-300a-48f3-b4eb-b296afba3953",
-    //           variationName: "variation 10",
-    //           variationValue: 10,
-    //           reason: "DEFAULT"));
-    //
-    //   expect(
-    //       await BKTClient.instance.objectVariationDetails(featureIdInt,
-    //           defaultValue: const BKTNumber(1)),
-    //       const BKTEvaluationDetails<BKTValue>(
-    //           featureId: featureIdInt,
-    //           featureVersion: 3,
-    //           userId: userId,
-    //           variationId: "36f14c02-300a-48f3-b4eb-b296afba3953",
-    //           variationName: "variation 10",
-    //           variationValue: BKTNumber(10),
-    //           reason: "DEFAULT"));
-    // });
+    testWidgets('testDoubleVariationDetail', (WidgetTester _) async {
+      expect(
+          await BKTClient.instance
+              .doubleVariationDetails(featureIdDouble, defaultValue: 1.0),
+          const BKTEvaluationDetails<double>(
+              featureId: featureIdDouble,
+              featureVersion: 3,
+              userId: userId,
+              variationId: "a141d1fa-85ef-4124-af5e-25374225474b",
+              variationName: "variation 2.1",
+              variationValue: 2.1,
+              reason: "DEFAULT"));
 
-    // testWidgets('testJSONVariation', (WidgetTester _) async {
-    //   var result = await BKTClient.instance
-    //       .jsonVariation(featureIdJson, defaultValue: {});
-    //   expect(result, featureIdJsonValue);
-    // });
+      expect(
+          await BKTClient.instance.objectVariationDetails(featureIdDouble,
+              defaultValue: const BKTNumber(1.0)),
+          const BKTEvaluationDetails<BKTValue>(
+              featureId: featureIdDouble,
+              featureVersion: 3,
+              userId: userId,
+              variationId: "a141d1fa-85ef-4124-af5e-25374225474b",
+              variationName: "variation 2.1",
+              variationValue: BKTNumber(2.1),
+              reason: "DEFAULT"));
+    });
 
-    // testWidgets('testSendTheBKTValueAsTheDefaultValueToTheNativeSideAndVersa', (WidgetTester _) async {
-    //   expect(
-    //       await BKTClient.instance.objectVariation("notFoundFeatureIdJson",
-    //           defaultValue: const BKTBoolean(false)),
-    //       const BKTBoolean(false));
-    //   expect(
-    //       await BKTClient.instance.objectVariation("notFoundFeatureIdJson",
-    //           defaultValue: const BKTString("false")),
-    //       const BKTString("false"));
-    //   expect(
-    //       await BKTClient.instance.objectVariation("notFoundFeatureIdJson",
-    //           defaultValue: const BKTNumber(1.2)),
-    //       const BKTNumber(1.2));
-    //   expect(
-    //       await BKTClient.instance.objectVariation("notFoundFeatureIdJson",
-    //           defaultValue: const BKTList([BKTNumber(1), BKTString("value")])),
-    //       const BKTList([BKTNumber(1), BKTString("value")]));
-    //   expect(
-    //       await BKTClient.instance.objectVariation("notFoundFeatureIdJson",
-    //           defaultValue: const BKTStructure(
-    //               {"key": BKTNumber(1), "key2": BKTString("value")})),
-    //       const BKTStructure(
-    //           {"key": BKTNumber(1), "key2": BKTString("value")}));
-    // });
+    testWidgets('testBoolVariation', (WidgetTester _) async {
+      await expectLater(
+        BKTClient.instance.boolVariation(featureIdBoolean, defaultValue: false),
+        completion(
+          equals(featureIdBooleanValue),
+        ),
+      );
+    });
+    testWidgets('testBoolVariationDetail', (WidgetTester _) async {
+      expect(
+          await BKTClient.instance
+              .boolVariationDetails(featureIdBoolean, defaultValue: false),
+          const BKTEvaluationDetails<bool>(
+              featureId: featureIdBoolean,
+              featureVersion: 3,
+              userId: userId,
+              variationId: "cbd42331-094e-4306-aacd-d7bf3f07cf65",
+              variationName: "variation true",
+              variationValue: true,
+              reason: "DEFAULT"));
 
-    // testWidgets('testObjectVariation', (WidgetTester _) async {
-    //   expect(
-    //       await BKTClient.instance.objectVariation(featureIdJson,
-    //           defaultValue: const BKTBoolean(false)),
-    //       const BKTStructure({"key": BKTString("value-1")}));
-    // });
-    //
-    // testWidgets('testObjectVariationDetail', (WidgetTester _) async {
-    //   var result = await BKTClient.instance.objectVariationDetails(
-    //       featureIdJson,
-    //       defaultValue: const BKTNumber(0));
-    //   var expected = const BKTEvaluationDetails<BKTValue>(
-    //       featureId: featureIdJson,
-    //       featureVersion: 3,
-    //       userId: userId,
-    //       variationId: "813070cf-7d6b-45a9-8713-cf9816d63997",
-    //       variationName: "variation 1",
-    //       variationValue: BKTStructure({"key": BKTString("value-1")}),
-    //       reason: "DEFAULT");
-    //   expect(result, expected);
-    // });
+      expect(
+          await BKTClient.instance.objectVariationDetails(featureIdBoolean,
+              defaultValue: const BKTBoolean(false)),
+          const BKTEvaluationDetails<BKTValue>(
+              featureId: featureIdBoolean,
+              featureVersion: 3,
+              userId: userId,
+              variationId: "cbd42331-094e-4306-aacd-d7bf3f07cf65",
+              variationName: "variation true",
+              variationValue: BKTBoolean(true),
+              reason: "DEFAULT"));
+    });
+
+    testWidgets('testIntVariation', (WidgetTester _) async {
+      await expectLater(
+        BKTClient.instance.intVariation(featureIdInt, defaultValue: 1000),
+        completion(
+          equals(featureIdIntValue),
+        ),
+      );
+    });
+    testWidgets('testIntVariationDetail', (WidgetTester _) async {
+      expect(
+          await BKTClient.instance
+              .intVariationDetails(featureIdInt, defaultValue: 1),
+          const BKTEvaluationDetails<int>(
+              featureId: featureIdInt,
+              featureVersion: 3,
+              userId: userId,
+              variationId: "36f14c02-300a-48f3-b4eb-b296afba3953",
+              variationName: "variation 10",
+              variationValue: 10,
+              reason: "DEFAULT"));
+
+      expect(
+          await BKTClient.instance.objectVariationDetails(featureIdInt,
+              defaultValue: const BKTNumber(1)),
+          const BKTEvaluationDetails<BKTValue>(
+              featureId: featureIdInt,
+              featureVersion: 3,
+              userId: userId,
+              variationId: "36f14c02-300a-48f3-b4eb-b296afba3953",
+              variationName: "variation 10",
+              variationValue: BKTNumber(10),
+              reason: "DEFAULT"));
+    });
+
+    testWidgets('testJSONVariation', (WidgetTester _) async {
+      var result = await BKTClient.instance
+          .jsonVariation(featureIdJson, defaultValue: {});
+      expect(result, featureIdJsonValue);
+    });
+
+    testWidgets('testSendTheBKTValueAsTheDefaultValueToTheNativeSideAndVersa', (WidgetTester _) async {
+      expect(
+          await BKTClient.instance.objectVariation("notFoundFeatureIdJson",
+              defaultValue: const BKTBoolean(false)),
+          const BKTBoolean(false));
+      expect(
+          await BKTClient.instance.objectVariation("notFoundFeatureIdJson",
+              defaultValue: const BKTString("false")),
+          const BKTString("false"));
+      expect(
+          await BKTClient.instance.objectVariation("notFoundFeatureIdJson",
+              defaultValue: const BKTNumber(1.2)),
+          const BKTNumber(1.2));
+      expect(
+          await BKTClient.instance.objectVariation("notFoundFeatureIdJson",
+              defaultValue: const BKTList([BKTNumber(1), BKTString("value")])),
+          const BKTList([BKTNumber(1), BKTString("value")]));
+      expect(
+          await BKTClient.instance.objectVariation("notFoundFeatureIdJson",
+              defaultValue: const BKTStructure(
+                  {"key": BKTNumber(1), "key2": BKTString("value")})),
+          const BKTStructure(
+              {"key": BKTNumber(1), "key2": BKTString("value")}));
+    });
+
+    testWidgets('testObjectVariation', (WidgetTester _) async {
+      expect(
+          await BKTClient.instance.objectVariation(featureIdJson,
+              defaultValue: const BKTBoolean(false)),
+          const BKTStructure({"key": BKTString("value-1")}));
+    });
+
+    testWidgets('testObjectVariationDetail', (WidgetTester _) async {
+      var result = await BKTClient.instance.objectVariationDetails(
+          featureIdJson,
+          defaultValue: const BKTNumber(0));
+      var expected = const BKTEvaluationDetails<BKTValue>(
+          featureId: featureIdJson,
+          featureVersion: 3,
+          userId: userId,
+          variationId: "813070cf-7d6b-45a9-8713-cf9816d63997",
+          variationName: "variation 1",
+          variationValue: BKTStructure({"key": BKTString("value-1")}),
+          reason: "DEFAULT");
+      expect(result, expected);
+    });
 
     testWidgets('testTrack', (WidgetTester _) async {
       await BKTClient.instance.track(goalId, value: goalValue).onError(
@@ -484,7 +483,7 @@ void main() async {
         fail("destroy() should success and should not throw an exception");
       });
     });
-  }, skip: false);
+  });
 
   group('Bucketeer: error handling', () {
     testWidgets('access BKTClient before initializing', (WidgetTester _) async {
@@ -588,7 +587,7 @@ void main() async {
             "fetchEvaluations() should not throw an exception ${obj.toString()}");
       });
     });
-  }, skip: false);
+  });
 }
 
 extension InitializeSuccess on BKTResult<void> {
