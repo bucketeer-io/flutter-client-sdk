@@ -152,6 +152,13 @@ class _MyHomePageState extends State<MyHomePage> {
     showSnackbar(title: 'getJSONVariation', message: '$result');
   }
 
+  Future<void> _getObjectVariation(String featureId) async {
+    final result =
+    await BKTClient.instance.objectVariation(featureId, defaultValue: const BKTNumber(1.0));
+    debugPrint('objectVariation: $result');
+    showSnackbar(title: 'objectVariation', message: '${result.toJson()}');
+  }
+
   Future<void> _getEvaluation(String featureId) async {
     // ignore: deprecated_member_use
     final result = await BKTClient.instance.evaluationDetails(featureId);
@@ -271,6 +278,11 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: const Text('GET bool params'),
                           onPressed: () async {
                             return _getBoolVariation(flagController.text);
+                          }),
+                      TextButton(
+                          child: const Text('GET object params'),
+                          onPressed: () async {
+                            return _getObjectVariation(flagController.text);
                           }),
                       TextButton(
                           child: const Text('GET json params'),

@@ -464,15 +464,22 @@ class VariationRequestContext<T>{
 }
 
 extension BKTEvaluationDetails where T: Equatable {
-    func toDictionary() -> [String: Any] {
-        [
+    func toDictionary() -> [String: Any?] {
+        let underlyingValue: Any
+        if let bktValue = variationValue as? BKTValue {
+            underlyingValue = bktValue.toJson()
+        } else {
+            underlyingValue = variationValue
+        }
+        return [
             "featureId": featureId,
             "featureVersion": featureVersion,
             "userId": userId,
             "variationId": variationId,
             "variationName": variationName,
-            "variationValue": variationValue,
+            "variationValue": underlyingValue,
             "reason": reason.rawValue
         ]
     }
 }
+

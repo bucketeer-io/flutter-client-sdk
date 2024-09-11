@@ -61,7 +61,7 @@ void main() async {
       );
     });
 
-    testWidgets('testStringVariationDetail', (WidgetTester _) async {
+    test('testStringVariationDetail', () async {
       expect(
           await BKTClient.instance
               .stringVariationDetails(featureIdString, defaultValue: "default"),
@@ -97,7 +97,7 @@ void main() async {
               variationName: "variation 1",
               variationValue: "value-1",
               reason: "DEFAULT"));
-    });
+    }, skip: false);
 
     testWidgets('testDoubleVariation', (WidgetTester _) async {
       await expectLater(
@@ -143,6 +143,7 @@ void main() async {
         ),
       );
     });
+
     testWidgets('testBoolVariationDetail', (WidgetTester _) async {
       expect(
           await BKTClient.instance
@@ -177,6 +178,7 @@ void main() async {
         ),
       );
     });
+
     testWidgets('testIntVariationDetail', (WidgetTester _) async {
       expect(
           await BKTClient.instance
@@ -209,7 +211,8 @@ void main() async {
       expect(result, featureIdJsonValue);
     });
 
-    testWidgets('testSendTheBKTValueAsTheDefaultValueToTheNativeSideAndVersa', (WidgetTester _) async {
+    testWidgets('testSendTheBKTValueAsTheDefaultValueToTheNativeSideAndVersa',
+        (WidgetTester _) async {
       expect(
           await BKTClient.instance.objectVariation("notFoundFeatureIdJson",
               defaultValue: const BKTBoolean(false)),
@@ -235,6 +238,7 @@ void main() async {
     });
 
     testWidgets('testObjectVariation', (WidgetTester _) async {
+      print("object");
       expect(
           await BKTClient.instance.objectVariation(featureIdJson,
               defaultValue: const BKTBoolean(false)),
