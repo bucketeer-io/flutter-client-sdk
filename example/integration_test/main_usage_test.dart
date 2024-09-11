@@ -99,7 +99,7 @@ void main() async {
               reason: "DEFAULT"));
     }, skip: false);
 
-    testWidgets('testDoubleVariation', (WidgetTester _) async {
+    test('testDoubleVariation', () async {
       await expectLater(
         BKTClient.instance
             .doubleVariation(featureIdDouble, defaultValue: 100.0),
@@ -109,7 +109,7 @@ void main() async {
       );
     });
 
-    testWidgets('testDoubleVariationDetail', (WidgetTester _) async {
+    test('testDoubleVariationDetail', () async {
       expect(
           await BKTClient.instance
               .doubleVariationDetails(featureIdDouble, defaultValue: 1.0),
@@ -135,7 +135,7 @@ void main() async {
               reason: "DEFAULT"));
     });
 
-    testWidgets('testBoolVariation', (WidgetTester _) async {
+    test('testBoolVariation', () async {
       await expectLater(
         BKTClient.instance.boolVariation(featureIdBoolean, defaultValue: false),
         completion(
@@ -144,7 +144,7 @@ void main() async {
       );
     });
 
-    testWidgets('testBoolVariationDetail', (WidgetTester _) async {
+    test('testBoolVariationDetail', () async {
       expect(
           await BKTClient.instance
               .boolVariationDetails(featureIdBoolean, defaultValue: false),
@@ -170,7 +170,7 @@ void main() async {
               reason: "DEFAULT"));
     });
 
-    testWidgets('testIntVariation', (WidgetTester _) async {
+    test('testIntVariation', () async {
       await expectLater(
         BKTClient.instance.intVariation(featureIdInt, defaultValue: 1000),
         completion(
@@ -179,7 +179,7 @@ void main() async {
       );
     });
 
-    testWidgets('testIntVariationDetail', (WidgetTester _) async {
+    test('testIntVariationDetail', () async {
       expect(
           await BKTClient.instance
               .intVariationDetails(featureIdInt, defaultValue: 1),
@@ -205,14 +205,14 @@ void main() async {
               reason: "DEFAULT"));
     });
 
-    testWidgets('testJSONVariation', (WidgetTester _) async {
+    test('testJSONVariation', () async {
       var result = await BKTClient.instance
           .jsonVariation(featureIdJson, defaultValue: {});
       expect(result, featureIdJsonValue);
     });
 
-    testWidgets('testSendTheBKTValueAsTheDefaultValueToTheNativeSideAndVersa',
-        (WidgetTester _) async {
+    test('testSendTheBKTValueAsTheDefaultValueToTheNativeSideAndVersa',
+        () async {
       expect(
           await BKTClient.instance.objectVariation("notFoundFeatureIdJson",
               defaultValue: const BKTBoolean(false)),
@@ -237,15 +237,14 @@ void main() async {
               {"key": BKTNumber(1), "key2": BKTString("value")}));
     });
 
-    testWidgets('testObjectVariation', (WidgetTester _) async {
-      print("object");
+    test('testObjectVariation', () async {
       expect(
           await BKTClient.instance.objectVariation(featureIdJson,
               defaultValue: const BKTBoolean(false)),
           const BKTStructure({"key": BKTString("value-1")}));
     });
 
-    testWidgets('testObjectVariationDetail', (WidgetTester _) async {
+    test('testObjectVariationDetail', () async {
       var result = await BKTClient.instance.objectVariationDetails(
           featureIdJson,
           defaultValue: const BKTNumber(0));
@@ -260,7 +259,7 @@ void main() async {
       expect(result, expected);
     });
 
-    testWidgets('testTrack', (WidgetTester _) async {
+    test('testTrack', () async {
       await BKTClient.instance.track(goalId, value: goalValue).onError(
           (error, stackTrace) =>
               fail("BKTClient.instance.track should succeed. Error: $error"));
@@ -269,7 +268,7 @@ void main() async {
       expect(flushResult, const BKTResult.success());
     });
 
-    testWidgets('testUpdateUserAttributes', (WidgetTester _) async {
+    test('testUpdateUserAttributes', () async {
       var userRs = await BKTClient.instance.currentUser();
       expect(userRs.isSuccess, true);
       var user = userRs.asSuccess.data;
@@ -288,7 +287,7 @@ void main() async {
               .customAttributes({'app_version': appVersion}).build());
     });
 
-    testWidgets('testFetchEvaluationsWithTimeout', (WidgetTester _) async {
+    test('testFetchEvaluationsWithTimeout', () async {
       var fetchEvaluationsResult = await BKTClient.instance
           .fetchEvaluations(timeoutMillis: 30000)
           .timeout(const Duration(milliseconds: 31000), onTimeout: () {
@@ -299,7 +298,7 @@ void main() async {
     });
 
     // This test also checks the `EvaluationUpdateListener` if it is called
-    testWidgets('testEvaluationUpdateFlow', (WidgetTester _) async {
+    test('testEvaluationUpdateFlow', () async {
       await expectLater(
         BKTClient.instance
             .stringVariation(featureIdString, defaultValue: "test"),
@@ -358,7 +357,7 @@ void main() async {
       );
     });
 
-    testWidgets('testSwitchUser', (WidgetTester _) async {
+    test('testSwitchUser', () async {
       await BKTClient.instance.destroy().onError((error, stackTrace) => fail(
           "BKTClient.instance.destroy should success and should not throw an exception. Error: ${error.toString()}"));
 

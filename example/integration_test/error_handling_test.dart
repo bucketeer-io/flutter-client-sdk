@@ -11,7 +11,7 @@ import 'constant.dart';
 void main() async {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   group('Bucketeer: error handling', () {
-    testWidgets('access BKTClient before initializing', (WidgetTester _) async {
+    test('access BKTClient before initializing', () async {
       var completer = Completer<BKTResult<void>>();
       BKTResult<void> fetchEvaluationsRs =
       await BKTClient.instance.fetchEvaluations().then((value) {
@@ -45,8 +45,8 @@ void main() async {
           reason: "completer should be completed");
     });
 
-    testWidgets('initialize BKTClient with invalid API_KEY',
-            (WidgetTester _) async {
+    test('initialize BKTClient with invalid API_KEY',
+            () async {
           final config = BKTConfigBuilder()
               .apiKey("RANDOM_KEY")
               .apiEndpoint(Constants.apiEndpoint)
