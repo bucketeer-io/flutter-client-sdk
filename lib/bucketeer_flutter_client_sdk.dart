@@ -1,5 +1,6 @@
 library bucketeer;
 
+export 'src/evaluation_details.dart';
 export 'src/evaluation.dart';
 export 'src/user.dart';
 export 'src/result.dart';
