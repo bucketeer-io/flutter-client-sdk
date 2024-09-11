@@ -17,7 +17,7 @@ void main() async {
   group('Bucketeer: test optional configurations', () {
     setUp(() {});
 
-    test('BKTClient should allow feature_tag to be optional', () async {
+    testWidgets('BKTClient should allow feature_tag to be optional', (WidgetTester _) async {
       final config = BKTConfigBuilder()
           .apiKey(Constants.apiKey)
           .apiEndpoint(Constants.apiEndpoint)
