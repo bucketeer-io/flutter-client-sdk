@@ -1,44 +1,16 @@
+// ignore_for_file: deprecated_member_use
 import 'dart:async';
-
 import 'package:bucketeer_example/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:bucketeer_flutter_client_sdk/bucketeer_flutter_client_sdk.dart';
 import 'package:mocktail/mocktail.dart';
-
-class MockEvaluationUpdateListener extends Mock
-    implements BKTEvaluationUpdateListener {}
+import 'constant.dart';
+import 'helper.dart';
 
 void main() async {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
-  const String appVersion = "1.2.3";
-  const String oldAppVersion = "0.0.1";
-  const bool debugging = true;
-
-  // E2E Flutter
-  const String featureTag = "flutter";
-  const String userId = 'bucketeer-flutter-user-id-1';
-
-  const String featureIdBoolean = "feature-flutter-e2e-boolean";
-  const bool featureIdBooleanValue = true;
-
-  const String featureIdString = "feature-flutter-e2e-string";
-  const String featureIdStringValue = "value-1";
-  const String featureIdStringValueUpdate = "value-2";
-
-  const String featureIdInt = "feature-flutter-e2e-int";
-  const int featureIdIntValue = 10;
-
-  const String featureIdDouble = "feature-flutter-e2e-double";
-  const double featureIdDoubleValue = 2.1;
-
-  const String featureIdJson = "feature-flutter-e2e-json";
-  const Map<String, dynamic> featureIdJsonValue = {"key": "value-1"};
-
-  const String goalId = "goal-flutter-e2e-1";
-  const double goalValue = 1.0;
 
   group('Bucketeer: general test', () {
     setUpAll(() async {
@@ -80,7 +52,7 @@ void main() async {
     });
 
     testWidgets('testStringVariation', (WidgetTester _) async {
-      expectLater(
+      await expectLater(
         BKTClient.instance
             .stringVariation(featureIdString, defaultValue: "test"),
         completion(
@@ -90,21 +62,45 @@ void main() async {
     });
 
     testWidgets('testStringVariationDetail', (WidgetTester _) async {
-      var result = await BKTClient.instance.evaluationDetails(featureIdString);
-      var expected = const BKTEvaluation(
-          id: "$featureIdString:4:$userId",
-          featureId: featureIdString,
-          featureVersion: 4,
-          userId: userId,
-          variationId: "2e696c59-ac2f-4b54-82a7-4aecfdd80224",
-          variationName: "variation 1",
-          variationValue: "value-1",
-          reason: "DEFAULT");
-      expect(result, expected);
-    });
+      expect(
+          await BKTClient.instance
+              .stringVariationDetails(featureIdString, defaultValue: "default"),
+          const BKTEvaluationDetails<String>(
+              featureId: featureIdString,
+              featureVersion: 4,
+              userId: userId,
+              variationId: "2e696c59-ac2f-4b54-82a7-4aecfdd80224",
+              variationName: "variation 1",
+              variationValue: "value-1",
+              reason: "DEFAULT"));
+
+      expect(
+          await BKTClient.instance.objectVariationDetails(featureIdString,
+              defaultValue: const BKTString("default")),
+          const BKTEvaluationDetails<BKTValue>(
+              featureId: featureIdString,
+              featureVersion: 4,
+              userId: userId,
+              variationId: "2e696c59-ac2f-4b54-82a7-4aecfdd80224",
+              variationName: "variation 1",
+              variationValue: BKTString("value-1"),
+              reason: "DEFAULT"));
+
+      expect(
+          await BKTClient.instance.evaluationDetails(featureIdString),
+          const BKTEvaluation(
+              id: "feature-flutter-e2e-string:4:bucketeer-flutter-user-id-1",
+              featureId: featureIdString,
+              featureVersion: 4,
+              userId: userId,
+              variationId: "2e696c59-ac2f-4b54-82a7-4aecfdd80224",
+              variationName: "variation 1",
+              variationValue: "value-1",
+              reason: "DEFAULT"));
+    }, skip: false);
 
     testWidgets('testDoubleVariation', (WidgetTester _) async {
-      expectLater(
+      await expectLater(
         BKTClient.instance
             .doubleVariation(featureIdDouble, defaultValue: 100.0),
         completion(
@@ -114,61 +110,99 @@ void main() async {
     });
 
     testWidgets('testDoubleVariationDetail', (WidgetTester _) async {
-      var result = await BKTClient.instance.evaluationDetails(featureIdDouble);
-      var expected = const BKTEvaluation(
-          id: "$featureIdDouble:3:$userId",
-          featureId: featureIdDouble,
-          featureVersion: 3,
-          userId: userId,
-          variationId: "a141d1fa-85ef-4124-af5e-25374225474b",
-          variationName: "variation 2.1",
-          variationValue: "2.1",
-          reason: "DEFAULT");
-      expect(result, expected);
+      expect(
+          await BKTClient.instance
+              .doubleVariationDetails(featureIdDouble, defaultValue: 1.0),
+          const BKTEvaluationDetails<double>(
+              featureId: featureIdDouble,
+              featureVersion: 3,
+              userId: userId,
+              variationId: "a141d1fa-85ef-4124-af5e-25374225474b",
+              variationName: "variation 2.1",
+              variationValue: 2.1,
+              reason: "DEFAULT"));
+
+      expect(
+          await BKTClient.instance.objectVariationDetails(featureIdDouble,
+              defaultValue: const BKTNumber(1.0)),
+          const BKTEvaluationDetails<BKTValue>(
+              featureId: featureIdDouble,
+              featureVersion: 3,
+              userId: userId,
+              variationId: "a141d1fa-85ef-4124-af5e-25374225474b",
+              variationName: "variation 2.1",
+              variationValue: BKTNumber(2.1),
+              reason: "DEFAULT"));
     });
 
     testWidgets('testBoolVariation', (WidgetTester _) async {
-      expectLater(
+      await expectLater(
         BKTClient.instance.boolVariation(featureIdBoolean, defaultValue: false),
         completion(
           equals(featureIdBooleanValue),
         ),
       );
     });
+
     testWidgets('testBoolVariationDetail', (WidgetTester _) async {
-      var result = await BKTClient.instance.evaluationDetails(featureIdBoolean);
-      var expected = const BKTEvaluation(
-          id: "$featureIdBoolean:3:$userId",
-          featureId: featureIdBoolean,
-          featureVersion: 3,
-          userId: userId,
-          variationId: "cbd42331-094e-4306-aacd-d7bf3f07cf65",
-          variationName: "variation true",
-          variationValue: "true",
-          reason: "DEFAULT");
-      expect(result, expected);
+      expect(
+          await BKTClient.instance
+              .boolVariationDetails(featureIdBoolean, defaultValue: false),
+          const BKTEvaluationDetails<bool>(
+              featureId: featureIdBoolean,
+              featureVersion: 3,
+              userId: userId,
+              variationId: "cbd42331-094e-4306-aacd-d7bf3f07cf65",
+              variationName: "variation true",
+              variationValue: true,
+              reason: "DEFAULT"));
+
+      expect(
+          await BKTClient.instance.objectVariationDetails(featureIdBoolean,
+              defaultValue: const BKTBoolean(false)),
+          const BKTEvaluationDetails<BKTValue>(
+              featureId: featureIdBoolean,
+              featureVersion: 3,
+              userId: userId,
+              variationId: "cbd42331-094e-4306-aacd-d7bf3f07cf65",
+              variationName: "variation true",
+              variationValue: BKTBoolean(true),
+              reason: "DEFAULT"));
     });
 
     testWidgets('testIntVariation', (WidgetTester _) async {
-      expectLater(
+      await expectLater(
         BKTClient.instance.intVariation(featureIdInt, defaultValue: 1000),
         completion(
           equals(featureIdIntValue),
         ),
       );
     });
+
     testWidgets('testIntVariationDetail', (WidgetTester _) async {
-      var result = await BKTClient.instance.evaluationDetails(featureIdInt);
-      var expected = const BKTEvaluation(
-          id: "$featureIdInt:3:$userId",
-          featureId: featureIdInt,
-          featureVersion: 3,
-          userId: userId,
-          variationId: "36f14c02-300a-48f3-b4eb-b296afba3953",
-          variationName: "variation 10",
-          variationValue: "10",
-          reason: "DEFAULT");
-      expect(result, expected);
+      expect(
+          await BKTClient.instance
+              .intVariationDetails(featureIdInt, defaultValue: 1),
+          const BKTEvaluationDetails<int>(
+              featureId: featureIdInt,
+              featureVersion: 3,
+              userId: userId,
+              variationId: "36f14c02-300a-48f3-b4eb-b296afba3953",
+              variationName: "variation 10",
+              variationValue: 10,
+              reason: "DEFAULT"));
+
+      expect(
+          await BKTClient.instance.objectVariationDetails(featureIdInt,
+              defaultValue: const BKTNumber(1)),
+          const BKTEvaluationDetails<BKTValue>(
+              featureId: featureIdInt,
+              featureVersion: 3,
+              userId: userId,
+              variationId: "36f14c02-300a-48f3-b4eb-b296afba3953",
+              variationName: "variation 10",
+              variationValue: BKTNumber(10),
+              reason: "DEFAULT"));
     });
 
     testWidgets('testJSONVariation', (WidgetTester _) async {
@@ -176,16 +210,51 @@ void main() async {
           .jsonVariation(featureIdJson, defaultValue: {});
       expect(result, featureIdJsonValue);
     });
-    testWidgets('testJSONVariationDetail', (WidgetTester _) async {
-      var result = await BKTClient.instance.evaluationDetails(featureIdJson);
-      var expected = const BKTEvaluation(
-          id: "$featureIdJson:3:$userId",
+
+    testWidgets('testSendTheBKTValueAsTheDefaultValueToTheNativeSideAndVersa',
+        (WidgetTester _) async {
+      expect(
+          await BKTClient.instance.objectVariation("notFoundFeatureIdJson",
+              defaultValue: const BKTBoolean(false)),
+          const BKTBoolean(false));
+      expect(
+          await BKTClient.instance.objectVariation("notFoundFeatureIdJson",
+              defaultValue: const BKTString("false")),
+          const BKTString("false"));
+      expect(
+          await BKTClient.instance.objectVariation("notFoundFeatureIdJson",
+              defaultValue: const BKTNumber(1.2)),
+          const BKTNumber(1.2));
+      expect(
+          await BKTClient.instance.objectVariation("notFoundFeatureIdJson",
+              defaultValue: const BKTList([BKTNumber(1), BKTString("value")])),
+          const BKTList([BKTNumber(1), BKTString("value")]));
+      expect(
+          await BKTClient.instance.objectVariation("notFoundFeatureIdJson",
+              defaultValue: const BKTStructure(
+                  {"key": BKTNumber(1), "key2": BKTString("value")})),
+          const BKTStructure(
+              {"key": BKTNumber(1), "key2": BKTString("value")}));
+    });
+
+    testWidgets('testObjectVariation', (WidgetTester _) async {
+      expect(
+          await BKTClient.instance.objectVariation(featureIdJson,
+              defaultValue: const BKTBoolean(false)),
+          const BKTStructure({"key": BKTString("value-1")}));
+    });
+
+    testWidgets('testObjectVariationDetail', (WidgetTester _) async {
+      var result = await BKTClient.instance.objectVariationDetails(
+          featureIdJson,
+          defaultValue: const BKTNumber(0));
+      var expected = const BKTEvaluationDetails<BKTValue>(
           featureId: featureIdJson,
           featureVersion: 3,
           userId: userId,
           variationId: "813070cf-7d6b-45a9-8713-cf9816d63997",
           variationName: "variation 1",
-          variationValue: "{ \"key\": \"value-1\" }",
+          variationValue: BKTStructure({"key": BKTString("value-1")}),
           reason: "DEFAULT");
       expect(result, expected);
     });
@@ -336,12 +405,12 @@ void main() async {
       }).onError((error, stackTrace) => fail(
           "destroy() should success and should not throw an exception ${error.toString()}"));
     });
-  });
+  }, skip: false);
 
   group('Bucketeer: test optional configurations', () {
     setUp(() {});
 
-    test('BKTClient should allow feature_tag to be optional', () async {
+    testWidgets('BKTClient should allow feature_tag to be optional', (WidgetTester _) async {
       final config = BKTConfigBuilder()
           .apiKey(Constants.apiKey)
           .apiEndpoint(Constants.apiEndpoint)
@@ -372,12 +441,12 @@ void main() async {
           reason: "evaluationDetails should not be null");
 
       final golang =
-          await BKTClient.instance.evaluationDetails("feature-go-server-e2e-1");
+      await BKTClient.instance.evaluationDetails("feature-go-server-e2e-1");
       expect(golang != null, true,
           reason: "evaluationDetails should not be null");
 
       final javascript =
-          await BKTClient.instance.evaluationDetails("feature-js-e2e-string");
+      await BKTClient.instance.evaluationDetails("feature-js-e2e-string");
       expect(javascript != null, true,
           reason: "evaluationDetails should not be null");
     });
@@ -395,7 +464,7 @@ void main() async {
     testWidgets('access BKTClient before initializing', (WidgetTester _) async {
       var completer = Completer<BKTResult<void>>();
       BKTResult<void> fetchEvaluationsRs =
-          await BKTClient.instance.fetchEvaluations().then((value) {
+      await BKTClient.instance.fetchEvaluations().then((value) {
         /// Use completer to make sure this callback will get called
         /// even if BKTClient has not initialize
         completer.complete(value);
@@ -405,11 +474,11 @@ void main() async {
       });
       expect(fetchEvaluationsRs.isFailure, true,
           reason:
-              "fetchEvaluations() should fail ${fetchEvaluationsRs.toString()}");
+          "fetchEvaluations() should fail ${fetchEvaluationsRs.toString()}");
       expect(fetchEvaluationsRs.asFailure.exception,
           isA<BKTIllegalStateException>(),
           reason:
-              "exception should be BKTIllegalStateException but got ${fetchEvaluationsRs.toString()}");
+          "exception should be BKTIllegalStateException but got ${fetchEvaluationsRs.toString()}");
 
       BKTResult<void> flushRs = await BKTClient.instance.flush().then((value) {
         return value;
@@ -420,111 +489,78 @@ void main() async {
       expect(fetchEvaluationsRs.asFailure.exception,
           isA<BKTIllegalStateException>(),
           reason:
-              "exception should be BKTIllegalStateException but got ${fetchEvaluationsRs.toString()}");
+          "exception should be BKTIllegalStateException but got ${fetchEvaluationsRs.toString()}");
 
       expect(completer.isCompleted, true,
           reason: "completer should be completed");
     });
 
     testWidgets('initialize BKTClient with invalid API_KEY',
-        (WidgetTester _) async {
-      final config = BKTConfigBuilder()
-          .apiKey("RANDOM_KEY")
-          .apiEndpoint(Constants.apiEndpoint)
-          .debugging(debugging)
-          .eventsMaxQueueSize(Constants.exampleEventMaxQueueSize)
-          .eventsFlushInterval(Constants.exampleEventsFlushInterval)
-          .pollingInterval(Constants.examplePollingInterval)
-          .backgroundPollingInterval(Constants.exampleBackgroundPollingInterval)
-          .appVersion(appVersion)
-          .build();
-      assert(config.featureTag == "");
-      final user = BKTUserBuilder().id(userId).customAttributes({}).build();
+            (WidgetTester _) async {
+          final config = BKTConfigBuilder()
+              .apiKey("RANDOM_KEY")
+              .apiEndpoint(Constants.apiEndpoint)
+              .debugging(debugging)
+              .eventsMaxQueueSize(Constants.exampleEventMaxQueueSize)
+              .eventsFlushInterval(Constants.exampleEventsFlushInterval)
+              .pollingInterval(Constants.examplePollingInterval)
+              .backgroundPollingInterval(Constants.exampleBackgroundPollingInterval)
+              .appVersion(appVersion)
+              .build();
+          assert(config.featureTag == "");
+          final user = BKTUserBuilder().id(userId).customAttributes({}).build();
 
-      await E2EBKTClient.initializeWithRetryMechanism(
-        config: config,
-        user: user,
-      ).then((instanceResult) {
-        expect(instanceResult.isFailure, true,
-            reason: "initialize() should fail ${instanceResult.toString()}");
-        expect(instanceResult.asFailure.exception, isA<BKTForbiddenException>(),
-            reason:
+          await E2EBKTClient.initializeWithRetryMechanism(
+            config: config,
+            user: user,
+          ).then((instanceResult) {
+            expect(instanceResult.isFailure, true,
+                reason: "initialize() should fail ${instanceResult.toString()}");
+            expect(instanceResult.asFailure.exception, isA<BKTForbiddenException>(),
+                reason:
                 "exception should be BKTForbiddenException but got ${instanceResult.toString()}. The exception could be a BKTTimeoutException, but we don't want it here");
-      }, onError: (obj, st) {
-        fail("initialize() should not throw an exception");
-      });
+          }, onError: (obj, st) {
+            fail("initialize() should not throw an exception");
+          });
 
-      await BKTClient.instance.fetchEvaluations().then((fetchEvaluationsRs) {
-        expect(fetchEvaluationsRs.asFailure.exception,
-            isA<BKTForbiddenException>(),
-            reason:
+          await BKTClient.instance.fetchEvaluations().then((fetchEvaluationsRs) {
+            expect(fetchEvaluationsRs.asFailure.exception,
+                isA<BKTForbiddenException>(),
+                reason:
                 "exception should be BKTForbiddenException but got ${fetchEvaluationsRs.toString()}");
-      }, onError: (obj, st) {
-        fail(
-            "fetchEvaluations() should not throw an exception ${obj.toString()}");
-      });
+          }, onError: (obj, st) {
+            fail(
+                "fetchEvaluations() should not throw an exception ${obj.toString()}");
+          });
 
-      await BKTClient.instance.flush().then((flushRs) {
-        expect(flushRs.asFailure.exception, isA<BKTForbiddenException>(),
-            reason:
+          await BKTClient.instance.flush().then((flushRs) {
+            expect(flushRs.asFailure.exception, isA<BKTForbiddenException>(),
+                reason:
                 "exception should be BKTForbiddenException but got ${flushRs.toString()}");
-        return flushRs;
-      }, onError: (obj, st) {
-        fail(
-            "fetchEvaluations() should not throw an exception but got ${obj.toString()}");
-      });
+            return flushRs;
+          }, onError: (obj, st) {
+            fail(
+                "fetchEvaluations() should not throw an exception but got ${obj.toString()}");
+          });
 
-      await BKTClient.instance.destroy().then(
-          (value) =>
-              expect(value.isSuccess, true, reason: "destroy() should succeed"),
-          onError: (obj, st) {
-        fail("destroy() should not throw an exception");
-      });
+          await BKTClient.instance.destroy().then(
+                  (value) =>
+                  expect(value.isSuccess, true, reason: "destroy() should succeed"),
+              onError: (obj, st) {
+                fail("destroy() should not throw an exception");
+              });
 
-      await BKTClient.instance.fetchEvaluations().then((fetchEvaluationsRs) {
-        expect(fetchEvaluationsRs.isFailure, true,
-            reason: "fetchEvaluations() should fail");
-        expect(fetchEvaluationsRs.asFailure.exception,
-            isA<BKTIllegalStateException>(),
-            reason:
+          await BKTClient.instance.fetchEvaluations().then((fetchEvaluationsRs) {
+            expect(fetchEvaluationsRs.isFailure, true,
+                reason: "fetchEvaluations() should fail");
+            expect(fetchEvaluationsRs.asFailure.exception,
+                isA<BKTIllegalStateException>(),
+                reason:
                 "exception should be BKTIllegalStateException but got ${fetchEvaluationsRs.toString()}");
-      }, onError: (obj, st) {
-        fail(
-            "fetchEvaluations() should not throw an exception ${obj.toString()}");
-      });
-    });
+          }, onError: (obj, st) {
+            fail(
+                "fetchEvaluations() should not throw an exception ${obj.toString()}");
+          });
+        });
   });
-}
-
-extension InitializeSuccess on BKTResult<void> {
-  bool isInitializeSuccess() {
-    return isSuccess || asFailure.exception is BKTTimeoutException;
-  }
-}
-
-extension E2EBKTClient on BKTClient {
-  /// This func will retry the BKTClient.initialize 3 times (default) if we got a network error.
-  static Future<BKTResult<void>> initializeWithRetryMechanism({
-    required BKTConfig config,
-    required BKTUser user,
-    int? timeoutMillis,
-    int maxRetryTimes = 3,
-  }) async {
-    var retryCount = 0;
-    BKTResult<void>? result;
-    do {
-      result = await BKTClient.initialize(
-        config: config,
-        user: user,
-        timeoutMillis: timeoutMillis,
-      );
-      bool shouldRetry = result.isFailure && result.asFailure is BKTNetworkException;
-      if (shouldRetry) {
-        retryCount++;
-        continue;
-      }
-      break;
-    } while (retryCount < maxRetryTimes);
-    return result;
-  }
 }

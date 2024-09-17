@@ -15,7 +15,7 @@
 *.iml
 *.ipr
 *.iws
-
+.idea/
 .idea/.gitignore
 .idea/dictionaries/
 .idea/libraries/

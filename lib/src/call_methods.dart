@@ -14,4 +14,16 @@ enum CallMethods {
   addProxyEvaluationUpdateListener,
   destroy,
   unknown,
+
+  objectVariation,
+  objectVariationDetails,
+  intVariationDetails,
+  boolVariationDetails,
+  doubleVariationDetails,
+  stringVariationDetails,
+}
+
+abstract class CallMethodParams {
+  static const featureId = 'featureId';
+  static const defaultValue = 'defaultValue';
 }
