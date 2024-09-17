@@ -145,13 +145,6 @@ class _MyHomePageState extends State<MyHomePage> {
     showSnackbar(title: 'getBoolVariation', message: '$result');
   }
 
-  Future<void> _getJSONVariation(String featureId) async {
-    // ignore: deprecated_member_use
-    final result = await BKTClient.instance.jsonVariation(featureId, defaultValue: {});
-    debugPrint('getJSONVariation: $result');
-    showSnackbar(title: 'getJSONVariation', message: '$result');
-  }
-
   Future<void> _getObjectVariation(String featureId) async {
     final result =
     await BKTClient.instance.objectVariation(featureId, defaultValue: const BKTNumber(1.0));
@@ -168,6 +161,13 @@ class _MyHomePageState extends State<MyHomePage> {
           title: 'getEvaluation(${result.toString()})',
           message: 'Successful the evaluation.');
     }
+  }
+
+  Future<void> _getJSONVariation(String featureId) async {
+    // ignore: deprecated_member_use
+    final result = await BKTClient.instance.jsonVariation(featureId, defaultValue: {});
+    debugPrint('getJSONVariation: $result');
+    showSnackbar(title: 'getJSONVariation', message: '$result');
   }
 
   Future<void> _sendGoal(String goalId) async {
