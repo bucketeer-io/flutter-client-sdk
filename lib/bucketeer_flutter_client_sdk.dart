@@ -184,7 +184,7 @@ class BKTClient {
     });
   }
 
-  @Deprecated("use objectVariation(featureId:, defaultValue:) instead")
+  @Deprecated("use objectVariation() instead")
   Future<Map<String, dynamic>> jsonVariation(
     String featureId, {
     required Map<String, dynamic> defaultValue,
