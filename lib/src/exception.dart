@@ -14,68 +14,61 @@ abstract class BKTException implements Exception {
 }
 
 class RedirectRequestException extends BKTException {
-  RedirectRequestException({required String message}) : super(message: message);
+  RedirectRequestException({required super.message});
 }
 
 class BKTBadRequestException extends BKTException {
-  BKTBadRequestException({required String message}) : super(message: message);
+  BKTBadRequestException({required super.message});
 }
 
 class BKTUnauthorizedException extends BKTException {
-  BKTUnauthorizedException({required String message}) : super(message: message);
+  BKTUnauthorizedException({required super.message});
 }
 
 class BKTForbiddenException extends BKTException {
-  BKTForbiddenException({required String message}) : super(message: message);
+  BKTForbiddenException({required super.message});
 }
 
 class BKTFeatureNotFoundException extends BKTException {
-  BKTFeatureNotFoundException({required String message})
-      : super(message: message);
+  BKTFeatureNotFoundException({required super.message});
 }
 
 class BKTClientClosedRequestException extends BKTException {
-  BKTClientClosedRequestException({required String message})
-      : super(message: message);
+  BKTClientClosedRequestException({required super.message});
 }
 
 class BKTInvalidHttpMethodException extends BKTException {
-  BKTInvalidHttpMethodException({required String message})
-      : super(message: message);
+  BKTInvalidHttpMethodException({required super.message});
 }
 
 class PayloadTooLargeException extends BKTException {
-  PayloadTooLargeException({required String message}) : super(message: message);
+  PayloadTooLargeException({required super.message});
 }
 
 class BKTInternalServerErrorException extends BKTException {
-  BKTInternalServerErrorException({required String message})
-      : super(message: message);
+  BKTInternalServerErrorException({required super.message});
 }
 
 class BKTServiceUnavailableException extends BKTException {
-  BKTServiceUnavailableException({required String message})
-      : super(message: message);
+  BKTServiceUnavailableException({required super.message});
 }
 
 class BKTTimeoutException extends BKTException {
-  BKTTimeoutException({required String message}) : super(message: message);
+  BKTTimeoutException({required super.message});
 }
 
 class BKTNetworkException extends BKTException {
-  BKTNetworkException({required String message}) : super(message: message);
+  BKTNetworkException({required super.message});
 }
 
 class BKTIllegalArgumentException extends BKTException {
-  BKTIllegalArgumentException({required String message})
-      : super(message: message);
+  BKTIllegalArgumentException({required super.message});
 }
 
 class BKTIllegalStateException extends BKTException {
-  BKTIllegalStateException({required String message}) : super(message: message);
+  BKTIllegalStateException({required super.message});
 }
 
 class BKTUnknownException extends BKTException {
-  BKTUnknownException({required String message, Exception? exception})
-      : super(message: message);
+  BKTUnknownException({required super.message, Exception? exception});
 }
