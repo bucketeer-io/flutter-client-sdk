@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.0](https://github.com/bucketeer-io/flutter-client-sdk/compare/2.0.0...v2.1.0) (2024-09-17)
+
+
+### Features
+
+* get variation details by variation type ([#19](https://github.com/bucketeer-io/flutter-client-sdk/issues/19)) ([f59d6be](https://github.com/bucketeer-io/flutter-client-sdk/commit/f59d6be91e14d7752fd17538738f7a77f87a0494))
+
+
+### Build System
+
+* **deps:** update deps using the Flutter version 3.19.2 ([#21](https://github.com/bucketeer-io/flutter-client-sdk/issues/21)) ([743e534](https://github.com/bucketeer-io/flutter-client-sdk/commit/743e534a9bace488dda65e9647281097d8087115))
+
 ## 2.0.0 (2024-04-09)
 
 This version brings the **BREAKING CHANGES**.
