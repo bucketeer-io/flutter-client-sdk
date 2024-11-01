@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.source           = { :http => "https://github.com/bucketeer-io/flutter-client-sdk", }
   s.source_files      = 'Classes/**/*.{h,m,swift}'
   s.dependency 'Flutter'
-  s.dependency 'Bucketeer', '2.2.0'
+  s.dependency 'Bucketeer', '2.2.1'
   s.platform = :ios, '11.0'
 
   s.ios.deployment_target = "11.0"
