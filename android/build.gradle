@@ -55,7 +55,7 @@ android {
 
 dependencies {
   implementation 'androidx.annotation:annotation:1.8.2'
-  implementation 'io.bucketeer:android-client-sdk:2.2.0'
+  implementation 'io.bucketeer:android-client-sdk:2.2.1'
   testImplementation 'junit:junit:4.13.2'
   testImplementation 'org.json:json:20240205'
 }
