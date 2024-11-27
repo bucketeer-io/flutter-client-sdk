@@ -10,7 +10,7 @@ on:
   workflow_call:
 
 env:
-  FLUTTER_VERSION: "3.19.2"
+  FLUTTER_VERSION: "3.24.3"
 
 jobs:
   ios-integration-test:

@@ -2,8 +2,8 @@ name: bucketeer_example
 description: A sample project for using the Bucketeer.
 
 publish_to: "none"
-
 version: 2.0.0+2
+
 
 environment:
   sdk: ">=2.15.0 <4.0.0"
