@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/bucketeer-io/flutter-client-sdk/compare/v2.1.0...v2.1.1) (2024-11-27)
+
+
+### Build System
+
+* **deps:** update ios/android sdk to 2.2.1 ([#22](https://github.com/bucketeer-io/flutter-client-sdk/issues/22)) ([82e757a](https://github.com/bucketeer-io/flutter-client-sdk/commit/82e757a5b9902af9909723dc3c13ea9c299940bb))
+
 ## [2.1.0](https://github.com/bucketeer-io/flutter-client-sdk/compare/2.0.0...v2.1.0) (2024-09-17)
 
 
