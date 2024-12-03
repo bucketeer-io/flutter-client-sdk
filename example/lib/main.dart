@@ -146,8 +146,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _getObjectVariation(String featureId) async {
-    final result =
-    await BKTClient.instance.objectVariation(featureId, defaultValue: const BKTNumber(1.0));
+    final result = await BKTClient.instance
+        .objectVariation(featureId, defaultValue: const BKTNumber(1.0));
     debugPrint('objectVariation: $result');
     showSnackbar(title: 'objectVariation', message: '${result.toJson()}');
   }
@@ -165,8 +165,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _getJSONVariation(String featureId) async {
     final result =
-      // ignore: deprecated_member_use
-      await BKTClient.instance.jsonVariation(featureId, defaultValue: {});
+        // ignore: deprecated_member_use
+        await BKTClient.instance.jsonVariation(featureId, defaultValue: {});
     debugPrint('getJSONVariation: $result');
     showSnackbar(title: 'getJSONVariation', message: '$result');
   }

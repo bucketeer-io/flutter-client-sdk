@@ -42,14 +42,18 @@ void main() {
 
     test('BKTStructure equality', () {
       expect(
-        const BKTStructure({'key1': BKTString('value1'), 'key2': BKTNumber(2.0)}),
-        equals(const BKTStructure({'key1': BKTString('value1'), 'key2': BKTNumber(2.0)})),
+        const BKTStructure(
+            {'key1': BKTString('value1'), 'key2': BKTNumber(2.0)}),
+        equals(const BKTStructure(
+            {'key1': BKTString('value1'), 'key2': BKTNumber(2.0)})),
       );
 
       // Test un-order
       expect(
-        const BKTStructure({'key2': BKTNumber(2.0), 'key1': BKTString('value1')}),
-        equals(const BKTStructure({'key1': BKTString('value1'), 'key2': BKTNumber(2.0)})),
+        const BKTStructure(
+            {'key2': BKTNumber(2.0), 'key1': BKTString('value1')}),
+        equals(const BKTStructure(
+            {'key1': BKTString('value1'), 'key2': BKTNumber(2.0)})),
       );
       expect(
         const BKTStructure({'key1': BKTBoolean(true)}),

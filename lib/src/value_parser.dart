@@ -5,7 +5,6 @@ abstract class TypeConverter<T> {
 }
 
 class DefaultTypeConverter<T> implements TypeConverter<T> {
-
   @override
   T parse(dynamic) {
     // Throw runtime exception
@@ -14,7 +13,6 @@ class DefaultTypeConverter<T> implements TypeConverter<T> {
 }
 
 class BKTValueTypeConverter implements TypeConverter<BKTValue> {
-
   const BKTValueTypeConverter();
 
   @override
