@@ -37,3 +37,16 @@ extension E2EBKTClient on BKTClient {
 
 class MockEvaluationUpdateListener extends Mock
     implements BKTEvaluationUpdateListener {}
+
+bool assertEvaluationDetails<T extends Object>({
+  required BKTEvaluationDetails<T> actual,
+  required BKTEvaluationDetails<T> expected,
+}) {
+  return actual.featureId == expected.featureId &&
+      actual.featureVersion == expected.featureVersion &&
+      actual.userId == expected.userId &&
+      actual.variationId == expected.variationId &&
+      actual.variationName == expected.variationName &&
+      actual.reason == expected.reason &&
+      actual.variationValue == expected.variationValue;
+}

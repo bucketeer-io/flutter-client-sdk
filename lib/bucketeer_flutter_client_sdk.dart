@@ -83,9 +83,7 @@ class BKTClient {
         CallMethodParams.defaultValue: defaultValue,
       }),
       customMapping: (response) {
-        return BKTEvaluationDetails.fromJson<bool>(
-          response
-        );
+        return BKTEvaluationDetails.fromJson<bool>(response);
       },
     ).onError((error, stackTrace) {
       debugPrint("get boolVariationDetails fail: ${error?.toString()}");

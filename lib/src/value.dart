@@ -178,7 +178,8 @@ class BKTStructure extends BKTValue {
   @override
   bool operator ==(Object other) {
     final bool isIdentical = identical(this, other);
-    final bool isSameType = other is BKTStructure && runtimeType == other.runtimeType;
+    final bool isSameType =
+        other is BKTStructure && runtimeType == other.runtimeType;
     final bool isMapEqual = isSameType && mapEquals(value, (other).value);
 
     return isIdentical || isMapEqual;

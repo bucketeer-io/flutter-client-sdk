@@ -62,10 +62,10 @@ void main() async {
     });
 
     testWidgets('testStringVariationDetail', (WidgetTester _) async {
-      expect(
-          await BKTClient.instance
+      assertEvaluationDetails(
+          actual: await BKTClient.instance
               .stringVariationDetails(featureIdString, defaultValue: "default"),
-          const BKTEvaluationDetails<String>(
+          expected: const BKTEvaluationDetails<String>(
               featureId: featureIdString,
               featureVersion: 4,
               userId: userId,
@@ -74,10 +74,11 @@ void main() async {
               variationValue: "value-1",
               reason: "DEFAULT"));
 
-      expect(
-          await BKTClient.instance.objectVariationDetails(featureIdString,
+      assertEvaluationDetails(
+          actual: await BKTClient.instance.objectVariationDetails(
+              featureIdString,
               defaultValue: const BKTString("default")),
-          const BKTEvaluationDetails<BKTValue>(
+          expected: const BKTEvaluationDetails<BKTValue>(
               featureId: featureIdString,
               featureVersion: 4,
               userId: userId,
@@ -110,10 +111,10 @@ void main() async {
     });
 
     testWidgets('testDoubleVariationDetail', (WidgetTester _) async {
-      expect(
-          await BKTClient.instance
+      assertEvaluationDetails(
+          actual: await BKTClient.instance
               .doubleVariationDetails(featureIdDouble, defaultValue: 1.0),
-          const BKTEvaluationDetails<double>(
+          expected: const BKTEvaluationDetails<double>(
               featureId: featureIdDouble,
               featureVersion: 3,
               userId: userId,
@@ -122,10 +123,11 @@ void main() async {
               variationValue: 2.1,
               reason: "DEFAULT"));
 
-      expect(
-          await BKTClient.instance.objectVariationDetails(featureIdDouble,
+      assertEvaluationDetails(
+          actual: await BKTClient.instance.objectVariationDetails(
+              featureIdDouble,
               defaultValue: const BKTNumber(1.0)),
-          const BKTEvaluationDetails<BKTValue>(
+          expected: const BKTEvaluationDetails<BKTValue>(
               featureId: featureIdDouble,
               featureVersion: 3,
               userId: userId,
@@ -145,10 +147,10 @@ void main() async {
     });
 
     testWidgets('testBoolVariationDetail', (WidgetTester _) async {
-      expect(
-          await BKTClient.instance
+      assertEvaluationDetails(
+          actual: await BKTClient.instance
               .boolVariationDetails(featureIdBoolean, defaultValue: false),
-          const BKTEvaluationDetails<bool>(
+          expected: const BKTEvaluationDetails<bool>(
               featureId: featureIdBoolean,
               featureVersion: 3,
               userId: userId,
@@ -157,10 +159,11 @@ void main() async {
               variationValue: true,
               reason: "DEFAULT"));
 
-      expect(
-          await BKTClient.instance.objectVariationDetails(featureIdBoolean,
+      assertEvaluationDetails(
+          actual: await BKTClient.instance.objectVariationDetails(
+              featureIdBoolean,
               defaultValue: const BKTBoolean(false)),
-          const BKTEvaluationDetails<BKTValue>(
+          expected: const BKTEvaluationDetails<BKTValue>(
               featureId: featureIdBoolean,
               featureVersion: 3,
               userId: userId,
@@ -180,10 +183,10 @@ void main() async {
     });
 
     testWidgets('testIntVariationDetail', (WidgetTester _) async {
-      expect(
-          await BKTClient.instance
+      assertEvaluationDetails(
+          actual: await BKTClient.instance
               .intVariationDetails(featureIdInt, defaultValue: 1),
-          const BKTEvaluationDetails<int>(
+          expected: const BKTEvaluationDetails<int>(
               featureId: featureIdInt,
               featureVersion: 3,
               userId: userId,
@@ -192,10 +195,10 @@ void main() async {
               variationValue: 10,
               reason: "DEFAULT"));
 
-      expect(
-          await BKTClient.instance.objectVariationDetails(featureIdInt,
+      assertEvaluationDetails(
+          actual: await BKTClient.instance.objectVariationDetails(featureIdInt,
               defaultValue: const BKTNumber(1)),
-          const BKTEvaluationDetails<BKTValue>(
+          expected: const BKTEvaluationDetails<BKTValue>(
               featureId: featureIdInt,
               featureVersion: 3,
               userId: userId,
@@ -256,7 +259,7 @@ void main() async {
           variationName: "variation 1",
           variationValue: BKTStructure({"key": BKTString("value-1")}),
           reason: "DEFAULT");
-      expect(result, expected);
+      assertEvaluationDetails(actual: result, expected: expected);
     });
 
     testWidgets('testTrack', (WidgetTester _) async {
@@ -410,7 +413,8 @@ void main() async {
   group('optional configurations test', () {
     setUp(() {});
 
-    testWidgets('BKTClient should allow feature_tag to be optional', (WidgetTester _) async {
+    testWidgets('BKTClient should allow feature_tag to be optional',
+        (WidgetTester _) async {
       final config = BKTConfigBuilder()
           .apiKey(Constants.apiKey)
           .apiEndpoint(Constants.apiEndpoint)
@@ -441,12 +445,12 @@ void main() async {
           reason: "evaluationDetails should not be null");
 
       final golang =
-      await BKTClient.instance.evaluationDetails("feature-go-server-e2e-1");
+          await BKTClient.instance.evaluationDetails("feature-go-server-e2e-1");
       expect(golang != null, true,
           reason: "evaluationDetails should not be null");
 
       final javascript =
-      await BKTClient.instance.evaluationDetails("feature-js-e2e-string");
+          await BKTClient.instance.evaluationDetails("feature-js-e2e-string");
       expect(javascript != null, true,
           reason: "evaluationDetails should not be null");
     });

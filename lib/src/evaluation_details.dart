@@ -45,8 +45,10 @@ class BKTEvaluationDetails<T extends Object> {
 
     if (variationValue is Map) {
       final variationValueMap = variationValue as Map;
-      final otherVariationValueMap = otherAsBKTEvaluationDetails.variationValue as Map;
-      isVariationValueEqual = mapEquals(variationValueMap, otherVariationValueMap);
+      final otherVariationValueMap =
+          otherAsBKTEvaluationDetails.variationValue as Map;
+      isVariationValueEqual =
+          mapEquals(variationValueMap, otherVariationValueMap);
     }
 
     return isSameType &&

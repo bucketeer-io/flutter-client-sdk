@@ -24,7 +24,6 @@ void main() {
       var result3 = BKTValue.fromJson("true");
       expect(result3, isA<BKTString>());
       expect((result3 as BKTString).value, equals("true"));
-
     });
 
     test('should return BKTNumber when given a num', () {
@@ -75,7 +74,6 @@ void main() {
       expect((list.value[2] as BKTBoolean).value, equals(true));
 
       expect(list.value[3], isA<BKTNull>());
-
 
       expect((result).asDouble(), equals(null));
       expect((result).asInteger(), equals(null));
