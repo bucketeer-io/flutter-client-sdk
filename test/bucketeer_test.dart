@@ -314,8 +314,8 @@ void main() {
 
     test("jsonVariation", () async {
       expect(
-        // ignore: deprecated_member_use_from_same_package
         (await BKTClient.instance
+            // ignore: deprecated_member_use_from_same_package
             .jsonVariation('jsonVariation', defaultValue: {})),
         Map<String, dynamic>.from(
           {
@@ -538,8 +538,8 @@ void main() {
 
     test("jsonVariation", () async {
       expect(
-        // ignore: deprecated_member_use_from_same_package
         (await BKTClient.instance
+            // ignore: deprecated_member_use_from_same_package
             .jsonVariation('jsonVariationNotFound', defaultValue: {
           'id': 'id123',
         })),
