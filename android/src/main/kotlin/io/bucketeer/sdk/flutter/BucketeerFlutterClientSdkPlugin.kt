@@ -67,14 +67,14 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
     val apiEndpoint = call.argument("apiEndpoint") as? String
     val featureTag = (call.argument("featureTag") as? String) ?: ""
     val eventsFlushInterval =
-      call.argument("eventsFlushInterval") as? Long
+      call.argument("eventsFlushInterval") as? Int
     val eventsMaxQueueSize =
       call.argument("eventsMaxQueueSize") as? Int
     val pollingInterval =
-      call.argument("pollingInterval") as? Long
+      call.argument("pollingInterval") as? Int
     val backgroundPollingInterval =
-      call.argument("backgroundPollingInterval") as? Long
-    val timeoutMillis = call.argument("timeoutMillis") as? Long
+      call.argument("backgroundPollingInterval") as? Int
+    val timeoutMillis = call.argument("timeoutMillis") as? Int
     val appVersion = call.argument("appVersion") as? String
     val userAttributes = call.argument("userAttributes") as? Map<String, String> ?: mapOf()
     if (apiKey.isNullOrEmpty()) {
@@ -96,7 +96,7 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
         .apiEndpoint(apiEndpoint)
         .featureTag(featureTag).let {
           if (eventsFlushInterval != null && eventsFlushInterval > 0) {
-            return@let it.eventsFlushInterval(eventsFlushInterval)
+            return@let it.eventsFlushInterval(eventsFlushInterval.toLong())
           }
           return@let it
         }.let {
@@ -106,12 +106,12 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
           return@let it
         }.let {
           if (pollingInterval != null && pollingInterval > 0) {
-            return@let it.pollingInterval(pollingInterval)
+            return@let it.pollingInterval(pollingInterval.toLong())
           }
           return@let it
         }.let {
           if (backgroundPollingInterval != null && backgroundPollingInterval > 0) {
-            return@let it.pollingInterval(backgroundPollingInterval)
+            return@let it.backgroundPollingInterval(backgroundPollingInterval.toLong())
           }
           return@let it
         }.let {
@@ -128,7 +128,7 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
         .build()
 
       val future: Future<BKTException?> = if (timeoutMillis != null) {
-        BKTClient.initialize(applicationContext!!, config, user, timeoutMillis)
+        BKTClient.initialize(applicationContext!!, config, user, timeoutMillis.toLong())
       } else {
         BKTClient.initialize(applicationContext!!, config, user)
       }
