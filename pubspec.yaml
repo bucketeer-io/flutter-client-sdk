@@ -1,6 +1,6 @@
 name: bucketeer_flutter_client_sdk
 description: Bucketeer
-version: 2.1.1
+version: 2.1.2
 homepage: https://bucketeer.io/
 repository: https://github.com/bucketeer-io/flutter-client-sdk
 documentation: https://docs.bucketeer.io/sdk/client-side/flutter
