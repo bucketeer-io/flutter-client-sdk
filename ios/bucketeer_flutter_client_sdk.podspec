@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'bucketeer_flutter_client_sdk'
-  s.version          = '2.1.1' # x-release-please-version
+  s.version          = '2.1.2' # x-release-please-version
   s.summary          = 'Bucketeer Feature Flag & A/B Testing Service for Flutter'
   s.homepage         = 'https://bucketeer.io/'
   s.license          = { :type => "Apache License, Version 2.0", :file => '../LICENSE' }

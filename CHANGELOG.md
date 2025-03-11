@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.2](https://github.com/bucketeer-io/flutter-client-sdk/compare/v2.1.1...v2.1.2) (2025-03-11)
+
+
+### Bug Fixes
+
+* **android:** cache not being updated in the background after initialized ([#25](https://github.com/bucketeer-io/flutter-client-sdk/issues/25)) ([0e78ff5](https://github.com/bucketeer-io/flutter-client-sdk/commit/0e78ff53c5c0fd4ba9dd24742ba0b2f4fecd30e1))
+
 ## [2.1.1](https://github.com/bucketeer-io/flutter-client-sdk/compare/v2.1.0...v2.1.1) (2024-11-27)
 
 
