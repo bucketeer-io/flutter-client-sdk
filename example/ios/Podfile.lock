@@ -1,6 +1,6 @@
 PODS:
   - Bucketeer (2.2.1)
-  - bucketeer_flutter_client_sdk (2.1.0):
+  - bucketeer_flutter_client_sdk (2.1.1):
     - Bucketeer (= 2.2.1)
     - Flutter
   - Flutter (1.0.0)
@@ -37,7 +37,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Bucketeer: 8b7f89fe85599dd5c18384fd9fd6aaa7ee5388bc
-  bucketeer_flutter_client_sdk: ec0738228b7abdab817a45ad6c6b719afdde7e72
+  bucketeer_flutter_client_sdk: 99397306b613410150a27094e442c1a56c5cb1f4
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
