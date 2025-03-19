@@ -24,7 +24,7 @@ jobs:
           key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
 
       - name: Setup Flutter SDK
-        uses: subosito/flutter-action@62f096cacda5168a3bd7b95793373be14fa4fbaf # v2.13.0
+        uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff # v2.13.0
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: "stable"
