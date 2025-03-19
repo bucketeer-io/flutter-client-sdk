@@ -29,7 +29,7 @@ jobs:
           key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
 
       - name: Setup Flutter SDK
-        uses: subosito/flutter-action@62f096cacda5168a3bd7b95793373be14fa4fbaf # v2.13.0
+        uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff # v2.18.0
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
@@ -41,7 +41,7 @@ jobs:
         run: make unit-test
 
   build-example-app-android:
-    runs-on: macos-13-xlarge
+    runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
@@ -49,11 +49,11 @@ jobs:
       - name: Cache Flutter dependencies
         uses: actions/cache@v4
         with:
-          path: /Users/runner/hostedtoolcache/flutter # For mac OS
+          path: ${{ runner.tool_cache }}/flutter
           key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
 
       - name: Setup Flutter SDK
-        uses: subosito/flutter-action@62f096cacda5168a3bd7b95793373be14fa4fbaf # v2.13.0
+        uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff # v2.18.0
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
@@ -68,7 +68,7 @@ jobs:
           make build-android
 
   build-example-app-ios:
-    runs-on: macos-13-xlarge
+    runs-on: macos-15-xlarge
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
@@ -76,11 +76,11 @@ jobs:
       - name: Cache Flutter dependencies
         uses: actions/cache@v4
         with:
-          path: /Users/runner/hostedtoolcache/flutter # For mac OS
+          path: ${{ runner.tool_cache }}/flutter
           key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
 
       - name: Setup Flutter SDK
-        uses: subosito/flutter-action@62f096cacda5168a3bd7b95793373be14fa4fbaf # v2.13.0
+        uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff # v2.18.0
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
