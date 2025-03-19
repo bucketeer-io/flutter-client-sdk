@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feat/ci-cd-update
     paths-ignore:
       - "*.md"
   workflow_dispatch:
