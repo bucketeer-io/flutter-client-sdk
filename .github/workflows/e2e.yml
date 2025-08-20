@@ -14,7 +14,7 @@ env:
 
 jobs:
   ios-integration-test:
-    runs-on: macos-15-xlarge
+    runs-on: macos-14-xlarge
     timeout-minutes: 30
     env:
       XCODE_VERSION: '16.2'
