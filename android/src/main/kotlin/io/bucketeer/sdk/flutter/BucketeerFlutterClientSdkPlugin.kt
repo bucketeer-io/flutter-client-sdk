@@ -8,6 +8,7 @@ import io.bucketeer.sdk.android.BKTEvaluationDetails
 import io.bucketeer.sdk.android.BKTException
 import io.bucketeer.sdk.android.BKTUser
 import io.bucketeer.sdk.android.BKTValue
+import io.bucketeer.sdk.android.BuildConfig
 import io.bucketeer.sdk.android.internal.evaluation.getBKTValue
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
@@ -32,6 +33,7 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
     const val METHOD_CHANNEL_NAME = "io.bucketeer.sdk.plugin.flutter"
     const val EVALUATION_UPDATE_EVENT_CHANNEL_NAME =
       "$METHOD_CHANNEL_NAME::evaluation.update.listener"
+    const val SOURCE_ID_FLUTTER = 8
   }
 
   private var applicationContext: Context? = null
@@ -94,6 +96,8 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
       val config: BKTConfig = BKTConfig.builder()
         .apiKey(apiKey)
         .apiEndpoint(apiEndpoint)
+        .wrapperSdkVersion(BuildConfig.SDK_VERSION)
+        .wrapperSdkSourceId(SOURCE_ID_FLUTTER)
         .featureTag(featureTag).let {
           if (eventsFlushInterval != null && eventsFlushInterval > 0) {
             return@let it.eventsFlushInterval(eventsFlushInterval.toLong())

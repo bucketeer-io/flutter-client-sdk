@@ -1,7 +1,5 @@
 package io.bucketeer.sdk.flutter
 
-import androidx.annotation.VisibleForTesting
-
 internal enum class CallMethods {
   Initialize,
   StringVariation,
