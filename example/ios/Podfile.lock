@@ -37,12 +37,12 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Bucketeer: 8b7f89fe85599dd5c18384fd9fd6aaa7ee5388bc
-  bucketeer_flutter_client_sdk: 6b3c787d8ca5426db256fb78491fe234cf3d66e5
+  bucketeer_flutter_client_sdk: ab0510cd69623ccf89f3c324d00c3a6b0b767957
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   integration_test: 13825b8a9334a850581300559b8839134b124670
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   ua_client_hints: 7f4e0f5d390685e8f7efd6eb363594f760108926
 
-PODFILE CHECKSUM: bade36bdaeffb51adaf1440994f0107db6b4a613
+PODFILE CHECKSUM: 290afd09614cbf3d707fe21f3d6aa8af2ec027b6
 
 COCOAPODS: 1.16.2
