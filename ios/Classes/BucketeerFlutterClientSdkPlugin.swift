@@ -40,7 +40,7 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
         }
         
         let featureTag = (arguments?["featureTag"] as? String) ?? ""
-        let version = Version.current
+        let sdkVersion = Version.current
         do {
             var builder = BKTConfig.Builder()
                 .with(apiKey: apiKey)
@@ -48,7 +48,7 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
                 .with(featureTag: featureTag)
                 .with(appVersion: appVersion)
                 //.with(wrapperSdkSourceId: BucketeerFlutterClientSdkPlugin.SOURCE_ID_FLUTTER)
-                //.with(wrapperSdkVersion: version)
+                //.with(wrapperSdkVersion: sdkVersion)
             
             if let eventsFlushInterval = arguments?["eventsFlushInterval"] as? Int64 {
                 builder = builder.with(eventsFlushInterval: eventsFlushInterval)
