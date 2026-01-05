@@ -6,6 +6,7 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
     
     private static let METHOD_CHANNEL_NAME = "io.bucketeer.sdk.plugin.flutter"
     private static let EVALUATION_UPDATE_EVENT_CHANNEL_NAME = "\(METHOD_CHANNEL_NAME)::evaluation.update.listener"
+    private static let SOURCE_ID_FLUTTER = 8
     
     private let logger = BucketeerPluginLogger()
     private let proxyEvaluationListener = BucketeerPluginEvaluationUpdateListener()
@@ -39,13 +40,15 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
         }
         
         let featureTag = (arguments?["featureTag"] as? String) ?? ""
-        
+        let version = Version.current
         do {
             var builder = BKTConfig.Builder()
                 .with(apiKey: apiKey)
                 .with(apiEndpoint: apiEndpoint)
                 .with(featureTag: featureTag)
                 .with(appVersion: appVersion)
+                //.with(sourceId: BucketeerFlutterClientSdkPlugin.SOURCE_ID_FLUTTER)
+                //.with(sdkVersion: version)
             
             if let eventsFlushInterval = arguments?["eventsFlushInterval"] as? Int64 {
                 builder = builder.with(eventsFlushInterval: eventsFlushInterval)
