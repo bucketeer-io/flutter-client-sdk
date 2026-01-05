@@ -37,6 +37,8 @@ android {
   defaultConfig {
     minSdkVersion 22
     targetSdkVersion 34
+
+    buildConfigField "String", "FLUTTER_SDK_VERSION", "\"${project.version}\""
   }
 
   compileOptions {
@@ -50,6 +52,10 @@ android {
 
   lintOptions {
     disable 'InvalidPackage'
+  }
+
+  buildFeatures {
+    buildConfig = true
   }
 }
 
