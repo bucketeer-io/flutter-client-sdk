@@ -47,8 +47,8 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
                 .with(apiEndpoint: apiEndpoint)
                 .with(featureTag: featureTag)
                 .with(appVersion: appVersion)
-                //.with(sourceId: BucketeerFlutterClientSdkPlugin.SOURCE_ID_FLUTTER)
-                //.with(sdkVersion: version)
+                //.with(wrapperSdkSourceId: BucketeerFlutterClientSdkPlugin.SOURCE_ID_FLUTTER)
+                //.with(wrapperSdkVersion: version)
             
             if let eventsFlushInterval = arguments?["eventsFlushInterval"] as? Int64 {
                 builder = builder.with(eventsFlushInterval: eventsFlushInterval)
@@ -436,7 +436,6 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
         fail(result: result, message: message, error: err)
     }
     
-
     private func requiredVariationContext<T>(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) -> VariationRequestContext<T>? {
         guard let featureId = arguments?[BKTFlutterCallParams.featureId] as? String else {
             failParamFeatureIdRequired(result: result)
