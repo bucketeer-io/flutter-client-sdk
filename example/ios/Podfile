@@ -3,7 +3,7 @@ platform :ios, '12.0'
 
 # Using the CDN is significantly faster for CI environments.
 # source 'https://cdn.cocoapods.org/'
-#cocoapods is started deprecated, their CDN is not reliable, so we could use the github repo directly
+# The CocoaPods CDN has been unreliable, so use the GitHub Specs repo directly.
 source 'https://github.com/CocoaPods/Specs.git'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
