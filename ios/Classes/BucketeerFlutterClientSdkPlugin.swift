@@ -47,8 +47,8 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
                 .with(apiEndpoint: apiEndpoint)
                 .with(featureTag: featureTag)
                 .with(appVersion: appVersion)
-                //.with(wrapperSdkSourceId: BucketeerFlutterClientSdkPlugin.SOURCE_ID_FLUTTER)
-                //.with(wrapperSdkVersion: sdkVersion)
+                .with(wrapperSdkSourceId: BucketeerFlutterClientSdkPlugin.SOURCE_ID_FLUTTER)
+                .with(wrapperSdkVersion: sdkVersion)
             
             if let eventsFlushInterval = arguments?["eventsFlushInterval"] as? Int64 {
                 builder = builder.with(eventsFlushInterval: eventsFlushInterval)
