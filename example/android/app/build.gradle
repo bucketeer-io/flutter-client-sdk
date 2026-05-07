@@ -29,8 +29,8 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace "io.bucketeer.example"
-    compileSdk 34
-    ndkVersion "25.1.8937393" // flutter.ndkVersion
+    compileSdk project.findProperty("android.compileSdk") as int
+    ndkVersion project.findProperty("android.ndkVersion") as String
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -49,8 +49,8 @@ android {
         applicationId "io.bucketeer.example"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
-        minSdkVersion 22
-        targetSdkVersion 34
+        minSdkVersion project.findProperty("android.minSdkVersion") as int
+        targetSdkVersion project.findProperty("android.targetSdkVersion") as int
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
