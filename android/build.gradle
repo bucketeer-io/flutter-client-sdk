@@ -32,11 +32,11 @@ android {
     namespace "io.bucketeer.sdk.flutter"
   }
 
-  compileSdk project.findProperty("android.compileSdk") as int
+  compileSdk 35
 
   defaultConfig {
-    minSdkVersion project.findProperty("android.minSdkVersion") as int
-    targetSdkVersion project.findProperty("android.targetSdkVersion") as int
+    minSdkVersion 21
+    targetSdkVersion 35
 
     buildConfigField "String", "FLUTTER_SDK_VERSION", "\"${project.version}\""
   }
