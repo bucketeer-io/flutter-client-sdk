@@ -21,10 +21,15 @@ concurrency:
 
 jobs:
   augment:
-    # Only run on release-please's branches. release-please names them
-    # `release-please--branches--<base>` (or similar) so a prefix match is the
-    # most resilient check across plugin versions.
-    if: startsWith(github.head_ref, 'release-please--')
+    # Only run on release-please branches that originate from THIS repo.
+    # release-please names its branches `release-please--branches--<base>`
+    # (or similar) so a prefix match is the most resilient check across
+    # plugin versions. The repo check prevents a forked PR that happens to
+    # reuse the same branch name from triggering this workflow (it would
+    # only get a read-only token and fail noisily at push time anyway).
+    if: >-
+      startsWith(github.head_ref, 'release-please--')
+      && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
       - name: Checkout PR branch

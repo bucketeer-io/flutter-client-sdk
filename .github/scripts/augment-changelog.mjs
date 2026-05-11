@@ -18,7 +18,6 @@
 
 import { execFileSync } from "node:child_process";
 import fs from "node:fs/promises";
-import path from "node:path";
 import process from "node:process";
 
 const CONFIG_PATH = ".github/native-sdk-changelog.config.json";

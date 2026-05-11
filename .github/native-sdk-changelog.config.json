@@ -1,5 +1,4 @@
 {
-  "$schema": "./native-sdk-changelog.schema.json",
   "natives": [
     {
       "name": "iOS SDK",
