@@ -32,6 +32,7 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
     const val METHOD_CHANNEL_NAME = "io.bucketeer.sdk.plugin.flutter"
     const val EVALUATION_UPDATE_EVENT_CHANNEL_NAME =
       "$METHOD_CHANNEL_NAME::evaluation.update.listener"
+    const val SOURCE_ID_FLUTTER = 8
   }
 
   private var applicationContext: Context? = null
@@ -94,6 +95,8 @@ class BucketeerFlutterClientSdkPlugin : MethodCallHandler, FlutterPlugin {
       val config: BKTConfig = BKTConfig.builder()
         .apiKey(apiKey)
         .apiEndpoint(apiEndpoint)
+        .wrapperSdkVersion(BuildConfig.FLUTTER_SDK_VERSION)
+        .wrapperSdkSourceId(SOURCE_ID_FLUTTER)
         .featureTag(featureTag).let {
           if (eventsFlushInterval != null && eventsFlushInterval > 0) {
             return@let it.eventsFlushInterval(eventsFlushInterval.toLong())

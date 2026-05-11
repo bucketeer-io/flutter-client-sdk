@@ -6,6 +6,7 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
     
     private static let METHOD_CHANNEL_NAME = "io.bucketeer.sdk.plugin.flutter"
     private static let EVALUATION_UPDATE_EVENT_CHANNEL_NAME = "\(METHOD_CHANNEL_NAME)::evaluation.update.listener"
+    private static let SOURCE_ID_FLUTTER = 8
     
     private let logger = BucketeerPluginLogger()
     private let proxyEvaluationListener = BucketeerPluginEvaluationUpdateListener()
@@ -39,13 +40,15 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
         }
         
         let featureTag = (arguments?["featureTag"] as? String) ?? ""
-        
+        let sdkVersion = Version.current
         do {
             var builder = BKTConfig.Builder()
                 .with(apiKey: apiKey)
                 .with(apiEndpoint: apiEndpoint)
                 .with(featureTag: featureTag)
                 .with(appVersion: appVersion)
+                .with(wrapperSdkSourceId: BucketeerFlutterClientSdkPlugin.SOURCE_ID_FLUTTER)
+                .with(wrapperSdkVersion: sdkVersion)
             
             if let eventsFlushInterval = arguments?["eventsFlushInterval"] as? Int64 {
                 builder = builder.with(eventsFlushInterval: eventsFlushInterval)
@@ -433,7 +436,6 @@ public class BucketeerFlutterClientSdkPlugin: NSObject, FlutterPlugin {
         fail(result: result, message: message, error: err)
     }
     
-
     private func requiredVariationContext<T>(_ arguments: [String: Any]?, _ result: @escaping FlutterResult) -> VariationRequestContext<T>? {
         guard let featureId = arguments?[BKTFlutterCallParams.featureId] as? String else {
             failParamFeatureIdRequired(result: result)

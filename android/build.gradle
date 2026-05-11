@@ -2,7 +2,7 @@ group 'io.bucketeer.sdk.plugin'
 version '2.1.2' // x-release-please-version
 
 buildscript {
-  ext.kotlin_version = '1.8.22'
+  ext.kotlin_version = '2.0.21'
   repositories {
     google()
     mavenCentral()
@@ -10,7 +10,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:7.4.2'
+    classpath 'com.android.tools.build:gradle:8.3.2'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
 }
@@ -32,11 +32,13 @@ android {
     namespace "io.bucketeer.sdk.flutter"
   }
 
-  compileSdk 34
+  compileSdk 35
 
   defaultConfig {
-    minSdkVersion 22
-    targetSdkVersion 34
+    minSdkVersion 21
+    targetSdkVersion 35
+
+    buildConfigField "String", "FLUTTER_SDK_VERSION", "\"${project.version}\""
   }
 
   compileOptions {
@@ -51,11 +53,15 @@ android {
   lintOptions {
     disable 'InvalidPackage'
   }
+
+  buildFeatures {
+    buildConfig = true
+  }
 }
 
 dependencies {
   implementation 'androidx.annotation:annotation:1.8.2'
-  implementation 'io.bucketeer:android-client-sdk:2.2.1'
+  implementation 'io.bucketeer:android-client-sdk:2.3.1'
   testImplementation 'junit:junit:4.13.2'
-  testImplementation 'org.json:json:20240205'
+  testImplementation 'org.json:json:20251224'
 }
