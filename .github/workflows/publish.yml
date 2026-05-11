@@ -2,6 +2,11 @@ name: Publish to pub.dev
 
 on:
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run pub publish in dry-run mode (validate only, no upload)"
+        type: boolean
+        default: false
   push:
     tags:
       - "v*"
@@ -12,7 +17,7 @@ env:
 jobs:
   publish:
     permissions:
-      id-token: write # This is required for authentication using OIDC
+      id-token: write # Required for OIDC authentication with pub.dev
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,12 +37,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Setup credentials
-        run: |
-          mkdir -p ~/.config/dart
-          cat <<EOF > ~/.config/dart/pub-credentials.json
-          ${{ secrets.PUB_DEV_CREDENTIALS_JSON }}
-          EOF
+      - name: Publish (dry-run)
+        if: ${{ inputs.dry_run }}
+        run: flutter pub publish --dry-run
 
       - name: Publish
+        if: ${{ !inputs.dry_run }}
         run: flutter pub publish --force
