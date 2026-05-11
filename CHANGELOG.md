@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/bucketeer-io/flutter-client-sdk/compare/v2.1.2...v2.2.0) (2026-05-11)
+
+
+### Features
+
+* update wrapper SDK's sourceId and version ([#31](https://github.com/bucketeer-io/flutter-client-sdk/issues/31)) ([ed5a914](https://github.com/bucketeer-io/flutter-client-sdk/commit/ed5a9147109da3106fc19b11dd1517b878f6f35e))
+
 ## [2.1.2](https://github.com/bucketeer-io/flutter-client-sdk/compare/v2.1.1...v2.1.2) (2025-03-11)
 
 
