@@ -1,0 +1,80 @@
+# Augments release-please's auto-generated CHANGELOG.md with release notes
+# from the native iOS and Android SDKs whenever the release-please PR bumps
+# them.
+#
+# The script is idempotent (uses sentinel HTML comments) so this workflow can
+# safely re-run after release-please force-pushes its branch.
+name: Augment release-please CHANGELOG
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: augment-changelog-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  augment:
+    # Only run on release-please branches that originate from THIS repo.
+    # release-please names its branches `release-please--branches--<base>`
+    # (or similar) so a prefix match is the most resilient check across
+    # plugin versions. The repo check prevents a forked PR that happens to
+    # reuse the same branch name from triggering this workflow (it would
+    # only get a read-only token and fail noisily at push time anyway).
+    if: >-
+      startsWith(github.head_ref, 'release-please--')
+      && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Fetch tags
+        run: git fetch --tags --force origin
+
+      - name: Determine previous release tag
+        id: previous
+        run: |
+          # The wrapper SDK PR that bumps the native dep versions lands on
+          # `main` before release-please opens the release PR, so comparing
+          # against `main` would show no diff. Compare against the previous
+          # release tag instead (the most recent tag reachable from main).
+          PREV_TAG="$(git describe --tags --abbrev=0 "origin/${{ github.base_ref }}")"
+          echo "tag=${PREV_TAG}" >> "$GITHUB_OUTPUT"
+          echo "Previous release tag: ${PREV_TAG}"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Augment CHANGELOG.md with native SDK changes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node .github/scripts/augment-changelog.mjs --base-ref "${{ steps.previous.outputs.tag }}"
+
+      - name: Commit and push if changed
+        run: |
+          if [[ -z "$(git status --porcelain CHANGELOG.md)" ]]; then
+            echo "No changes to CHANGELOG.md."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git commit -m "docs(changelog): augment with native SDK release notes"
+          # Pushing with GITHUB_TOKEN does not retrigger workflows, so this
+          # cannot loop with itself. release-please pushes (using its PAT)
+          # will retrigger this workflow, and the script's sentinels make
+          # the augmentation re-apply cleanly.
+          git push origin "HEAD:${{ github.head_ref }}"
