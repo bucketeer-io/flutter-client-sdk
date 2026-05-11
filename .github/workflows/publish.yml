@@ -34,13 +34,19 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: "stable"
 
+      # Required so `dart pub publish` can use the GitHub OIDC token for auth.
+      # `flutter pub publish` does not configure OIDC by itself.
+      # See: https://github.com/subosito/flutter-action/issues/330
+      - name: Setup Dart SDK (configures pub.dev OIDC)
+        uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260 # v1.7.2
+
       - name: Install dependencies
         run: flutter pub get
 
       - name: Publish (dry-run)
         if: ${{ inputs.dry_run }}
-        run: flutter pub publish --dry-run
+        run: dart pub publish --dry-run
 
       - name: Publish
         if: ${{ !inputs.dry_run }}
-        run: flutter pub publish --force
+        run: dart pub publish --force
