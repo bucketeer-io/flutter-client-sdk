@@ -1,0 +1,31 @@
+{
+  "$schema": "./native-sdk-changelog.schema.json",
+  "natives": [
+    {
+      "name": "iOS SDK",
+      "shortName": "ios-client-sdk",
+      "repo": "bucketeer-io/ios-client-sdk",
+      "versionFile": "ios/bucketeer_flutter_client_sdk.podspec",
+      "versionRegex": "s\\.dependency\\s+'Bucketeer',\\s+'([^']+)'"
+    },
+    {
+      "name": "Android SDK",
+      "shortName": "android-client-sdk",
+      "repo": "bucketeer-io/android-client-sdk",
+      "versionFile": "android/build.gradle",
+      "versionRegex": "io\\.bucketeer:android-client-sdk:([^'\"]+)"
+    }
+  ],
+  "skipPatterns": [
+    "^\\*\\*deps:\\*\\*\\s+update\\s+all\\s+non-major\\s+dependencies"
+  ],
+  "sectionOrder": [
+    "Features",
+    "Bug Fixes",
+    "Performance Improvements",
+    "Reverts",
+    "Refactoring",
+    "Miscellaneous",
+    "Build System"
+  ]
+}
