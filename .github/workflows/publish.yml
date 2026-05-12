@@ -28,25 +28,25 @@ jobs:
           path: /opt/hostedtoolcache/flutter # For Ubuntu machine
           key: ${{ runner.os }}-flutter-install-cache-${{ env.FLUTTER_VERSION }}
 
-      - name: Setup Flutter SDK
-        uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff # v2.13.0
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: "stable"
-
       # Required so `dart pub publish` can use the GitHub OIDC token for auth.
       # `flutter pub publish` does not configure OIDC by itself.
       # See: https://github.com/subosito/flutter-action/issues/330
       - name: Setup Dart SDK (configures pub.dev OIDC)
         uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260 # v1.7.2
 
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
+
       - name: Install dependencies
         run: flutter pub get
 
       - name: Publish (dry-run)
         if: ${{ inputs.dry_run }}
-        run: dart pub publish --dry-run
+        run: flutter pub publish --dry-run
 
       - name: Publish
         if: ${{ !inputs.dry_run }}
-        run: dart pub publish --force
+        run: flutter pub publish --force
