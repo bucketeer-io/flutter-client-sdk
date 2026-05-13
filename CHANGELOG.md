@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.2.1](https://github.com/bucketeer-io/flutter-client-sdk/compare/v2.2.0...v2.2.1) (2026-05-13)
+
+
+### Miscellaneous
+
+* update iOS SDK to 2.3.1 ([#36](https://github.com/bucketeer-io/flutter-client-sdk/issues/36)) ([9304acb](https://github.com/bucketeer-io/flutter-client-sdk/commit/9304acb935caddc7f08f455b4a86d6361336b566))
+
+<!-- native-sdk-changes:start -->
+
+### Native SDK Changes
+
+This release also brings the following changes from the underlying native SDKs.
+
+#### iOS SDK ([v2.3.0...v2.3.1](https://github.com/bucketeer-io/ios-client-sdk/compare/v2.3.0...v2.3.1))
+
+##### Bug Fixes
+
+* latency metrics should reflect only the most recent (final) network request attempt ([ios-client-sdk#122](https://github.com/bucketeer-io/ios-client-sdk/issues/122))
+
+<!-- native-sdk-changes:end -->
+
 ## [2.2.0](https://github.com/bucketeer-io/flutter-client-sdk/compare/v2.1.2...v2.2.0) (2026-05-11)
 
 ### Features
