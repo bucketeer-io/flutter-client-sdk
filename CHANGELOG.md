@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.2](https://github.com/bucketeer-io/flutter-client-sdk/compare/v2.2.1...v2.2.2) (2026-06-18)
+
+
+### Miscellaneous
+
+* bump ios sdk version to 2.3.2 ([#38](https://github.com/bucketeer-io/flutter-client-sdk/issues/38)) ([a824b17](https://github.com/bucketeer-io/flutter-client-sdk/commit/a824b17f10fa7868531a4c425b0a4a76826b05e7))
+
 ## [2.2.1](https://github.com/bucketeer-io/flutter-client-sdk/compare/v2.2.0...v2.2.1) (2026-05-13)
 
 
