@@ -22,7 +22,7 @@ jobs:
       # release-please builds the GitHub Release body from the release PR notes,
       # not from CHANGELOG.md, so the "Native SDK Changes" block added by the
       # augment-changelog workflow never reaches the published release. Re-sync
-      # the release body from the (already augmented) CHANGELOG.md on main.
+      # the release body from the (already augmented) CHANGELOG.md in the current ref.
       - name: Checkout
         if: ${{ steps.release.outputs.release_created == 'true' }}
         uses: actions/checkout@v4
