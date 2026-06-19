@@ -58,7 +58,7 @@ function extractSection(changelog, version) {
     throw new Error(`Could not find a CHANGELOG section for version ${version}`);
   }
 
-  const headingIdx = changelog.indexOf(headingMatch[0]);
+  const headingIdx = headingMatch.index;
   const afterHeading = headingIdx + headingMatch[0].length;
   // Find the end of the heading line, then look for the next `## ` heading.
   const lineEnd = changelog.indexOf("\n", afterHeading);
