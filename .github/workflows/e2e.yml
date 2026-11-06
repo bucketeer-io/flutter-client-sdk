@@ -14,10 +14,10 @@ env:
 
 jobs:
   ios-integration-test:
-    runs-on: macos-14-xlarge
+    runs-on: macos-15-xlarge
     timeout-minutes: 30
     env:
-      XCODE_VERSION: "16.2"
+      XCODE_VERSION: "16.4"
     strategy:
       matrix:
         test-group:
@@ -32,9 +32,21 @@ jobs:
 
       - name: Boot iPhone Simulator
         run: |
-          DEVICE_ID=$(xcrun simctl list devices available | grep "iPhone" | head -1 | grep -o "([A-F0-9\\-]*)" | tr -d "()")
+          # iOS 18.5 is the first preinstalled runtime on macos-15 after the
+          # iOS 18.4 simulator networking bug. Match iPhone 16, not 16 Plus/Pro.
+          DEVICE_ID=$(xcrun simctl list devices available | awk '
+            /-- iOS 18.5 --/ { in_section=1; next }
+            /-- / { in_section=0 }
+            in_section && /iPhone 16 \(/ {
+              if (match($0, /[A-F0-9]{8}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{12}/)) {
+                print substr($0, RSTART, RLENGTH)
+                exit
+              }
+            }
+          ')
           if [ -z "$DEVICE_ID" ]; then
-            echo "No iPhone simulators available!"
+            echo "No iPhone 16 simulator on iOS 18.5."
+            xcrun simctl list devices available | grep "iPhone" || true
             exit 1
           fi
           xcrun simctl boot "$DEVICE_ID" || echo "Simulator may already be booted"
